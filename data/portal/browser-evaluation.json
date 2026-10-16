@@ -1,0 +1,105 @@
+{
+  "browser": "Main Chrome 48425945",
+  "date": "2026-10-16",
+  "source": "Packaged held-out Portal images via UI click; WebGL/browser image decode",
+  "results": [
+    {
+      "test": 1,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 2,
+      "expected": "Món nước",
+      "actual": "Món nước",
+      "passed": true
+    },
+    {
+      "test": 3,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 4,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 5,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 6,
+      "expected": "Món nước",
+      "actual": "Món nước",
+      "passed": true
+    },
+    {
+      "test": 7,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 8,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 9,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 10,
+      "expected": "Món nước",
+      "actual": "Món nước",
+      "passed": true
+    },
+    {
+      "test": 11,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 12,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 13,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 14,
+      "expected": "Món nước",
+      "actual": "Món nước",
+      "passed": true
+    },
+    {
+      "test": 15,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    },
+    {
+      "test": 16,
+      "expected": "Món dùng kèm cơm",
+      "actual": "Món dùng kèm cơm",
+      "passed": true
+    }
+  ],
+  "passed": 16,
+  "total": 16
+}

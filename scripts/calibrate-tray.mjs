@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {PNG} from 'pngjs';
+import {calibrateTray,measureTray,layoutSignature} from '../lib/tray.mjs';
+const bytes=fs.readFileSync('public/tray-demo/portal.ptnk.png');
+const photo=PNG.sync.read(bytes);
+const rois={rice:[.56,.26,.96,.60],vegetables:[.065,.72,.50,.96],main:[.065,.32,.50,.68]};
+const labels={rice:50,vegetables:100,main:100};
+const calibration={...calibrateTray(photo.data,photo.width,photo.height,rois,{profile:'ptnk-steel',labels}),signature:layoutSignature(photo.data,photo.width,photo.height),example:'portal.ptnk.png',reference:'portal.ptnk.png',source:'Real photograph supplied by the user; labels supplied by the user: rice 50%, vegetables 100%, main 100%.',sha256:createHash('sha256').update(bytes).digest('hex'),method:'One labelled reference image. Fixed component regions and colour-area ratios scaled by the supplied labels. Reusing the calibration image is a demonstration, not independent model evaluation. No separate full-portion reference was supplied.'};
+const result=measureTray(photo.data,photo.width,photo.height,calibration);
+fs.writeFileSync('public/tray-demo/calibration.json',JSON.stringify(calibration,null,2));
+fs.writeFileSync('data/tray-demo-evaluation.json',JSON.stringify({source:calibration.source,method:calibration.method,sha256:calibration.sha256,result},null,2));
+console.log(result);

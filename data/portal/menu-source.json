@@ -1,0 +1,367 @@
+{
+  "source": "https://portal.ptnk.edu.vn/boarding-menu",
+  "retrievedAt": "2026-10-16",
+  "coverage": "Selected-day cards and all loaded detail images, 12–16 October 2026; not the entire portal archive.",
+  "menus": [
+    {
+      "date": "2026-10-12",
+      "name": "Sườn kho tiêu",
+      "images": [
+        {
+          "path": "/food/a7a33191b5532fef.jpg",
+          "sha256": "a7a33191b5532fefa4a623241e69cda061a51ee6613376270a4d33f487fa0550",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/7f8566da57b63b81.jpg",
+          "sha256": "7f8566da57b63b81ff7f7b6f3d76f7b0f1965290b54199326aa367b958079f63",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/e17c9f55bf32597a.jpg",
+          "sha256": "e17c9f55bf32597a4b217c19a006a5be4411a864b168505472432d147f42a482",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/fcbd2c3d373117fa.jpg",
+          "sha256": "fcbd2c3d373117fa74206a05db812944397b0c5a0e85558e5c6f36f7d1cdc100",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-12",
+      "name": "Bún bò Huế",
+      "images": [
+        {
+          "path": "/food/ef6733c94dd0fa6d.jpg",
+          "sha256": "ef6733c94dd0fa6de5989d9875c8f50756cf0dc64cc26eafc8d5c8e4028a7fea",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/40415af289d91809.jpg",
+          "sha256": "40415af289d91809afd62d8428281ea2d24e563cb570c951b11690a0d4bd5f61",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-12",
+      "name": "Chả lụa chay kho tiêu",
+      "images": [
+        {
+          "path": "/food/ba75066bf2e6aac0.jpg",
+          "sha256": "ba75066bf2e6aac03644feb2cc95f682e13447eb0e9320414e9edcacd415e0d6",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/e895c5d6a00918c6.jpg",
+          "sha256": "e895c5d6a00918c61e8910765a36913614365dc950ba61e385d7ddada13527e9",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-12",
+      "name": "Tôm ram thịt",
+      "images": [
+        {
+          "path": "/food/39ced84f138eef99.jpg",
+          "sha256": "39ced84f138eef99f7f30b7af5c4ad751017bb9572cfc5005f2507d2b43a1630",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/e7676c756730f638.jpg",
+          "sha256": "e7676c756730f6380453f3381ac1a818739bda99c36fc727b66cd4abfc40ff4a",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-13",
+      "name": "Thịt kho cải chua",
+      "images": [
+        {
+          "path": "/food/003b1d77fd4ab7db.jpg",
+          "sha256": "003b1d77fd4ab7dbaff801794e33e70474f08cd2f33de368532b5f1090888ddc",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/5caf497db4773a99.jpg",
+          "sha256": "5caf497db4773a992181c4ad26d1a126362005ed240ebc97b4d4ec19e5bb935a",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/5e9e3ad4af6381c4.jpg",
+          "sha256": "5e9e3ad4af6381c41ee1df5a39faf3e66cc9a1626f85f29df357258605897253",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/e5fd76ee4f69f713.jpg",
+          "sha256": "e5fd76ee4f69f713d13e52faebacfebe3d5c99b4022d27a732c58f9aed769f98",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/3cb726aecd06b967.jpg",
+          "sha256": "3cb726aecd06b967ad3e838ab2c92f309d6e9b431c92fe20cfa08f688b608d37",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-13",
+      "name": "Nui sườn mộc",
+      "images": [
+        {
+          "path": "/food/02aaae6b3fb5bdae.jpg",
+          "sha256": "02aaae6b3fb5bdaee80d41247e9229106d24af5e626041c7492f083ecb59d15e",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/5e3d044509de877d.jpg",
+          "sha256": "5e3d044509de877d78159b4fa6383e1b9d97092acd3c17f5b559244cef198e3c",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/899ac5c732eb2fae.jpg",
+          "sha256": "899ac5c732eb2fae354dad0f80eeffbfdee8bdf2bf4afe2327b27db20fb3e07a",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/7e687479ea0854a2.jpg",
+          "sha256": "7e687479ea0854a27e2241d116c38b2ae4c16e41de8537530971d9dff37f83e9",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/c7ddb82b54013116.jpg",
+          "sha256": "c7ddb82b54013116ddf1fdd7a3f6158849db5b53dc760792ab43d0c94817e10d",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-13",
+      "name": "Đậu hủ chiên sả chay",
+      "images": [
+        {
+          "path": "/food/195bac0311c7d562.jpg",
+          "sha256": "195bac0311c7d5627e97eb9823a58ee85ec64444ddf803306504791d75d7851b",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/d540c22309cf389a.jpg",
+          "sha256": "d540c22309cf389a6e7c93873bb285608df6aadb5e1860a9693f2505aefdd8cb",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/48275fff16f6f490.jpg",
+          "sha256": "48275fff16f6f490e47f2753bdd94a2ffb31aac7ce5b82097f6e046ba1e015a2",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/aa097e909e184361.jpg",
+          "sha256": "aa097e909e184361947d5c62d0b0e79f0809f111c05e15cd69d431cf515d71a4",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-13",
+      "name": "Gà quay chảo",
+      "images": [
+        {
+          "path": "/food/f1a153d9454db57b.jpg",
+          "sha256": "f1a153d9454db57b8d8e9184a5f6c31f2f1294928ef96e95f8ebe316ba82acad",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/84a3872560089529.jpg",
+          "sha256": "84a387256008952999ab26d08c5dfb4314d6a234937e30d4149e90ca3cb4aade",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-14",
+      "name": "Cá ngừ kho thơm",
+      "images": [
+        {
+          "path": "/food/42c0269598b35a0f.jpg",
+          "sha256": "42c0269598b35a0f265d6fbc057aca8853120281608aa4ec6897d1f484dd7436",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/865d4252f13acc01.jpg",
+          "sha256": "865d4252f13acc013fd019917245f526a4c4358c67ba16f7b4643f6a01d2e4a2",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-14",
+      "name": "Hủ tiếu nam vang",
+      "images": [
+        {
+          "path": "/food/c64c0383d2ac3d3a.jpg",
+          "sha256": "c64c0383d2ac3d3a618c6b7ba8d7cc328fc121a155d1546e18f60a6cd9faae83",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/adcdf10edac680d4.jpg",
+          "sha256": "adcdf10edac680d4cbfb86281f59a57e64e21f259b5ac5f00915722f50aa5e76",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-14",
+      "name": "Đậu hũ kho củ cải muối chay",
+      "images": [
+        {
+          "path": "/food/79a5beb491715ae7.jpg",
+          "sha256": "79a5beb491715ae7d5844c65de83072d28a2ddace707ae02952550da6fd5f608",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/dd4cb9bcde6485be.jpg",
+          "sha256": "dd4cb9bcde6485be86b2f2ea4cb2c72891044624240dc5853aee333715d072d6",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-14",
+      "name": "Sườn cốt lết ram mặn",
+      "images": [
+        {
+          "path": "/food/b3a232c4f0201565.jpg",
+          "sha256": "b3a232c4f0201565d09c386fe87f9b158653d2f6ead045b78772cafdadef972b",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/77d539478710da32.jpg",
+          "sha256": "77d539478710da32d9d060b288f1b399c343b9cfa1551736e2d24cfb067374e5",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-15",
+      "name": "Gà sốt nấm đông cô",
+      "images": [
+        {
+          "path": "/food/700020f5882ef632.jpg",
+          "sha256": "700020f5882ef632f0d8a3968eaff9a42a06b77aae4b1980b47640392dc363a2",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-15",
+      "name": "Bún mộc",
+      "images": [
+        {
+          "path": "/food/f4254d5df79478e8.jpg",
+          "sha256": "f4254d5df79478e88cb81d02612dcfa7c883909dfe7d648da3bff6e2dab56bf9",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-15",
+      "name": "Nấm rơm kho tiêu",
+      "images": [
+        {
+          "path": "/food/7826c3d7bea1898c.jpg",
+          "sha256": "7826c3d7bea1898c5def3d85cbfd8262c231b36753387f6aef51a19f307f3bc8",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-15",
+      "name": "Bò xào sả ớt",
+      "images": [
+        {
+          "path": "/food/31e76b8ef3f139dc.jpg",
+          "sha256": "31e76b8ef3f139dc02ac3821f891a625b22cfc871df83552ccadd7ddffe0aed2",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "name": "Vịt kho gừng",
+      "images": [
+        {
+          "path": "/food/0f210051169351b5.jpg",
+          "sha256": "0f210051169351b55ada4fe84dec786e4d4f75631764863f8ba425860de5ffb6",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/7aadb55482770db0.jpg",
+          "sha256": "7aadb55482770db00fc7d2ee907d6cceda04d3ed14d717bcf09866b7fea29ba6",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "name": "Bánh canh chả cá",
+      "images": [
+        {
+          "path": "/food/aef70be67c162d86.jpg",
+          "sha256": "aef70be67c162d86db50e1fa75ab555741d985b84804f60c17790820aec201d3",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/259594eefac0cbd0.jpg",
+          "sha256": "259594eefac0cbd0cc4f382909fa93877f332e25205915d450272aca93fcaa09",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/79c7203358197446.jpg",
+          "sha256": "79c720335819744657a713b781180f3bb7c39fb855e9ce59c34a23bd614411ff",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "name": "Heo lát chay kho thơm",
+      "images": [
+        {
+          "path": "/food/a48f649cb74e2b28.jpg",
+          "sha256": "a48f649cb74e2b28bf0ecbc83a9b56653131522b0007f5be34e11b9b1608a9df",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/7b3cf3b7fbb439a6.jpg",
+          "sha256": "7b3cf3b7fbb439a6af1a66525d36106de4ff2acbcbef050e50f6aa4dd9fc1794",
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "name": "Cơm xá xíu",
+      "images": [
+        {
+          "path": "/food/946e563daa98c9e6.jpg",
+          "sha256": "946e563daa98c9e69b3a46beb7e69d9ee698aea93a9bfbd2d6f891df0b8ea95c",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/a329386db7b8717e.jpg",
+          "sha256": "a329386db7b8717e2d5de1ee6a46ff03d71e9d9808904d06f520410e629bfa6e",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "/food/fd2325996549c5e7.jpg",
+          "sha256": "fd2325996549c5e76c8c11126e5cf157e2235618e343543ba2842bda9d9464a9",
+          "mime": "image/jpeg"
+        }
+      ]
+    }
+  ]
+}

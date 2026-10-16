@@ -1,0 +1,37 @@
+{
+  "source": "Real photograph supplied by the user; labels supplied by the user: rice 50%, vegetables 100%, main 100%.",
+  "method": "One labelled reference image. Fixed component regions and colour-area ratios scaled by the supplied labels. Reusing the calibration image is a demonstration, not independent model evaluation. No separate full-portion reference was supplied.",
+  "sha256": "725350fa4c04011f3c6a79f577106ffb039b6053f3b4ffdb832a6892f46beca1",
+  "result": {
+    "rice": {
+      "percent": 50,
+      "areaRatio": 50,
+      "roi": [
+        0.56,
+        0.26,
+        0.96,
+        0.6
+      ]
+    },
+    "vegetables": {
+      "percent": 100,
+      "areaRatio": 100,
+      "roi": [
+        0.065,
+        0.72,
+        0.5,
+        0.96
+      ]
+    },
+    "main": {
+      "percent": 100,
+      "areaRatio": 100,
+      "roi": [
+        0.065,
+        0.32,
+        0.5,
+        0.68
+      ]
+    }
+  }
+}

@@ -1,0 +1,469 @@
+{
+  "categoryEvaluation": {
+    "testImages": 16,
+    "top1Correct": 16,
+    "accepted": 16,
+    "acceptedCorrect": 16,
+    "results": [
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món nước",
+        "prediction": "Món nước",
+        "reason": "ok",
+        "top1": "Món nước"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món nước",
+        "prediction": "Món nước",
+        "reason": "ok",
+        "top1": "Món nước"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món nước",
+        "prediction": "Món nước",
+        "reason": "ok",
+        "top1": "Món nước"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món nước",
+        "prediction": "Món nước",
+        "reason": "ok",
+        "top1": "Món nước"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      },
+      {
+        "expected": "Món dùng kèm cơm",
+        "prediction": "Món dùng kèm cơm",
+        "reason": "ok",
+        "top1": "Món dùng kèm cơm"
+      }
+    ]
+  },
+  "source": "https://portal.ptnk.edu.vn/boarding-menu",
+  "method": "MobileNet v1 0.25 frozen embeddings + nearest reference; no fine-tuning of backbone weights.",
+  "split": "Last distinct file per menu with >=2 images held out before preparing reference bank. Single-image classes train only. No independent field validation; same-source photographs may be visually similar.",
+  "trainImages": 32,
+  "classes": 20,
+  "testImages": 16,
+  "top1Correct": 2,
+  "accepted": 9,
+  "acceptedCorrect": 0,
+  "results": [
+    {
+      "name": "Sườn kho tiêu",
+      "path": "/food/fcbd2c3d373117fa.jpg",
+      "hash": "fcbd2c3d373117fa74206a05db812944397b0c5a0e85558e5c6f36f7d1cdc100",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Nấm rơm kho tiêu",
+      "candidates": [
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7933326312385275
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.7824091788192731
+        },
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.7794799519326169
+        }
+      ]
+    },
+    {
+      "name": "Bún bò Huế",
+      "path": "/food/40415af289d91809.jpg",
+      "hash": "40415af289d91809afd62d8428281ea2d24e563cb570c951b11690a0d4bd5f61",
+      "prediction": "Nui sườn mộc",
+      "reason": "ok",
+      "top1": "Nui sườn mộc",
+      "candidates": [
+        {
+          "name": "Nui sườn mộc",
+          "score": 0.7564820821025422
+        },
+        {
+          "name": "Bánh canh chả cá",
+          "score": 0.7275124682184897
+        },
+        {
+          "name": "Bún mộc",
+          "score": 0.6764533049734947
+        }
+      ]
+    },
+    {
+      "name": "Chả lụa chay kho tiêu",
+      "path": "/food/e895c5d6a00918c6.jpg",
+      "hash": "e895c5d6a00918c61e8910765a36913614365dc950ba61e385d7ddada13527e9",
+      "prediction": "Cơm xá xíu",
+      "reason": "ok",
+      "top1": "Cơm xá xíu",
+      "candidates": [
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.7833233117598202
+        },
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.7507605189125359
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7080188053104306
+        }
+      ]
+    },
+    {
+      "name": "Tôm ram thịt",
+      "path": "/food/e7676c756730f638.jpg",
+      "hash": "e7676c756730f6380453f3381ac1a818739bda99c36fc727b66cd4abfc40ff4a",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8293577036262408
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.8191248431907976
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7726026253011681
+        }
+      ]
+    },
+    {
+      "name": "Thịt kho cải chua",
+      "path": "/food/3cb726aecd06b967.jpg",
+      "hash": "3cb726aecd06b967ad3e838ab2c92f309d6e9b431c92fe20cfa08f688b608d37",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Nấm rơm kho tiêu",
+      "candidates": [
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7693473818453267
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.7659810796322093
+        },
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.7540328848037225
+        }
+      ]
+    },
+    {
+      "name": "Nui sườn mộc",
+      "path": "/food/c7ddb82b54013116.jpg",
+      "hash": "c7ddb82b54013116ddf1fdd7a3f6158849db5b53dc760792ab43d0c94817e10d",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Nui sườn mộc",
+      "candidates": [
+        {
+          "name": "Nui sườn mộc",
+          "score": 0.9018818958569944
+        },
+        {
+          "name": "Hủ tiếu nam vang",
+          "score": 0.8891678698540146
+        },
+        {
+          "name": "Bún bò Huế",
+          "score": 0.8822638360134266
+        }
+      ]
+    },
+    {
+      "name": "Đậu hủ chiên sả chay",
+      "path": "/food/aa097e909e184361.jpg",
+      "hash": "aa097e909e184361947d5c62d0b0e79f0809f111c05e15cd69d431cf515d71a4",
+      "prediction": "Gà sốt nấm đông cô",
+      "reason": "ok",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8813221068226139
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.859074514390767
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.8322005840883036
+        }
+      ]
+    },
+    {
+      "name": "Gà quay chảo",
+      "path": "/food/84a3872560089529.jpg",
+      "hash": "84a387256008952999ab26d08c5dfb4314d6a234937e30d4149e90ca3cb4aade",
+      "prediction": "Gà sốt nấm đông cô",
+      "reason": "ok",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8312050409875028
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.7931018356066596
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7738287684128282
+        }
+      ]
+    },
+    {
+      "name": "Cá ngừ kho thơm",
+      "path": "/food/865d4252f13acc01.jpg",
+      "hash": "865d4252f13acc013fd019917245f526a4c4358c67ba16f7b4643f6a01d2e4a2",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.82760297410746
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.8092515177494319
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.80311748692548
+        }
+      ]
+    },
+    {
+      "name": "Hủ tiếu nam vang",
+      "path": "/food/adcdf10edac680d4.jpg",
+      "hash": "adcdf10edac680d4cbfb86281f59a57e64e21f259b5ac5f00915722f50aa5e76",
+      "prediction": "Nui sườn mộc",
+      "reason": "ok",
+      "top1": "Nui sườn mộc",
+      "candidates": [
+        {
+          "name": "Nui sườn mộc",
+          "score": 0.9293491117791097
+        },
+        {
+          "name": "Bánh canh chả cá",
+          "score": 0.8399870201469264
+        },
+        {
+          "name": "Bún mộc",
+          "score": 0.808767695699713
+        }
+      ]
+    },
+    {
+      "name": "Đậu hũ kho củ cải muối chay",
+      "path": "/food/dd4cb9bcde6485be.jpg",
+      "hash": "dd4cb9bcde6485be86b2f2ea4cb2c72891044624240dc5853aee333715d072d6",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Cơm xá xíu",
+      "candidates": [
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.8544172025367094
+        },
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8415772062855982
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.8173048889334557
+        }
+      ]
+    },
+    {
+      "name": "Sườn cốt lết ram mặn",
+      "path": "/food/77d539478710da32.jpg",
+      "hash": "77d539478710da32d9d060b288f1b399c343b9cfa1551736e2d24cfb067374e5",
+      "prediction": "Gà sốt nấm đông cô",
+      "reason": "ok",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8007878331903737
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.778792849269017
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7458413745657125
+        }
+      ]
+    },
+    {
+      "name": "Vịt kho gừng",
+      "path": "/food/7aadb55482770db0.jpg",
+      "hash": "7aadb55482770db00fc7d2ee907d6cceda04d3ed14d717bcf09866b7fea29ba6",
+      "prediction": "Gà sốt nấm đông cô",
+      "reason": "ok",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.846257890756754
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.7978454377931737
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.7842945906127174
+        }
+      ]
+    },
+    {
+      "name": "Bánh canh chả cá",
+      "path": "/food/79c7203358197446.jpg",
+      "hash": "79c720335819744657a713b781180f3bb7c39fb855e9ce59c34a23bd614411ff",
+      "prediction": "Nui sườn mộc",
+      "reason": "ok",
+      "top1": "Nui sườn mộc",
+      "candidates": [
+        {
+          "name": "Nui sườn mộc",
+          "score": 0.9037502837003131
+        },
+        {
+          "name": "Bánh canh chả cá",
+          "score": 0.8724670242034817
+        },
+        {
+          "name": "Bún mộc",
+          "score": 0.8097886738655176
+        }
+      ]
+    },
+    {
+      "name": "Heo lát chay kho thơm",
+      "path": "/food/7b3cf3b7fbb439a6.jpg",
+      "hash": "7b3cf3b7fbb439a6af1a66525d36106de4ff2acbcbef050e50f6aa4dd9fc1794",
+      "prediction": "Gà sốt nấm đông cô",
+      "reason": "ok",
+      "top1": "Gà sốt nấm đông cô",
+      "candidates": [
+        {
+          "name": "Gà sốt nấm đông cô",
+          "score": 0.8992654338665363
+        },
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.8600974262399075
+        },
+        {
+          "name": "Nấm rơm kho tiêu",
+          "score": 0.8452295482584318
+        }
+      ]
+    },
+    {
+      "name": "Cơm xá xíu",
+      "path": "/food/fd2325996549c5e7.jpg",
+      "hash": "fd2325996549c5e76c8c11126e5cf157e2235618e343543ba2842bda9d9464a9",
+      "prediction": null,
+      "reason": "uncertain",
+      "top1": "Cơm xá xíu",
+      "candidates": [
+        {
+          "name": "Cơm xá xíu",
+          "score": 0.9092129473113413
+        },
+        {
+          "name": "Cá ngừ kho thơm",
+          "score": 0.9036949865408369
+        },
+        {
+          "name": "Đậu hủ chiên sả chay",
+          "score": 0.9032699578829677
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "components": {
+    "rice": {
+      "roi": [
+        0.56,
+        0.26,
+        0.96,
+        0.6
+      ],
+      "fraction": 0.7363020522016338,
+      "label": 50
+    },
+    "vegetables": {
+      "roi": [
+        0.065,
+        0.72,
+        0.5,
+        0.96
+      ],
+      "fraction": 0.6003229370272797,
+      "label": 100
+    },
+    "main": {
+      "roi": [
+        0.065,
+        0.32,
+        0.5,
+        0.68
+      ],
+      "fraction": 0.7050091021724448,
+      "label": 100
+    }
+  },
+  "profile": "ptnk-steel",
+  "aspectRatio": 0.7497907949790795,
+  "signature": [
+    110,
+    97,
+    89,
+    97,
+    99,
+    94,
+    129,
+    130,
+    122,
+    127,
+    118,
+    111,
+    175,
+    162,
+    153,
+    108,
+    109,
+    103,
+    95,
+    46,
+    14,
+    154,
+    139,
+    116,
+    161,
+    156,
+    153,
+    176,
+    171,
+    167,
+    221,
+    220,
+    226
+  ],
+  "example": "portal.ptnk.png",
+  "reference": "portal.ptnk.png",
+  "source": "Real photograph supplied by the user; labels supplied by the user: rice 50%, vegetables 100%, main 100%.",
+  "sha256": "725350fa4c04011f3c6a79f577106ffb039b6053f3b4ffdb832a6892f46beca1",
+  "method": "One labelled reference image. Fixed component regions and colour-area ratios scaled by the supplied labels. Reusing the calibration image is a demonstration, not independent model evaluation. No separate full-portion reference was supplied."
+}
