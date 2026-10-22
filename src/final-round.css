@@ -1,0 +1,1347 @@
+/* Final-round tools extend the existing green/neutral design system. */
+:root {
+  --surface: #fff;
+  --soft: #edf4ef;
+  --positive: #21664c;
+  --warning-bg: #fff4dc;
+  --warning-ink: #785214;
+  --danger-bg: #fbece8;
+  --danger-ink: #923e31;
+}
+.fine {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #5e7066;
+  margin-top: 12px;
+}
+.full-width {
+  width: 100%;
+}
+.wrap-cell {
+  white-space: normal;
+  min-width: 240px;
+  max-width: 500px;
+}
+.live-launch {
+  background: #f9efed;
+  color: #8a3c30;
+  border-color: #e8cbc4;
+  font-weight: 650;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.nav-item {
+  white-space: normal;
+  text-align: left;
+}
+.nav-symbol {
+  flex-shrink: 0;
+}
+.dataset-note {
+  flex-wrap: wrap;
+}
+.subtabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 24px 0 20px;
+}
+.subtabs button {
+  font-size: 12px;
+}
+.module-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.settings-stack {
+  display: grid;
+  gap: 24px;
+  margin-top: 24px;
+}
+.connection-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 18px 0;
+}
+.connection-controls .inline-status {
+  flex-basis: 100%;
+  margin: 0;
+}
+.connection-settings {
+  position: relative;
+  font-size: 11px;
+}
+.connection-settings summary {
+  cursor: pointer;
+}
+.connection-settings label {
+  margin-top: 12px;
+}
+.connection-settings p {
+  font-size: 10px;
+  max-width: 380px;
+  color: #5e7066;
+  margin-top: 8px;
+}
+.connection-settings input {
+  min-width: 240px;
+}
+.segmented button {
+  font-size: 11px;
+  padding: 9px 12px;
+}
+.segmented {
+  flex-wrap: wrap;
+}
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 1px 5px;
+  border: 1px solid #d7e0d9;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: #f5f8f5;
+  color: var(--ink);
+  font:
+    11px ui-monospace,
+    monospace;
+}
+.toast {
+  gap: 12px;
+}
+.operational-funnel {
+  margin: 24px 0 16px;
+  padding: 20px 24px;
+}
+.operational-funnel .section-heading {
+  margin-bottom: 18px;
+}
+.funnel-stages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.funnel-stages article {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+.funnel-stages article + article:before {
+  content: "→";
+  color: #90a69a;
+  position: absolute;
+  left: -20px;
+}
+.funnel-stages article > span {
+  font-size: 20px;
+  color: #96afa0;
+  font-weight: 400;
+}
+.funnel-stages small,
+.funnel-stages strong {
+  display: block;
+}
+.funnel-stages small {
+  color: #5e7066;
+  font-size: 11px;
+}
+.funnel-stages strong {
+  font-size: 18px;
+  font-weight: 550;
+  margin-top: 4px;
+}
+.sustainability-strip {
+  background: #edf4ef;
+  border: 1px solid #dce8df;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.strip-intro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.esg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.esg-grid article {
+  display: grid;
+  gap: 4px;
+}
+.esg-grid strong {
+  font-size: 23px;
+  font-weight: 550;
+  color: #275943;
+  letter-spacing: -0.7px;
+}
+.esg-grid span {
+  font-size: 11px;
+}
+.esg-grid small {
+  font-size: 10px;
+  color: #5e7066;
+}
+.sustainability-strip > .fine {
+  border-top: 1px solid #d8e5da;
+  padding-top: 12px;
+}
+.adapter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.adapter-card {
+  align-items: start;
+  text-align: left;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: #f9fbf9;
+}
+.adapter-card strong {
+  font-size: 17px;
+}
+.adapter-card span {
+  font-size: 12px;
+  color: #5e7066;
+}
+.adapter-card small {
+  font-size: 11px;
+}
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.calculator-grid label {
+  font-size: 12px;
+  margin: 14px 0;
+}
+.calculator-grid label strong {
+  font-size: 28px;
+  letter-spacing: -1px;
+  color: var(--green);
+}
+input[type="range"] {
+  accent-color: var(--green);
+  padding: 0;
+  height: 24px;
+  cursor: pointer;
+}
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  gap: 10px;
+  color: #5e7066;
+}
+.range-labels button {
+  font-size: 10px;
+  padding: 5px 10px;
+}
+.cost-result {
+  background: #f0f5f0;
+  border-radius: 10px;
+  padding: 24px;
+}
+.cost-result > strong {
+  display: block;
+  font-size: 36px;
+  letter-spacing: -1px;
+  color: var(--green);
+  font-weight: 550;
+}
+.cost-result > strong span {
+  font-size: 14px;
+}
+.cost-result dl {
+  margin: 18px 0 0;
+}
+.cost-result dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid #dfe9e0;
+  font-size: 11px;
+}
+.cost-result dd {
+  margin: 0;
+  white-space: nowrap;
+}
+.cloud-calculator details {
+  margin-top: 20px;
+}
+.cloud-calculator summary {
+  font-size: 12px;
+  cursor: pointer;
+}
+.intervention-history .section-heading {
+  margin-bottom: 14px;
+}
+.nfc-terminal {
+  margin-top: 16px;
+}
+.nfc-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #d7e5db;
+  border-radius: 10px;
+  background: #eff6f1;
+  padding: 18px;
+}
+.nfc-icon {
+  font-size: 34px;
+  color: var(--green);
+}
+.nfc-card strong,
+.nfc-card small,
+.nfc-card code {
+  display: block;
+}
+.nfc-card strong {
+  font-size: 14px;
+}
+.nfc-card small {
+  font-size: 10px;
+  color: #5e7066;
+  margin: 4px 0;
+}
+.nfc-card code {
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.nfc-card.warning,
+.verification.warning {
+  background: var(--warning-bg);
+  border-color: #ecd6a9;
+  color: var(--warning-ink);
+}
+.nfc-card.danger {
+  background: var(--danger-bg);
+  border-color: #eac7be;
+  color: var(--danger-ink);
+}
+.registered-dish {
+  font-size: 12px;
+  margin-top: 12px;
+}
+.allergy-alert,
+.allergy-clear {
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.allergy-alert {
+  background: var(--warning-bg);
+  color: var(--warning-ink);
+}
+.allergy-clear {
+  background: #f4f7f4;
+  color: #4f6b57;
+}
+.terminal-counters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.terminal-counters strong,
+.terminal-counters small {
+  display: block;
+}
+.terminal-counters strong {
+  font-size: 28px;
+  color: var(--green);
+  font-weight: 550;
+  letter-spacing: -1px;
+}
+.terminal-counters small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #5e7066;
+}
+.nfc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+.nfc-actions button {
+  font-size: 11px;
+  padding: 8px 10px;
+  gap: 5px;
+}
+.nfc-full {
+  max-width: 900px;
+}
+.nfc-full > .nfc-terminal {
+  max-width: 650px;
+}
+.nfc-full > button {
+  margin-top: 18px;
+  font-size: 11px;
+}
+.capture-preview {
+  position: relative;
+  height: 220px;
+  aspect-ratio: 0.74979;
+  margin: 0 auto;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+  background: #f0f3ef;
+}
+.capture-preview > img {
+  height: 100%;
+  width: 100%;
+  display: block;
+  object-fit: contain;
+}
+.capture-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 11px;
+  padding: 12px;
+  gap: 12px;
+}
+.capture-placeholder > span {
+  font-size: 40px;
+  color: #8aa293;
+}
+.capture-preview:has(.capture-placeholder) {
+  aspect-ratio: 1.4;
+  width: 100%;
+}
+.roi {
+  position: absolute;
+  border: 1px dashed #edf5eb;
+  border-radius: 4px;
+  font-size: 8px;
+  line-height: 1.2;
+  padding: 3px;
+  color: white;
+  background: #22583e66;
+  pointer-events: none;
+}
+.roi-rice {
+  left: 56%;
+  top: 26%;
+  width: 40%;
+  height: 34%;
+}
+.roi-vegetables {
+  left: 6.5%;
+  top: 72%;
+  width: 43.5%;
+  height: 24%;
+}
+.roi-main {
+  left: 6.5%;
+  top: 32%;
+  width: 43.5%;
+  height: 36%;
+}
+.scan-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    transparent 45%,
+    #226b5580 49%,
+    #226b55 50%,
+    transparent 51%
+  );
+  animation: scan-pass 0.6s ease-in-out;
+}
+.capture-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.capture-breakdown > div {
+  padding: 10px;
+  background: #eef5ef;
+  border-radius: 7px;
+  color: #286248;
+}
+.capture-breakdown > div.high {
+  background: var(--warning-bg);
+  color: var(--warning-ink);
+}
+.capture-breakdown span,
+.capture-breakdown strong,
+.capture-breakdown small {
+  display: block;
+}
+.capture-breakdown span {
+  font-size: 10px;
+}
+.capture-breakdown strong {
+  font-size: 22px;
+  font-weight: 550;
+}
+.capture-breakdown small {
+  font-size: 9px;
+}
+.decision-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.decision-card h3 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+.decision-card p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.decision-card .fine {
+  font-size: 10px;
+  margin: 0;
+}
+.decision-card > .badge {
+  align-self: start;
+}
+.decision-card > button {
+  margin-top: 8px;
+  font-size: 12px;
+}
+.simulated-impact {
+  background: #edf5ed;
+  border: 1px solid #d8e8d8;
+  padding: 14px;
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+.simulated-impact small {
+  font-size: 10px;
+}
+.gram-results {
+  margin: 20px 0;
+}
+.gram-results p {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.iot-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.iot-metrics article {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  gap: 6px;
+}
+.iot-metrics span,
+.iot-metrics small {
+  font-size: 11px;
+  color: #5e7066;
+}
+.iot-metrics strong {
+  font-size: 20px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.live-dialog {
+  border: 0;
+  border-radius: 16px;
+  max-width: 1600px;
+  width: 96vw;
+  max-height: 96dvh;
+  padding: 26px;
+  background: #f5f8f5;
+  color: var(--ink);
+  box-shadow: 0 24px 100px #152e3540;
+}
+.live-dialog::backdrop,
+.dish-dialog::backdrop {
+  background: #152e3570;
+  backdrop-filter: blur(4px);
+}
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+.live-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.live-header h1 {
+  font-size: 27px;
+}
+.live-header .eyebrow {
+  margin-bottom: 5px;
+}
+.live-dialog .connection-controls {
+  margin: 14px 0 8px;
+}
+.hotkey-guide {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  color: #5e7066;
+  margin: 8px 0 18px;
+}
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+.pipeline-step {
+  padding: 18px;
+}
+.step-heading {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.step-heading > span {
+  display: grid;
+  place-items: center;
+  border: 1px solid #d5e3d9;
+  border-radius: 8px;
+  min-width: 30px;
+  height: 30px;
+  background: #eff5ef;
+  color: var(--green);
+  font-size: 13px;
+}
+.step-heading h2 {
+  font-size: 14px;
+}
+.step-heading p {
+  font-size: 10px;
+  color: #5e7066;
+  margin-top: 4px;
+}
+.step-heading > button {
+  font-size: 10px;
+  margin-left: auto;
+  padding: 6px;
+}
+.live-dialog .nfc-card {
+  padding: 14px;
+  gap: 10px;
+}
+.live-dialog .nfc-icon {
+  font-size: 25px;
+}
+.live-dialog .nfc-card strong {
+  font-size: 12px;
+}
+.live-dialog .capture-preview {
+  height: 200px;
+}
+.live-dialog .nfc-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.live-dialog .nfc-actions button {
+  font-size: 10px;
+  padding: 8px 4px;
+}
+.live-dialog .decision-card h3 {
+  font-size: 20px;
+}
+.live-dialog .fine {
+  font-size: 10px;
+}
+.verification {
+  padding: 22px 14px;
+  background: #eff5ef;
+  border: 1px solid #dbe8de;
+  border-radius: 10px;
+  text-align: center;
+}
+.verification > span {
+  font-size: 36px;
+  color: var(--green);
+}
+.verification h3 {
+  font-size: 17px;
+  margin: 10px 0;
+}
+.verification p {
+  font-size: 11px;
+  line-height: 1.8;
+}
+.defense-layers {
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+}
+.defense-layers span {
+  font-size: 11px;
+}
+.defense-layers b {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 5px;
+  color: #35644a;
+}
+.live-history {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 16px;
+  padding: 12px 18px;
+}
+.live-history > summary {
+  cursor: pointer;
+  font-size: 11px;
+}
+.live-history .intervention-history {
+  margin-top: 20px;
+}
+.live-footnote {
+  margin-top: 12px;
+}
+.live-dialog .toast {
+  margin: 12px 0;
+}
+.dish-row-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  justify-content: start;
+  color: var(--ink);
+  font-size: 11px;
+}
+.dish-row-button:hover {
+  background: transparent;
+}
+.dish-row-button > span:last-child:not(.dish-icon) {
+  margin-left: 6px;
+  color: var(--green);
+}
+.clickable-row {
+  cursor: pointer;
+}
+.clickable-row:hover {
+  background: #f5f8f4;
+}
+.dish-detail-button {
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.dish-dialog {
+  width: min(960px, 94vw);
+  max-height: 92dvh;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px;
+  color: var(--ink);
+  background: white;
+}
+.dish-dialog h2 {
+  font-size: 23px;
+  max-width: 650px;
+}
+.dish-detail-hero {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 26px;
+  align-items: start;
+}
+.dish-detail-hero figure {
+  margin: 0;
+}
+.dish-detail-hero img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.dish-detail-hero figcaption {
+  font-size: 10px;
+  color: #5e7066;
+  margin-top: 6px;
+}
+.dish-detail-hero h3 {
+  margin: 12px 0;
+}
+.dish-component-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.dish-component-stats > div {
+  display: grid;
+  gap: 4px;
+}
+.dish-component-stats span,
+.dish-component-stats small {
+  font-size: 10px;
+  color: #5e7066;
+}
+.dish-component-stats strong {
+  font-size: 24px;
+  font-weight: 550;
+}
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-top: 20px;
+  color: var(--ink);
+}
+.toggle-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--green);
+}
+.dish-trend {
+  margin-top: 26px;
+}
+.dish-trend > h3,
+.before-after h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.dish-trend .trend-chart {
+  max-height: 220px;
+}
+.before-after {
+  background: #f4f7f2;
+  border: 1px solid var(--line);
+  padding: 22px;
+  border-radius: 9px;
+  margin-top: 24px;
+}
+.comparison-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 82px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+.stacked-bar {
+  display: flex;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.before-after .chart-key {
+  margin: 18px 0 0;
+}
+.comparison-row b {
+  font-size: 12px;
+  font-weight: 550;
+  text-align: right;
+}
+.calibration-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+}
+.calibration-coefficients {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.calibration-coefficients article {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  background: #f1f6ef;
+  border-radius: 8px;
+}
+.calibration-coefficients span,
+.calibration-coefficients small {
+  font-size: 11px;
+}
+.calibration-coefficients strong {
+  font-size: 22px;
+  font-weight: 550;
+}
+.calibration-log .table-scroll {
+  margin-top: 20px;
+}
+.sandbox-note {
+  font-size: 12px;
+  color: #5e7066;
+  line-height: 1.8;
+  margin: 16px 0;
+}
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+.preset-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  padding: 10px;
+  gap: 6px;
+}
+.preset-grid img,
+.preset-tray {
+  height: 75px;
+  width: 100%;
+  object-fit: contain;
+  background: #e9eeea;
+  border-radius: 5px;
+}
+.preset-tray {
+  display: grid;
+  place-items: center;
+  font-size: 46px;
+  font-weight: 400;
+  color: #718978;
+  line-height: 1;
+}
+.preset-grid strong {
+  font-size: 11px;
+}
+.preset-grid small {
+  font-size: 9px;
+  line-height: 1.5;
+}
+.scenario-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.tray-diagram {
+  height: 240px;
+  border: 8px solid #91a196;
+  border-radius: 18px;
+  background: #ced6cf;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+}
+.tray-diagram > div {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #91a196;
+  border-radius: 8px;
+  background: #edf0eb;
+  display: flex;
+  align-items: end;
+}
+.tray-diagram > div > div {
+  width: 100%;
+  transition: height 0.2s;
+}
+.diagram-rice > div {
+  background: #c1c7af;
+}
+.diagram-vegetables > div {
+  background: #69966c;
+}
+.diagram-main > div {
+  background: #bd9265;
+}
+.tray-diagram > div > span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #263e2f;
+}
+.tray-diagram b {
+  font-size: 24px;
+}
+.scenario-slider {
+  font-size: 12px;
+  margin-bottom: 20px;
+  gap: 9px;
+}
+.scenario-slider small {
+  font-size: 10px;
+}
+@keyframes scan-pass {
+  from {
+    transform: translateY(-90%);
+  }
+  to {
+    transform: translateY(90%);
+  }
+}
+@media (max-width: 1250px) {
+  .esg-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pipeline-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .live-dialog .capture-preview {
+    height: 180px;
+  }
+  .preset-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .funnel-stages strong {
+    font-size: 16px;
+  }
+  .calibration-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .live-dialog .nfc-actions {
+    display: flex;
+  }
+  .live-dialog .pipeline-step {
+    padding: 18px;
+  }
+}
+@media (max-width: 900px) {
+  .funnel-stages {
+    gap: 14px;
+  }
+  .funnel-stages article {
+    gap: 8px;
+  }
+  .funnel-stages article > span {
+    font-size: 15px;
+  }
+  .funnel-stages article + article:before {
+    left: -13px;
+  }
+  .adapter-grid {
+    grid-template-columns: 1fr;
+  }
+  .adapter-card {
+    padding: 18px;
+  }
+  .calculator-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .dish-detail-hero {
+    grid-template-columns: 1fr;
+  }
+  .dish-detail-hero img {
+    height: 200px;
+  }
+  .iot-metrics {
+    grid-template-columns: 1fr;
+  }
+  .scenario-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .topbar-right {
+    gap: 8px;
+  }
+  .topbar .breadcrumb {
+    max-width: 40%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .live-dialog {
+    padding: 20px;
+  }
+  .live-header {
+    align-items: start;
+  }
+  .live-header h1 {
+    font-size: 23px;
+  }
+  .live-header .header-actions {
+    flex-wrap: wrap;
+    justify-content: end;
+  }
+  .pipeline-grid {
+    gap: 12px;
+  }
+  .live-dialog .pipeline-step {
+    padding: 16px;
+  }
+}
+@media (max-width: 700px) {
+  .topbar {
+    height: auto;
+    min-height: 54px;
+    padding: 10px 18px;
+    gap: 8px;
+  }
+  .topbar .breadcrumb,
+  .topbar .avatar {
+    display: none;
+  }
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .live-launch {
+    font-size: 11px;
+  }
+  .nav-item {
+    white-space: nowrap;
+  }
+  .funnel-stages {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .funnel-stages article + article:before {
+    content: "↓";
+    left: 4px;
+    top: -22px;
+  }
+  .funnel-stages strong {
+    font-size: 19px;
+  }
+  .operational-funnel,
+  .sustainability-strip {
+    padding: 18px;
+  }
+  .esg-grid {
+    gap: 18px;
+  }
+  .esg-grid strong {
+    font-size: 22px;
+  }
+  .strip-intro {
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .connection-controls {
+    align-items: stretch;
+  }
+  .connection-controls .segmented {
+    width: 100%;
+  }
+  .segmented button {
+    flex: 1;
+    font-size: 10px;
+  }
+  .connection-settings input {
+    min-width: 0;
+  }
+  .connection-settings {
+    width: 100%;
+  }
+  .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+  .live-dialog {
+    padding: 16px;
+    border-radius: 10px;
+    width: 96vw;
+    max-height: 96dvh;
+  }
+  .live-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .live-header .header-actions {
+    justify-content: start;
+  }
+  .live-dialog .capture-preview {
+    height: 230px;
+  }
+  .live-dialog .nfc-actions {
+    display: flex;
+  }
+  .live-dialog .nfc-actions button {
+    padding: 10px;
+  }
+  .hotkey-guide {
+    font-size: 9px;
+    gap: 5px;
+  }
+  .live-header h1 {
+    font-size: 25px;
+  }
+  .dish-dialog {
+    padding: 20px;
+  }
+  .dish-dialog h2 {
+    font-size: 21px;
+  }
+  .dish-detail-hero {
+    gap: 20px;
+  }
+  .dish-component-stats strong {
+    font-size: 22px;
+  }
+  .comparison-row {
+    grid-template-columns: 30px minmax(0, 1fr) 65px;
+    gap: 6px;
+  }
+  .before-after {
+    padding: 16px;
+  }
+  .calibration-form {
+    grid-template-columns: 1fr;
+  }
+  .calibration-coefficients {
+    grid-template-columns: 1fr;
+  }
+  .calibration-coefficients article {
+    grid-template-columns: 1fr auto;
+  }
+  .calibration-coefficients small {
+    grid-column: 1/-1;
+  }
+  .preset-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .scenario-layout {
+    gap: 20px;
+  }
+  .tray-diagram {
+    height: 190px;
+  }
+  .cost-result {
+    padding: 18px;
+  }
+  .range-labels {
+    font-size: 9px;
+  }
+  .terminal-counters strong {
+    font-size: 28px;
+  }
+  .esg-grid small {
+    font-size: 9px;
+  }
+  .settings-stack {
+    gap: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan-line {
+    animation: none;
+  }
+  .tray-diagram > div > div {
+    transition: none;
+  }
+}
+@media (min-width: 1251px) and (max-height: 800px) {
+  .live-dialog {
+    padding: 18px;
+  }
+  .live-header h1 {
+    font-size: 23px;
+  }
+  .live-dialog .connection-controls {
+    margin: 10px 0 6px;
+  }
+  .live-dialog .connection-controls button {
+    padding: 7px 10px;
+  }
+  .hotkey-guide {
+    margin-bottom: 12px;
+  }
+  .live-dialog .pipeline-step {
+    padding: 14px;
+  }
+  .live-dialog .step-heading {
+    margin-bottom: 12px;
+  }
+  .live-dialog .step-heading h2 {
+    font-size: 12px;
+  }
+  .live-dialog .step-heading p {
+    font-size: 9px;
+  }
+  .live-dialog .capture-preview {
+    height: 140px;
+  }
+  .live-dialog .fine {
+    font-size: 9px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .live-dialog .nfc-card {
+    padding: 10px;
+  }
+  .live-dialog .allergy-alert,
+  .live-dialog .allergy-clear {
+    padding: 7px 10px;
+    margin: 10px 0;
+  }
+  .live-dialog .terminal-counters {
+    padding: 8px 0;
+  }
+  .live-dialog .terminal-counters strong {
+    font-size: 25px;
+  }
+  .live-dialog .verification {
+    padding: 14px 10px;
+  }
+  .live-dialog .verification h3 {
+    font-size: 15px;
+  }
+  .live-dialog .verification p {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .live-dialog .defense-layers {
+    margin: 14px 0;
+    gap: 12px;
+  }
+  .live-dialog .decision-card {
+    gap: 10px;
+  }
+  .live-dialog .decision-card h3 {
+    font-size: 18px;
+  }
+  .live-dialog .decision-card p {
+    font-size: 11px;
+    line-height: 1.65;
+  }
+  .live-dialog .capture-breakdown > div {
+    padding: 7px;
+  }
+  .live-history {
+    margin-top: 12px;
+    padding: 10px 14px;
+  }
+}

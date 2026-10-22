@@ -1,4 +1,6 @@
 import http from 'node:http';
+import {configuredService,nodeHandler} from '../server/node-handler.mjs';
+const iot = nodeHandler(configuredService());
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -18,6 +20,7 @@ const types = {
 };
 
 const server = http.createServer(async (req, res) => {
+  if (req.url?.startsWith('/api/iot/')) { await iot(req,res); return; }
   if (!['GET', 'HEAD'].includes(req.method)) {
     res.writeHead(405, { Allow: 'GET, HEAD' }).end();
     return;

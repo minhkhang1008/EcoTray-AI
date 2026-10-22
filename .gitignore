@@ -7,3 +7,6 @@ dist/
 *.pem
 *.key
 .vercel/
+
+# Local browser verification exports and screenshots
+/artifacts/
