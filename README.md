@@ -237,3 +237,8 @@ Database & Vercel Dashboard
 - [ ]  **Trước 3 tháng 11, 2026:** Hoàn thiện và nộp file thuyết trình Chung kết PDF qua link BTC.
 - [ ]  **4 tháng 11, 2026 → 6 tháng 11, 2026:** Tổng duyệt 5 lần kịch bản 05 phút + biểu diễn phần cứng và luyện phản biện 10 phút Q&A.
 - [ ]  **7 tháng 11, 2026 8:00 — ĐH Quốc tế, ĐHQG-HCM:** **THI ĐẤU VÒNG CHUNG KẾT & TRAO GIẢI — MỤC TIÊU TOP 1!**
+## 8. Triển khai dashboard trong repository
+
+Dashboard giữ React/Vite/CSS thuần và output `dist/`. Bản nâng cấp bổ sung Live Demo ngoại tuyến, drawer thực đơn, kiểm định IQR, QuickLog cân mẫu, cấu hình Lite/Standard/Pro, dự toán chi phí và Vercel Functions cho IoT. Dữ liệu sân khấu, bộ khay mô phỏng và phần cứng được tách riêng.
+
+Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [Hợp đồng IoT v1 / cấu hình môi trường](docs/IOT.md). Các mục chiến lược phía trên là yêu cầu dự án, không tự xác nhận phần cứng hoặc AWS/Vercel đã được triển khai. Kho hiện chỉ có một ảnh khay thật đã gán nhãn; chưa có sáu ảnh khay độc lập để công bố kiểm định Vision. Chi phí là dự toán, tác động trước/sau là mô phỏng theo nguồn đã nêu.

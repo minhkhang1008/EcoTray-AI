@@ -26,24 +26,25 @@ Canonical values (do not invent alternatives):
 This is a static React 19 + TypeScript + Vite application, not a backend. There is no React Router: `src/App.tsx` switches five tabs (`Tổng quan`, `Phân tích thực đơn`, `EcoTray Vision`, `Ghi nhận khay`, `Dữ liệu`) with component state.
 
 - `src/main.tsx`: React entry. `src/App.tsx`: tabs, filters, CSV I/O, manual records, data separation, and local persistence under `ecotray-records`.
+- `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/LiveDemo.tsx`, `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
 - `src/EcoVision.tsx`: mounted tray demo. `src/TrendChart.tsx`: trend chart. `src/imageFeatures.ts`: browser-side TensorFlow.js/MobileNet features. `src/vision.tsx` and `src/DishVision.tsx`: calibration/classification components not mounted by `App.tsx`.
-- `src/styles.css`: responsive, accessible “EcoTray Intelligence” visual system.
+- `src/styles.css` and `src/final-round.css`: responsive, accessible “EcoTray Intelligence” visual system.
 - `lib/`: pure analytics, CSV/decision rules, tray measurement, dish classification, and vision logic; `lib/*.test.mjs` are Node tests.
 - `data/`: canonical demo CSV/summary and Portal/evaluation metadata. Active paths use `data/`, never the obsolete `demo-data/` path.
 - `public/`: food images, `food-bank.json`, MobileNet files, tray images, and calibration data copied into the build.
-- `scripts/`: calibration, dish-bank generation, model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
-- `vite.config.ts`: relative asset base and `dist/` output. No `api/` or serverless route implementation exists yet.
+- `scripts/`: production offline-cache generation, calibration, dish-bank generation, model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
+- `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` now exposes authenticated Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
 
 ## 4. Hardware–Cloud–Web Integration & Live Stage Demo Contract
 
-Minh Khang’s pipeline is `ESP32-CAM + debounced proximity state machine + NFC UID reader → API Gateway/Lambda/S3`; Sơn Hoàng’s consumer is `ecotray-ai.vercel.app`. The following is the required v1 contract to implement and contract-test; do not claim it is already present.
+Minh Khang’s pipeline is `ESP32-CAM + debounced proximity state machine + NFC UID reader → API Gateway/Lambda/S3`; Sơn Hoàng’s consumer is `ecotray-ai.vercel.app`. The following is the v1 contract. Dashboard routes are implemented and contract-tested locally; deployment and physical AWS/ESP32/NFC acceptance remain unverified.
 
 - `POST /api/iot/nfc-scan`, JSON body: `{ "eventId", "schoolId", "stationId", "cardUidHash", "scannedAt" }`. Use ISO-8601 UTC and an anonymized/HMAC UID, never a student name. Return `{ "eventId", "status": "VALID|ALLERGY_WARNING|ALREADY_REDEEMED|UNKNOWN_CARD", "servedCount", "menu": { "menuId", "name" }, "allergyFlags": [], "recordedAt" }`.
 - `POST /api/iot/tray-capture`: raw `image/jpeg` body (expected 800×600, approximately 45 KB), with `X-School-Id`, `X-Station-Id`, `X-Captured-At`, and `Idempotency-Key` headers. Return HTTP 202: `{ "captureId", "status": "QUEUED", "statusUrl" }`. The sensor must debounce for 300 ms, take one frame, lock, and re-arm only after absence for more than 1.000 ms.
 - `GET /api/iot/status?schoolId=ptnk&since=<ISO-8601>` returns `{ "online", "lastUpdatedAt", "servedCount", "latestNfc", "latestCapture" }`; capture status is `QUEUED|PROCESSING|COMPLETED|FAILED`, and a completed result contains `rice`, `vegetables`, `main` percentages plus `isOutlier` and `recommendation`.
 - Errors use `{ "error": { "code", "message", "details" } }`. Validate at route boundaries. POSTs must atomically honor `Idempotency-Key`; reject a reused key with a different body.
 
-Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboard fallbacks and local fallback state: `1` = NFC event, `2` = tray capture, `3` = analysis/outlier decision, `Space` or `4` = recommendation/`Bếp Phê Duyệt`. The fallback must run without Wi-Fi, be resettable, and remain isolated from real records and simulation analytics. Network success may update the same event reducer, but must never be required for the five-minute pitch.
+Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboard fallbacks and local fallback state: `1` = normal NFC, `2` = allergy NFC, `3` = unknown NFC; repeating `1`/`2` tests duplicate rejection. `Space` or `4` = tray capture and automatic analysis; recommendation is approved with the keyboard-accessible `Bếp Phê Duyệt` button. The fallback must run without Wi-Fi, be resettable, and remain isolated from real records and simulation analytics. Network success may update the same event reducer, but must never be required for the five-minute pitch.
 
 ## 5. UI/UX & Scalability Guardrails
 
