@@ -14,13 +14,13 @@ Dùng `api/iot/[action].mjs` trên Vercel, output frontend vẫn là `dist`. Thi
 
 Dev: sao chép `.env.example` sang `.env.local`, điền khóa thử riêng và bật `IOT_LOCAL_MEMORY=true` nếu chưa có Redis. Chạy `npm run dev`, hoặc `npm run build` rồi `npm start`. Bộ nhớ dev mất khi restart, chỉ dùng local; Vercel luôn vô hiệu hóa fallback RAM. Thiếu Redis trên Vercel trả 503, không nhận giả thành công.
 
-Trong Live Demo/Vision/NFC, chọn **Kết nối phần cứng → Thiết lập kết nối IoT**, nhập khóa đọc. Khóa chỉ ở RAM trong phiên. Muốn gửi sự kiện bằng Web NFC thì cần khóa ghi; không phân phối khóa ghi cho dashboard công cộng. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
+Trong Live Demo/Vision/NFC, chọn **Kết nối phần cứng → Thiết lập kết nối IoT**, nhập khóa đọc. Khóa chỉ ở RAM trong phiên. Muốn gửi sự kiện bằng Web NFC thì nhập giá trị `IOT_WRITE_TOKEN` vào cùng ô này; khóa ghi cũng xem được trạng thái. Nếu đã bật đọc NFC bằng khóa đọc, hãy dừng đọc, đổi khóa, rồi bật đọc lại. Trình đọc sẽ tự dừng khi khóa thay đổi để không giữ khóa cũ. Không phân phối khóa ghi cho dashboard công cộng. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
 
 Tài liệu nền: [Vercel Node Functions](https://vercel.com/docs/functions/runtimes/node-js), [Upstash REST](https://upstash.com/docs/redis/features/restapi), [Redis Lua atomicity](https://redis.io/docs/latest/develop/programmability/eval-intro/), [Web NFC trên Android](https://developer.chrome.com/docs/capabilities/nfc).
 
 ## Quy ước chung
 
-Mọi endpoint yêu cầu `Authorization: Bearer <token>`. GET cho phép khóa đọc hoặc ghi; POST chỉ khóa ghi. Mỗi POST cần `Idempotency-Key` ổn định cho cùng một sự kiện, chữ/số/`_`/`-`, tối đa 100 ký tự. Giữ nguyên cả body và thời gian khi thử lại. Khóa đã dùng với body khác trả 409 `IDEMPOTENCY_CONFLICT`. `eventId` NFC cũng được bảo vệ khỏi gửi lại dưới khóa khác. Biên nhận giữ 48 giờ; sau cửa sổ này thiết bị phải đối soát, không tự gửi lại sự kiện cũ.
+Mọi endpoint yêu cầu `Authorization: Bearer <token>`. GET cho phép khóa đọc hoặc ghi; POST chỉ khóa ghi. Dùng khóa đọc cho POST trả 403 `WRITE_ACCESS_REQUIRED`; khóa sai/thiếu trả 401 `UNAUTHORIZED`. Mỗi POST cần `Idempotency-Key` ổn định cho cùng một sự kiện, chữ/số/`_`/`-`, tối đa 100 ký tự. Giữ nguyên cả body và thời gian khi thử lại. Khóa đã dùng với body khác trả 409 `IDEMPOTENCY_CONFLICT`. `eventId` NFC cũng được bảo vệ khỏi gửi lại dưới khóa khác. Biên nhận giữ 48 giờ; sau cửa sổ này thiết bị phải đối soát, không tự gửi lại sự kiện cũ.
 
 Thời gian ISO-8601 UTC dạng `2026-10-22T04:00:00.000Z`. Lỗi: `{ "error": { "code", "message", "details": null } }`. JSON/binary tối đa 250 KB; JPEG tối đa 150 KB, 800×600; thiết bị nên gửi khoảng 45 KB. Body được giới hạn tại adapter HTTP.
 
