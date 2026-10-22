@@ -35,18 +35,19 @@ export function ConnectionControls() {
         <details className="connection-settings">
           <summary>Thiết lập kết nối IoT</summary>
           <label>
-            Khóa truy cập của trạm
+            Khóa truy cập IoT
             <input
               type="password"
               autoComplete="off"
               value={f.token}
-              placeholder="Khóa chỉ dùng trong phiên này"
-              onChange={(e) => f.setToken(e.target.value)}
+              placeholder="Nhập khóa đọc hoặc khóa ghi"
+              onChange={(e) => f.setToken(e.target.value.trim())}
             />
           </label>
           <p>
-            Dùng khóa đọc để xem; cần khóa ghi khi quét Web NFC. Khóa không được
-            lưu trên thiết bị.
+            Chỉ xem trạng thái: dùng IOT_READ_TOKEN. Quét Web NFC: dùng
+            IOT_WRITE_TOKEN; khóa ghi cũng xem được trạng thái. Đổi khóa rồi bật
+            lại đọc NFC. Khóa chỉ dùng trong phiên này.
           </p>
         </details>
       )}
@@ -85,7 +86,8 @@ export function NfcTerminal() {
   useEffect(() => {
     controller.current?.abort();
     setReading(false);
-  }, [f.source]);
+    setMessage("");
+  }, [f.source, f.token]);
   async function webNfc() {
     const Reader = (window as unknown as { NDEFReader?: ReaderConstructor })
       .NDEFReader;

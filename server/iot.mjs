@@ -175,8 +175,16 @@ export function createIotService({
             headers: { Allow: method, "Content-Type": "application/json" },
           },
         );
-      if (!(auth(request, writeToken) || (isRead && auth(request, readToken))))
-        fail("UNAUTHORIZED", "Cần khóa truy cập IoT hợp lệ.", 401);
+      if (!auth(request, writeToken)) {
+        if (!auth(request, readToken))
+          fail("UNAUTHORIZED", "Cần khóa truy cập IoT hợp lệ.", 401);
+        if (!isRead)
+          fail(
+            "WRITE_ACCESS_REQUIRED",
+            "Thao tác này cần khóa ghi IoT. Khóa đọc chỉ dùng để xem trạng thái.",
+            403,
+          );
+      }
       if (!store)
         fail(
           "STORAGE_NOT_CONFIGURED",
