@@ -7,11 +7,12 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "start": "node scripts/serve.mjs",
+    "start": "node --env-file-if-exists=.env.local scripts/serve.mjs",
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-offline.mjs",
     "test": "node --test lib/*.test.mjs",
-    "test:model": "node scripts/model-smoke.mjs"
+    "test:model": "node scripts/model-smoke.mjs",
+    "test:iot:redis": "node scripts/test-redis.mjs"
   },
   "dependencies": {
     "@tensorflow/tfjs": "4.22.0",
