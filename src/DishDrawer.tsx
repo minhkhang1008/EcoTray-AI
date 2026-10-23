@@ -71,6 +71,11 @@ export default function DishDrawer({
                 : "GHI NHẬN CỤC BỘ"}
           </span>
           <h3>{number(selected.length)} khay trong phân tích</h3>
+          <p className="analysis-basis">
+            {trim
+              ? "Số liệu sau lọc dị ứng & ngoại lai IQR"
+              : "Số liệu trước lọc ngoại lai"}
+          </p>
           <div className="dish-component-stats">
             {componentKeys.map((k) => (
               <div key={k}>

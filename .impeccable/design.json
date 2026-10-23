@@ -1,0 +1,522 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T12:16:42.381945+00:00",
+  "title": "Design System: EcoTray AI",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "role": "primary",
+        "displayName": "Xanh vận hành",
+        "canonical": "#28694f",
+        "tonalRamp": [
+          "oklch(15% 0.0792 163.95)",
+          "oklch(26% 0.0792 163.95)",
+          "oklch(38% 0.0792 163.95)",
+          "oklch(49% 0.0792 163.95)",
+          "oklch(61% 0.0792 163.95)",
+          "oklch(72% 0.0792 163.95)",
+          "oklch(84% 0.0792 163.95)",
+          "oklch(95% 0.0792 163.95)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Mực xanh",
+        "canonical": "#253c33",
+        "tonalRamp": [
+          "oklch(15% 0.0332 167.84)",
+          "oklch(26% 0.0332 167.84)",
+          "oklch(38% 0.0332 167.84)",
+          "oklch(49% 0.0332 167.84)",
+          "oklch(61% 0.0332 167.84)",
+          "oklch(72% 0.0332 167.84)",
+          "oklch(84% 0.0332 167.84)",
+          "oklch(95% 0.0332 167.84)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Chữ phụ",
+        "canonical": "#627169",
+        "tonalRamp": [
+          "oklch(15% 0.0218 162.37)",
+          "oklch(26% 0.0218 162.37)",
+          "oklch(38% 0.0218 162.37)",
+          "oklch(49% 0.0218 162.37)",
+          "oklch(61% 0.0218 162.37)",
+          "oklch(72% 0.0218 162.37)",
+          "oklch(84% 0.0218 162.37)",
+          "oklch(95% 0.0218 162.37)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Viền nhẹ",
+        "canonical": "#dfe5df",
+        "tonalRamp": [
+          "oklch(15% 0.0103 145.49)",
+          "oklch(26% 0.0103 145.49)",
+          "oklch(38% 0.0103 145.49)",
+          "oklch(49% 0.0103 145.49)",
+          "oklch(61% 0.0103 145.49)",
+          "oklch(72% 0.0103 145.49)",
+          "oklch(84% 0.0103 145.49)",
+          "oklch(95% 0.0103 145.49)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Trắng bề mặt",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(72% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Nền giấy dịu",
+        "canonical": "#f6f7f4",
+        "tonalRamp": [
+          "oklch(15% 0.0041 121.56)",
+          "oklch(26% 0.0041 121.56)",
+          "oklch(38% 0.0041 121.56)",
+          "oklch(49% 0.0041 121.56)",
+          "oklch(61% 0.0041 121.56)",
+          "oklch(72% 0.0041 121.56)",
+          "oklch(84% 0.0041 121.56)",
+          "oklch(95% 0.0041 121.56)"
+        ]
+      },
+      "sage": {
+        "role": "primary",
+        "displayName": "Xanh xô thơm",
+        "canonical": "#e9f0e7",
+        "tonalRamp": [
+          "oklch(15% 0.0141 138.71)",
+          "oklch(26% 0.0141 138.71)",
+          "oklch(38% 0.0141 138.71)",
+          "oklch(49% 0.0141 138.71)",
+          "oklch(61% 0.0141 138.71)",
+          "oklch(72% 0.0141 138.71)",
+          "oklch(84% 0.0141 138.71)",
+          "oklch(95% 0.0141 138.71)"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Hổ phách cảnh báo",
+        "canonical": "#856125",
+        "tonalRamp": [
+          "oklch(15% 0.0891 77.03)",
+          "oklch(26% 0.0891 77.03)",
+          "oklch(38% 0.0891 77.03)",
+          "oklch(49% 0.0891 77.03)",
+          "oklch(61% 0.0891 77.03)",
+          "oklch(72% 0.0891 77.03)",
+          "oklch(84% 0.0891 77.03)",
+          "oklch(95% 0.0891 77.03)"
+        ]
+      },
+      "warning-dot": {
+        "role": "secondary",
+        "displayName": "Chấm chú ý",
+        "canonical": "#ac8035",
+        "tonalRamp": [
+          "oklch(15% 0.1062 77.84)",
+          "oklch(26% 0.1062 77.84)",
+          "oklch(38% 0.1062 77.84)",
+          "oklch(49% 0.1062 77.84)",
+          "oklch(61% 0.1062 77.84)",
+          "oklch(72% 0.1062 77.84)",
+          "oklch(84% 0.1062 77.84)",
+          "oklch(95% 0.1062 77.84)"
+        ]
+      },
+      "demo-text": {
+        "role": "secondary",
+        "displayName": "Chữ nguồn mô phỏng",
+        "canonical": "#79602d",
+        "tonalRamp": [
+          "oklch(15% 0.0759 83.25)",
+          "oklch(26% 0.0759 83.25)",
+          "oklch(38% 0.0759 83.25)",
+          "oklch(49% 0.0759 83.25)",
+          "oklch(61% 0.0759 83.25)",
+          "oklch(72% 0.0759 83.25)",
+          "oklch(84% 0.0759 83.25)",
+          "oklch(95% 0.0759 83.25)"
+        ]
+      },
+      "demo-bg": {
+        "role": "secondary",
+        "displayName": "Nền nguồn mô phỏng",
+        "canonical": "#f7f0df",
+        "tonalRamp": [
+          "oklch(15% 0.0237 88.23)",
+          "oklch(26% 0.0237 88.23)",
+          "oklch(38% 0.0237 88.23)",
+          "oklch(49% 0.0237 88.23)",
+          "oklch(61% 0.0237 88.23)",
+          "oklch(72% 0.0237 88.23)",
+          "oklch(84% 0.0237 88.23)",
+          "oklch(95% 0.0237 88.23)"
+        ]
+      },
+      "demo-border": {
+        "role": "secondary",
+        "displayName": "Viền nguồn mô phỏng",
+        "canonical": "#e8ddbf",
+        "tonalRamp": [
+          "oklch(15% 0.0415 90.26)",
+          "oklch(26% 0.0415 90.26)",
+          "oklch(38% 0.0415 90.26)",
+          "oklch(49% 0.0415 90.26)",
+          "oklch(61% 0.0415 90.26)",
+          "oklch(72% 0.0415 90.26)",
+          "oklch(84% 0.0415 90.26)",
+          "oklch(95% 0.0415 90.26)"
+        ]
+      },
+      "priority-surface": {
+        "role": "neutral",
+        "displayName": "Nền ưu tiên",
+        "canonical": "#f3f6ef",
+        "tonalRamp": [
+          "oklch(15% 0.0098 125.68)",
+          "oklch(26% 0.0098 125.68)",
+          "oklch(38% 0.0098 125.68)",
+          "oklch(49% 0.0098 125.68)",
+          "oklch(61% 0.0098 125.68)",
+          "oklch(72% 0.0098 125.68)",
+          "oklch(84% 0.0098 125.68)",
+          "oklch(95% 0.0098 125.68)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Vòng focus hổ phách",
+        "canonical": "#9c7a29",
+        "tonalRamp": [
+          "oklch(15% 0.1053 85.24)",
+          "oklch(26% 0.1053 85.24)",
+          "oklch(38% 0.1053 85.24)",
+          "oklch(49% 0.1053 85.24)",
+          "oklch(61% 0.1053 85.24)",
+          "oklch(72% 0.1053 85.24)",
+          "oklch(84% 0.1053 85.24)",
+          "oklch(95% 0.1053 85.24)"
+        ]
+      },
+      "rice-bar": {
+        "role": "secondary",
+        "displayName": "Cơm trên thanh",
+        "canonical": "#a6b2a3",
+        "tonalRamp": [
+          "oklch(15% 0.0250 139.44)",
+          "oklch(26% 0.0250 139.44)",
+          "oklch(38% 0.0250 139.44)",
+          "oklch(49% 0.0250 139.44)",
+          "oklch(61% 0.0250 139.44)",
+          "oklch(72% 0.0250 139.44)",
+          "oklch(84% 0.0250 139.44)",
+          "oklch(95% 0.0250 139.44)"
+        ]
+      },
+      "vegetables": {
+        "role": "secondary",
+        "displayName": "Rau",
+        "canonical": "#237f67",
+        "tonalRamp": [
+          "oklch(15% 0.0927 171.46)",
+          "oklch(26% 0.0927 171.46)",
+          "oklch(38% 0.0927 171.46)",
+          "oklch(49% 0.0927 171.46)",
+          "oklch(61% 0.0927 171.46)",
+          "oklch(72% 0.0927 171.46)",
+          "oklch(84% 0.0927 171.46)",
+          "oklch(95% 0.0927 171.46)"
+        ]
+      },
+      "main-bar": {
+        "role": "secondary",
+        "displayName": "Món chính trên thanh",
+        "canonical": "#b68c58",
+        "tonalRamp": [
+          "oklch(15% 0.0858 71.42)",
+          "oklch(26% 0.0858 71.42)",
+          "oklch(38% 0.0858 71.42)",
+          "oklch(49% 0.0858 71.42)",
+          "oklch(61% 0.0858 71.42)",
+          "oklch(72% 0.0858 71.42)",
+          "oklch(84% 0.0858 71.42)",
+          "oklch(95% 0.0858 71.42)"
+        ]
+      },
+      "rice-line": {
+        "role": "secondary",
+        "displayName": "Cơm trên đường",
+        "canonical": "#8a9984",
+        "tonalRamp": [
+          "oklch(15% 0.0349 136.69)",
+          "oklch(26% 0.0349 136.69)",
+          "oklch(38% 0.0349 136.69)",
+          "oklch(49% 0.0349 136.69)",
+          "oklch(61% 0.0349 136.69)",
+          "oklch(72% 0.0349 136.69)",
+          "oklch(84% 0.0349 136.69)",
+          "oklch(95% 0.0349 136.69)"
+        ]
+      },
+      "main-line": {
+        "role": "secondary",
+        "displayName": "Món chính trên đường",
+        "canonical": "#ad8050",
+        "tonalRamp": [
+          "oklch(15% 0.0851 67.06)",
+          "oklch(26% 0.0851 67.06)",
+          "oklch(38% 0.0851 67.06)",
+          "oklch(49% 0.0851 67.06)",
+          "oklch(61% 0.0851 67.06)",
+          "oklch(72% 0.0851 67.06)",
+          "oklch(84% 0.0851 67.06)",
+          "oklch(95% 0.0851 67.06)"
+        ]
+      },
+      "green-hover": {
+        "role": "primary",
+        "displayName": "Xanh vận hành khi hover",
+        "canonical": "#185740",
+        "tonalRamp": [
+          "oklch(15% 0.0745 164.74)",
+          "oklch(26% 0.0745 164.74)",
+          "oklch(38% 0.0745 164.74)",
+          "oklch(49% 0.0745 164.74)",
+          "oklch(61% 0.0745 164.74)",
+          "oklch(72% 0.0745 164.74)",
+          "oklch(84% 0.0745 164.74)",
+          "oklch(95% 0.0745 164.74)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Tiêu đề trang."
+      },
+      "decision-title": {
+        "displayName": "Decision Title",
+        "purpose": "Việc cần xem xét ở Tổng quan."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Tiêu đề khung phân tích."
+      },
+      "metric": {
+        "displayName": "Metric",
+        "purpose": "Số tổng hợp, dùng tabular-nums."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Chữ gốc của tài liệu."
+      },
+      "decision-body": {
+        "displayName": "Decision Body",
+        "purpose": "Giải thích khuyến nghị, tối đa 63ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nhãn trường và nút."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Chú giải và đơn vị."
+      },
+      "badge": {
+        "displayName": "Badge",
+        "purpose": "Nhãn nguồn dữ liệu."
+      }
+    },
+    "shadows": [
+      {
+        "name": "filter-popover",
+        "value": "0 10px 24px #29483412",
+        "purpose": "Bộ lọc desktop; bỏ bóng trên mobile."
+      },
+      {
+        "name": "selected-preset",
+        "value": "0 1px 4px #254a3310",
+        "purpose": "Kỳ đang chọn."
+      },
+      {
+        "name": "selected-segment",
+        "value": "0 1px 3px #214b3510",
+        "purpose": "Phân đoạn đang chọn."
+      },
+      {
+        "name": "live-dialog",
+        "value": "0 24px 100px #152e3540",
+        "purpose": "Hộp trình diễn riêng."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-background",
+        "value": "background .15s",
+        "purpose": "Đổi nền nút khi hover."
+      },
+      {
+        "name": "button-press",
+        "value": "translateY(1px)",
+        "purpose": "Phản hồi nhấn nút chưa disabled."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none; scroll-behavior: auto",
+        "purpose": "Áp dụng khi prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1190px"
+      },
+      {
+        "name": "stack-max",
+        "value": "940px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "700px"
+      },
+      {
+        "name": "narrow-max",
+        "value": "390px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Nút chính",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Hành động tiếp theo cho bếp.",
+      "html": "<button class=\"ds-primary\">Xem món ưu tiên<svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></button>",
+      "css": ".ds-primary{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:12px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;line-height:1.3;cursor:pointer;transition:background .15s;background:var(--green,#28694f);color:var(--surface,#fff);border:1px solid var(--green,#28694f);border-radius:7px;padding:10px 14px;min-height:40px}.ds-primary:hover{background:#185740}.ds-primary:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}.ds-primary:active:not(:disabled){transform:translateY(1px)}.ds-primary:disabled{opacity:.45;cursor:not-allowed}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Nút phụ",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Hành động bổ sung có khung.",
+      "html": "<button class=\"ds-secondary\">Ghi nhận khay</button>",
+      "css": ".ds-secondary{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:12px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;line-height:1.3;cursor:pointer;transition:background .15s;background:var(--surface,#fff);color:var(--ink,#253c33);border:1px solid #dce4df;border-radius:7px;padding:9px 12px;min-height:40px}.ds-secondary:hover{background:#f2f6f3;border-color:#b5c8be}.ds-secondary:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}.ds-secondary:active:not(:disabled){transform:translateY(1px)}.ds-secondary:disabled{opacity:.45;cursor:not-allowed}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Nút văn bản",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Đi đến nội dung chi tiết.",
+      "html": "<button class=\"ds-text\">Xem thực đơn<svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></button>",
+      "css": ".ds-text{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:12px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;line-height:1.3;cursor:pointer;transition:background .15s;background:transparent;color:#326345;border:0;padding:0;min-height:32px}.ds-text:hover{text-decoration:underline;text-underline-offset:3px}.ds-text:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}.ds-text:active:not(:disabled){transform:translateY(1px)}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Trường nhập",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Trường có nhãn và focus rõ.",
+      "html": "<label class=\"ds-field\">Tên món<input class=\"ds-input\" placeholder=\"Nhập tên món\" /></label>",
+      "css": ".ds-field{display:grid;gap:7px;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:12px;font-weight:500;color:var(--muted,#627169)}.ds-input{font-family:inherit;font-size:13px;min-height:42px;border:1px solid #dce4df;border-radius:6px;padding:10px 12px;background:var(--surface,#fff);color:var(--ink,#253c33);caret-color:var(--green,#28694f)}.ds-input::placeholder{color:#7d8a81}.ds-input:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Điều hướng đang chọn",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Tab có nhãn, biểu tượng và nền chọn nhẹ.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Ví dụ điều hướng\"><button class=\"ds-nav-item\" aria-current=\"page\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/></svg>Tổng quan</button></nav>",
+      "css": ".ds-nav{background:var(--surface,#fff);padding:12px;max-width:224px}.ds-nav-item{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:12px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;line-height:1.3;cursor:pointer;transition:background .15s;justify-content:flex-start;width:100%;min-height:46px;padding:11px 12px;border:0;border-radius:7px;background:var(--sage,#e9f0e7);color:#225b3d;font-size:13px;font-weight:600;gap:11px}.ds-nav-item:hover{background:#f1f4ee;color:#244f38}.ds-nav-item:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}.ds-nav-item:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Thẻ nguồn",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Nguồn dữ liệu đọc được bằng chữ.",
+      "html": "<span class=\"ds-badge\">DỮ LIỆU CỦA TÔI</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:10px;font-weight:500;letter-spacing:.015em;border-radius:4px;padding:4px 7px;border:1px solid #e3e8de;background:#f2f5ee;color:#50634e}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Thẻ mô phỏng",
+      "kind": "chip",
+      "refersTo": "badge-demo",
+      "description": "Nguồn mô phỏng được phân biệt bằng nhãn và sắc hổ phách.",
+      "html": "<span class=\"ds-demo\">DỮ LIỆU MÔ PHỎNG</span>",
+      "css": ".ds-demo{display:inline-flex;align-items:center;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:10px;font-weight:500;letter-spacing:.015em;border-radius:4px;padding:4px 7px;border:1px solid #e8ddbf;background:#f7f0df;color:#79602d}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Khung phân tích",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Bề mặt phẳng, có tiêu đề và nội dung hỗ trợ.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-panel-title\">Theo thành phần</h2><p class=\"ds-panel-copy\">Tỷ lệ phần còn lại trên khay, chưa quy đổi khối lượng.</p></section>",
+      "css": ".ds-panel{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;background:var(--surface,#fff);color:var(--ink,#253c33);border:1px solid var(--line,#dfe5df);border-radius:12px;padding:24px}.ds-panel-title{margin:0 0 22px;font-size:15px;font-weight:600;letter-spacing:-.015em}.ds-panel-copy{margin:0;color:var(--muted,#627169);font-size:11px;line-height:1.6}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Chi tiết mở bằng bàn phím",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "Mẫu disclosure giữ dữ liệu chi tiết theo nhu cầu.",
+      "html": "<details class=\"ds-details\"><summary class=\"ds-summary\">Xem số liệu theo ngày</summary><p class=\"ds-details-copy\">Ngày · Khay · Rau · Cơm · Món chính<br/>Bảng số liệu dùng cùng nguồn và bộ lọc với biểu đồ.</p></details>",
+      "css": ".ds-details{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;font-size:11px;color:var(--muted,#627169);margin-top:12px}.ds-summary{cursor:pointer;width:fit-content;padding:4px 0}.ds-summary:focus-visible{outline:3px solid #9c7a29;outline-offset:3px;}.ds-details-copy{font-size:11px;line-height:1.6;margin:12px 0 0}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Bàn làm việc của bếp",
+    "overview": "Bàn làm việc của bếp đặt sự rõ ràng và khả năng thao tác lên trước. Nền trắng và trắng ngả xanh, chữ xanh đậm, khoảng cách có nhịp và đường viền nhẹ tạo cảm giác bình tĩnh, phù hợp với quản lý căn tin và nhân viên ghi nhận khay. Nhận diện hiện diện qua sắc xanh, kiểu chữ hệ thống và bộ biểu tượng nét đồng nhất.\n\nMàn hình Tổng quan hiện tại mở bằng việc cần xem xét cùng hành động tiếp theo; số liệu và giải thích hỗ trợ quyết định. Cấu trúc này là lựa chọn cho Tổng quan, không phải yêu cầu mọi tab phải mở bằng cùng một khối. Giữ lời nhắc nguồn dữ liệu và giới hạn kiểm chứng gần nội dung mà chúng giải thích.",
+    "keyCharacteristics": [
+      "Bề mặt trắng, nền trung tính và điểm nhấn xanh lá dịu.",
+      "Phân cấp bằng chữ, khoảng cách và đường viền; ít bóng đổ.",
+      "Hành động cho bếp rõ, thông tin chi tiết mở theo nhu cầu.",
+      "Nguồn dữ liệu, trạng thái và đơn vị luôn có nhãn đọc được.",
+      "Thao tác bàn phím, bố cục điện thoại và giảm chuyển động được giữ nguyên."
+    ],
+    "rules": [
+      {
+        "name": "The Source Stays Visible Rule",
+        "body": "Nhãn nguồn và lời giải thích đi cùng dữ liệu cả khi đổi tab, thu gọn điều khiển hoặc in báo cáo.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Workspace Rule",
+        "body": "Bề mặt báo cáo dùng đường viền và khác biệt sắc nền; bóng đổ dành cho lớp nổi hoặc lựa chọn đang được nâng lên.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do dùng token đang thắng trong src/product.css; kiểm tra cascade từ styles.css và final-round.css trước khi mở rộng giao diện.",
+      "Do dùng tiếng Việt tự nhiên, đơn vị rõ và số theo định dạng Việt Nam; giữ tên Cơm, Rau, Món chính nhất quán.",
+      "Do giữ lời giải thích: thực đơn và ảnh Portal PTNK là thật, số khay và tỷ lệ thừa của bộ mẫu là mô phỏng.",
+      "Do ghi đúng trạng thái lưu trên thiết bị/trình duyệt; README.md là nguồn chuẩn cho nghiệp vụ, số liệu và mức kiểm chứng.",
+      "Do giữ vùng focus, nhãn có thể đọc và bảng số liệu biểu đồ mở được bằng bàn phím.",
+      "Do dùng ảnh món Portal đúng nguồn; dùng biểu tượng SVG hiện có và nội dung phù hợp Lite/Standard/Pro."
+    ],
+    "donts": [
+      "Don't thay Tổng quan bằng phần giới thiệu lớn làm đẩy việc cần xử lý xuống dưới.",
+      "Don't dùng màu cảnh báo như trang trí hoặc dùng màu làm tín hiệu duy nhất.",
+      "Don't gộp dữ liệu thực địa, mô phỏng, sự kiện sân khấu, phần cứng và dự toán thành một kết quả đã kiểm chứng.",
+      "Don't gọi dữ liệu localStorage là đã đồng bộ máy chủ hoặc coi thiết kế mới là bằng chứng nghiệm thu phần cứng.",
+      "Don't làm mất phạm vi lọc đang xem khi thu gọn các điều khiển.",
+      "Don't thêm emoji, icon font hoặc bộ biểu tượng có nét khác vào thanh điều hướng và các hành động sản phẩm.",
+      "Don't dùng ảnh mặt, tên học sinh hoặc hình học sinh nhận diện được trong bản ghi khay."
+    ]
+  }
+}
