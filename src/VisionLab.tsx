@@ -100,7 +100,7 @@ function ScenarioSandbox({ initial }: { initial: Values }) {
 export default function VisionLab() {
   const f = useFinalRound(),
     [view, setView] = useState<"sandbox" | "iot">("sandbox"),
-    [preset, setPreset] = useState(0);
+    [preset, setPreset] = useState(1);
   return (
     <>
       <div className="subtabs" role="group" aria-label="Chế độ Vision">
@@ -109,14 +109,14 @@ export default function VisionLab() {
           className={view === "iot" ? "selected" : ""}
           onClick={() => setView("iot")}
         >
-          Luồng IoT trực tiếp
+          Trạm phần cứng
         </button>
         <button
           aria-pressed={view === "sandbox"}
           className={view === "sandbox" ? "selected" : ""}
           onClick={() => setView("sandbox")}
         >
-          Thử mẫu & tải ảnh
+          Phân tích ảnh khay
         </button>
       </div>
       {view === "iot" ? (
@@ -196,13 +196,15 @@ export default function VisionLab() {
         </>
       ) : (
         <>
+          <EcoVision />
+          <details className="vision-scenarios"><summary>Thử kịch bản mô phỏng <span>Khám phá các mức phần còn lại</span></summary>
           <p className="sandbox-note">
             Có 1 ảnh khay thực tế đã gán nhãn và 5 kịch bản số liệu để thử tương
             tác. Ảnh món ăn từ Portal không được dùng thay cho ảnh khay thừa.
             Tải ảnh cùng bố cục đã hiệu chuẩn để thử phân tích.
           </p>
           <div className="preset-grid">
-            {presets.map((p, i) => (
+            {presets.map((p, i) => p.real ? null : (
               <button
                 key={p.title}
                 aria-pressed={preset === i}
@@ -226,11 +228,8 @@ export default function VisionLab() {
               </button>
             ))}
           </div>
-          {preset === 0 ? (
-            <EcoVision />
-          ) : (
-            <ScenarioSandbox key={preset} initial={presets[preset].values} />
-          )}
+          <ScenarioSandbox key={preset} initial={presets[preset].values} />
+          </details>
         </>
       )}
       <details className="method-details">

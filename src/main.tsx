@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles.css';
 import './final-round.css';
+import './product.css';
 import {FinalRoundProvider} from './FinalRoundContext';
 
 createRoot(document.getElementById('root')!).render(<FinalRoundProvider><App /></FinalRoundProvider>);

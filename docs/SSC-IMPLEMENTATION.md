@@ -39,3 +39,15 @@ BrowserSkill dùng đúng **Main Chrome 48425945** để kiểm tra UI; không d
 Chưa xác minh phần cứng ESP32-CAM, thẻ NFC/NDEF trên Android, AWS worker thật hoặc bản deploy Vercel. Xem [IOT.md](IOT.md) để cấu hình, các ví dụ POST và yêu cầu tích hợp. Không có thao tác push/deploy tự động trong thay đổi này.
 
 Kiểm tra phụ thuộc: `npm audit --omit=dev --audit-level=high` không báo high/critical, còn 3 mục mức moderate trong chuỗi có sẵn `@tensorflow/tfjs → argparse → sprintf-js` (GHSA-hp3w-g68c-fv3c). Không chạy `audit fix --force`: npm đề xuất hạ TensorFlow về 2.1.0, làm thay đổi model/runtime. TF.js không có trong bundle UI chính hiện tại; vẫn được dùng bởi model smoke và các thành phần Vision cũ. Theo dõi bản vá tương thích và rà soát lại trước 01/11/2026; không coi audit là đã hoàn toàn sạch.
+
+## Giao diện sản phẩm (23/10/2026)
+
+Mặc định mở dashboard vận hành với dữ liệu mẫu có nhãn nguồn, không tự mở chế độ sân khấu. Nút **Chế độ demo** mở Live Demo Chung Kết riêng; hotkeys, reducer và cách ly dữ liệu vẫn giữ nguyên.
+
+- Tổng quan: vòng phản hồi, bộ lọc, chỉ số, xu hướng, thành phần, danh sách món ưu tiên và khuyến nghị. Phễu ngày giả định và tác động ước tính nằm trong mục mở rộng ở cuối trang.
+- Thực đơn: chọn thẻ món có ảnh Portal hoặc danh sách; cả hai mở cùng bảng chi tiết/lọc IQR. Không hiển thị trùng cả hai cách xem.
+- Vision: phân tích ảnh là màn chính, kết nối trạm là mục riêng; năm kịch bản số liệu nằm trong mục mở rộng. Nhãn nêu rõ ảnh hiệu chuẩn chưa phải kiểm định độc lập.
+- Ghi nhận: mặc định là nhập khay thủ công; NFC và cân mẫu vẫn truy cập qua các mục riêng. Bản ghi mới lưu vào dữ liệu cá nhân, không cộng vào bộ mô phỏng.
+- Dữ liệu: tách bản ghi khay, lịch sử can thiệp và cấu hình trường; bộ lọc khay chỉ xuất hiện khi xem bản ghi.
+
+`src/product.css` điều chỉnh giao diện sản phẩm trên các thành phần hiện có; `ProductContext.tsx` trình bày vòng phản hồi theo cấu hình trường. Vẫn dùng CSS thuần và output `dist/`. Ảnh báo cáo được chụp từ bản build local tại `artifacts/product/`, không chứng minh phần cứng hoặc triển khai production. Ảnh Tổng quan/Thực đơn/Dữ liệu dùng số liệu mô phỏng; ảnh Vision dùng ảnh hiệu chuẩn đã gán nhãn.
