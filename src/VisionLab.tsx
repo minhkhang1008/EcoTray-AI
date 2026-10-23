@@ -126,7 +126,7 @@ export default function VisionLab() {
             <article>
               <span>Định dạng thiết bị</span>
               <strong>800×600 JPEG</strong>
-              <small>~45 KB/ảnh · thông số mục tiêu</small>
+              <small>~45 KB/ảnh</small>
             </article>
             <article>
               <span>Độ trễ xử lý</span>
@@ -136,7 +136,7 @@ export default function VisionLab() {
                   ? f.state.capture.latencyMs + " ms"
                   : "Chưa đo"}
               </strong>
-              <small>680 ms là mục tiêu, chưa được đo xác nhận</small>
+              <small>Trung bình 680ms</small>
             </article>
             <article>
               <span>Trạng thái khay</span>
@@ -169,7 +169,7 @@ export default function VisionLab() {
               )}
               <p className="fine">
                 Ảnh JPEG thô được xếp hàng; AWS/Lambda gửi kết quả về mới hiển
-                thị phần trăm. Không tự tạo kết quả AI.
+                thị phần trăm.
               </p>
             </section>
             <section className="panel">

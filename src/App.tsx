@@ -51,6 +51,8 @@ const navigation = [
   ["log", "Ghi nhận khay"],
   ["data", "Dữ liệu & cấu hình"],
 ] as const;
+// Temporarily hide the stage demo entry; retain the demo for later use.
+const SHOW_STAGE_DEMO = false;
 const mobileNavigation = {
   overview: "Tổng quan",
   menus: "Thực đơn",
@@ -285,6 +287,7 @@ export default function App() {
             <b>{navigation.find((n) => n[0] === tab)?.[1]}</b>
           </div>
           <div className="topbar-right">
+            {SHOW_STAGE_DEMO && (
             <button
               className="live-launch"
               onClick={() => {
@@ -294,6 +297,7 @@ export default function App() {
             >
               <Icon name="play" size={14} /> Demo chung kết
             </button>
+            )}
             <button
               className="mobile-help"
               aria-label="Phương pháp và trợ giúp"
