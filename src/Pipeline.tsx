@@ -1,3 +1,4 @@
+import { NutritionPanel } from "./DecisionSupport";
 import { useEffect, useRef, useState } from "react";
 import { useFinalRound } from "./FinalRoundContext";
 import type { Capture } from "../lib/contracts";
@@ -216,9 +217,10 @@ export function NfcTerminal() {
         </div>
       </div>
       {event?.menu && (
-        <p className="registered-dish">
+        <div className="registered-dish">
           Món đăng ký: <b>{event.menu.name}</b>
-        </p>
+          {f.source === "simulation" && <p className="fine">Cơm trắng · Bắp cải luộc · Canh bí đỏ (cặp món mô phỏng)</p>}
+        </div>
       )}
       <div
         aria-live="polite"
@@ -372,6 +374,7 @@ export function TrayPreview({
               <small>{capture.result![k] >= 20 ? "Thừa cao" : "Ăn tốt"}</small>
             </div>
           ))}
+          {capture.result.soup !== undefined && <div className={capture.result.soup >= 20 ? "high" : ""}><span>Canh</span><strong>{percent(capture.result.soup)}</strong><small>{capture.result.soup >= 20 ? "Cần xem xét" : "Ăn tốt"}</small></div>}
         </div>
       )}
       {source === "simulation" && capture && (
@@ -386,7 +389,7 @@ export function TrayPreview({
   );
 }
 
-export function DecisionCard() {
+export function DecisionCard({ stage = false }: { stage?: boolean }) {
   const f = useFinalRound(),
     result = f.state.capture?.result;
   return (
@@ -404,11 +407,12 @@ export function DecisionCard() {
       </p>
       {f.state.analyzed ? (
         <>
-          <p>{f.decision.text}</p>
+          <p>{stage && f.source === "simulation" && f.decision.kind === "portion" ? "Giữ số suất và 90 g rau/khay. Thử đổi Bắp cải luộc + Canh bí đỏ sang Rau muống xào tỏi + Canh rong biển; cân lại ở chu kỳ sau." : f.decision.text}</p>
+          {!stage && <NutritionPanel served={f.source === "simulation" ? result?.vegetableServedGrams : undefined} waste={result?.vegetables} compact />}
           {f.source === "simulation" && !result?.isOutlier && (
             <p className="fine">
               64 mẫu mô phỏng cùng món · Rau trung bình{" "}
-              {f.state.capture?.menuName === "Vịt kho gừng" ? "36,5%" : "46,5%"}{" "}
+              {number(result?.vegetables ?? 0)}%{" "}
               · Thực nhận {number((f.state.served / 1017) * 100)}%.
             </p>
           )}

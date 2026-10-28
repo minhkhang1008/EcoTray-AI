@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFinalRound } from "./FinalRoundContext";
-import { adapters, cloudEstimate } from "../lib/final-round.mjs";
+import { adapters, cloudEstimate, roiEstimate } from "../lib/final-round.mjs";
 import { number, dateLabel, csvCell, downloadCsv } from "./format";
 import type { Adapter } from "../lib/contracts";
 
@@ -167,9 +167,12 @@ export function AdapterSettings() {
   );
 }
 export function CloudCalculator() {
+  const f = useFinalRound();
+  const [reader, setReader] = useState(false);
   const [students, setStudents] = useState(1017),
     [days, setDays] = useState(20),
-    cost = cloudEstimate(students, days);
+    cost = cloudEstimate(students, days),
+    roi = roiEstimate(students, f.adapterInfo.nfc, reader && f.adapterInfo.nfc);
   return (
     <section className="panel cloud-calculator">
       <div className="section-heading">
@@ -246,6 +249,18 @@ export function CloudCalculator() {
             ))}
           </dl>
         </div>
+      </div>
+      <div className="roi-section">
+        <h3>Chi phí đầu tư & hoàn vốn dự kiến</h3>
+        {f.adapterInfo.nfc && <label className="toggle-label"><input type="checkbox" checked={reader} onChange={e => setReader(e.target.checked)} />Thêm đầu đọc NFC rời · 195.000đ (Android Web NFC sẵn có: 0đ)</label>}
+        <dl className="nutrition-values">
+          <div><dt>CAPEX · một trạm</dt><dd>{number(roi.capex)} <small>đ</small></dd></div>
+          <div><dt>OPEX · 9 tháng học</dt><dd>{number(roi.annualOpex)} <small>đ</small></dd></div>
+          <div><dt>Tiết kiệm dự kiến / năm</dt><dd>{number(roi.paper + roi.ingredients)} <small>đ</small></dd></div>
+          <div><dt>Hoàn vốn dự kiến</dt><dd>{roi.paybackMonths === null ? "Chưa xác định" : number(roi.paybackMonths)} <small>tháng học</small></dd></div>
+        </dl>
+        <p className="fine">Một trạm Vision: ESP32-CAM 135.000đ + cảm biến/LED 45.000đ + nguồn/khung 110.000đ. Dự toán nguyên liệu {number(roi.ingredients)}đ/năm; phiếu giấy {number(roi.paper)}đ/năm {f.adapterInfo.nfc ? "(180 ngày × 30đ/phiếu)" : "(gói không dùng NFC: chưa tính thay phiếu)"}. Hoàn vốn = CAPEX / [(tiết kiệm năm − OPEX 9 tháng) / 9]. Chưa tính nhân công, bảo trì, triển khai và số trạm cần theo lưu lượng; chưa phải lợi nhuận thực đo.</p>
+        <p className="fine">Dự phòng giảm 50% kinh phí: ưu tiên một trạm Lite 290.000đ, tận dụng thiết bị sẵn có; vẫn cần đối chiếu mức ngân sách thực được cấp.</p>
       </div>
       <details>
         <summary>Giả định, công thức & giới hạn của dự toán</summary>

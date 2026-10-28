@@ -1,3 +1,4 @@
+import { MealComboLine, NutritionPanel } from "./DecisionSupport";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { daily, portalMenus } from "../lib/analytics.mjs";
 import { summarize } from "../lib/core.mjs";
@@ -109,6 +110,9 @@ export default function DishDrawer({
           </p>
         </div>
       </div>
+      <MealComboLine main={name} rows={subset} />
+      <p className="fine">Canh: {selected.filter(r => typeof r.soup === "number").length} quan sát; {(() => { const a = selected.flatMap(r => typeof r.soup === "number" ? [r.soup] : []); return a.length ? percent(a.reduce((x,y) => x+y,0)/a.length) + " còn lại trung bình" : "chưa có tỷ lệ đo"; })()}</p>
+      <NutritionPanel />
       <section className="dish-trend">
         <h3>Phần còn lại theo ngày phục vụ</h3>
         {days.length === 1 && (
@@ -185,7 +189,7 @@ export default function DishDrawer({
           ))}
         </div>
         <p className="fine">
-          Giảm 12% rau ở nhóm món cần xem xét, giữ nguyên tổng số suất. 63,1 →
+          Khảo sát cặp món và định lượng, bảo vệ ngưỡng rau đã cấu hình; giữ nguyên tổng số suất. 63,1 →
           52,5 kg/ngày là mô phỏng theo README, chưa có dữ liệu sau can thiệp
           thực địa.
         </p>

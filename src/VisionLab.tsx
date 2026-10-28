@@ -1,3 +1,4 @@
+import { NutritionPanel } from "./DecisionSupport";
 import { useState } from "react";
 import EcoVision from "./EcoVision";
 import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
@@ -6,6 +7,7 @@ import {
   componentKeys,
   componentLabels,
   estimateGrams,
+  trimOutliers,
 } from "../lib/final-round.mjs";
 import type { Values } from "../lib/contracts";
 import { number } from "./format";
@@ -35,7 +37,11 @@ const presets = [
 ];
 function ScenarioSandbox({ initial }: { initial: Values }) {
   const f = useFinalRound(),
-    [values, setValues] = useState(initial);
+    [values, setValues] = useState(initial),
+    [iqr, setIqr] = useState(true);
+  const cohort = [...Array.from({length:20}, (_, i) => ({rice:5+i%3, vegetables:20+i%3, main:5+i%3})), values];
+  const trimmed = trimOutliers(cohort), selectedRows = iqr ? trimmed.rows : cohort;
+  const mean = selectedRows.reduce((sum, row) => sum + row.vegetables, 0) / selectedRows.length;
   return (
     <section className="panel scenario-sandbox">
       <div className="section-heading">
@@ -94,6 +100,8 @@ function ScenarioSandbox({ initial }: { initial: Values }) {
           </p>
         </div>
       </div>
+      <div className="vision-iqr"><label className="toggle-label"><input type="checkbox" checked={iqr} onChange={e => setIqr(e.target.checked)} />Bộ lọc ngoại lai IQR: {iqr ? "Đang bật" : "Đang tắt"}</label><p>{selectedRows.length}/21 mẫu mô phỏng trong phép tính · {iqr ? trimmed.removed : 0} mẫu tách · Rau trung bình {number(mean)}%.</p><p className="fine">Thử trên 20 mẫu nền mô phỏng và một mẫu từ thanh trượt. Không dùng một khay làm quần thể IQR, không chẩn đoán dị ứng và không cộng vào dữ liệu nguồn.</p></div>
+      <NutritionPanel served={f.fullPortion("vegetables") ?? undefined} waste={values.vegetables} compact />
     </section>
   );
 }

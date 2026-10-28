@@ -1,3 +1,4 @@
+import { PairingMatrix, NutritionPanel, EvidenceRoadmap, AdapterSwitcher, ComboFields } from "./DecisionSupport";
 import { useEffect, useMemo, useState } from "react";
 import { parseCSV, exportCSV, keys, labels } from "../lib/core.mjs";
 import {
@@ -23,15 +24,7 @@ import {
   InterventionHistory,
 } from "./OperationalPanels";
 
-type Row = {
-  id: string;
-  date: string;
-  menu: string;
-  rice: number | null;
-  vegetables: number | null;
-  main: number | null;
-  source: string;
-};
+type Row = import("../lib/contracts").TrayRow;
 const fmt = (n: number) => new Intl.NumberFormat("vi-VN").format(n);
 const pct = (n: number | null) =>
   n === null
@@ -51,8 +44,8 @@ const navigation = [
   ["log", "Ghi nhận khay"],
   ["data", "Dữ liệu & cấu hình"],
 ] as const;
-// Temporarily hide the stage demo entry; retain the demo for later use.
-const SHOW_STAGE_DEMO = false;
+// Stage remains separate from the operational workspace.
+const SHOW_STAGE_DEMO = true;
 const mobileNavigation = {
   overview: "Tổng quan",
   menus: "Thực đơn",
@@ -90,6 +83,7 @@ export default function App() {
     rice: "NA",
     vegetables: "NA",
     main: "NA",
+    soup: "NA", riceDish: "", vegetableDish: "", soupDish: "",
   });
   const [aiApplied, setAiApplied] = useState(false);
   const [dataView, setDataView] = useState("records"),
@@ -111,6 +105,8 @@ export default function App() {
               typeof r.id === "string" &&
               typeof r.menu === "string" &&
               typeof r.date === "string" &&
+              (r.soup == null || (typeof r.soup === "number" && Number.isFinite(r.soup) && r.soup >= 0 && r.soup <= 100)) &&
+              ["riceDish", "vegetableDish", "soupDish"].every(k => r[k] === undefined || (typeof r[k] === "string" && r[k].length <= 100)) &&
               keys.every(
                 (k) =>
                   r[k] === null ||
@@ -189,6 +185,8 @@ export default function App() {
       date: entry.date,
       menu: entry.menu.trim(),
       source: aiApplied ? "ai-reviewed" : "manual",
+      riceDish: entry.riceDish.trim(), vegetableDish: entry.vegetableDish.trim(), soupDish: entry.soupDish.trim(),
+      soup: entry.soup === "NA" ? null : Number(entry.soup),
       rice: null,
       vegetables: null,
       main: null,
@@ -198,7 +196,7 @@ export default function App() {
         (row[k as "rice"] =
           entry[k as "rice"] === "NA" ? null : Number(entry[k as "rice"])),
     );
-    if (keys.every((k) => row[k as "rice"] === null)) {
+    if (keys.every((k) => row[k as "rice"] === null) && row.soup === null) {
       setMessage("Cần ít nhất một thành phần được ghi nhận.");
       return;
     }
@@ -207,7 +205,7 @@ export default function App() {
     reset();
     setMessage("Đã lưu bản ghi.");
     setAiApplied(false);
-    setEntry({ ...entry, rice: "NA", vegetables: "NA", main: "NA" });
+    setEntry({ ...entry, rice: "NA", vegetables: "NA", main: "NA", soup: "NA" });
   }
   const table = filtered
     .slice()
@@ -287,6 +285,7 @@ export default function App() {
             <b>{navigation.find((n) => n[0] === tab)?.[1]}</b>
           </div>
           <div className="topbar-right">
+            <AdapterSwitcher />
             {SHOW_STAGE_DEMO && (
             <button
               className="live-launch"
@@ -295,7 +294,7 @@ export default function App() {
                 final.setNotice("");
               }}
             >
-              <Icon name="play" size={14} /> Demo chung kết
+              <Icon name="play" size={14} /> Live Demo Chung Kết
             </button>
             )}
             <button
@@ -458,6 +457,7 @@ export default function App() {
               </button>
             </div>
           )}
+          <p className="adapter-active" role="status">{final.adapterInfo.name} · {final.adapterInfo.input} · Vision + IQR{final.adapterInfo.nfc ? " · NFC + cảnh báo dị ứng" : " · Không yêu cầu thẻ NFC / Portal"}<span> Cấu hình đề xuất; chưa xác nhận kết nối.</span></p>
           {help && (
             <section className="help-panel">
               <div className="section-heading">
@@ -585,6 +585,8 @@ export default function App() {
           )}
           {tab === "menus" && (
             <section className="menu-catalog">
+              {mode === "demo" && <PairingMatrix />}
+              <NutritionPanel />
               <div className="section-heading">
                 <div>
                   <h2>Danh mục thực đơn</h2>
@@ -759,6 +761,7 @@ export default function App() {
                     </datalist>
                   </label>
                 </div>
+                <ComboFields value={entry} onChange={patch => setEntry(old => ({...old, ...patch}))} />
                 {keys.map((k) => (
                   <fieldset key={k}>
                     <legend>
@@ -872,6 +875,7 @@ export default function App() {
                         <th>Cơm</th>
                         <th>Rau</th>
                         <th>Món chính</th>
+                        <th>Canh</th><th>Tổ hợp đi kèm</th>
                         <th>Nguồn</th>
                       </tr>
                     </thead>
@@ -892,6 +896,8 @@ export default function App() {
                                 : r[k as "rice"] + "%"}
                             </td>
                           ))}
+                          <td>{r.soup == null ? "NA" : pct(r.soup)}</td>
+                          <td className="wrap-cell">{[r.riceDish, r.vegetableDish, r.soupDish].filter(Boolean).join(" · ") || "Chưa ghi nhận"}</td>
                           <td>
                             <span className="badge">
                               {r.source === "simulation"
@@ -943,6 +949,7 @@ export default function App() {
           {tab === "data" && dataView === "settings" && (
             <div className="settings-stack">
               <AdapterSettings />
+              <EvidenceRoadmap />
               <CloudCalculator />
             </div>
           )}

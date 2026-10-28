@@ -1469,3 +1469,78 @@ textarea {
   padding: 10px 8px;
   font-size: 11px;
 }
+
+/* Decision support extends the existing kitchen workspace. */
+.adapter-switcher { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted, #627169); }
+.adapter-switcher select { max-width:160px; min-height:40px; padding:6px 10px; }
+.pairing-panel { margin-bottom:24px; }
+.pairing-panel table { min-width:850px; }
+.pairing-panel caption, .roadmap-panel caption { text-align:left; padding:12px 0; color:#627169; }
+.pairing-panel th button { text-align:left; white-space:nowrap; }
+.pairing-panel th small { display:block; margin-top:4px; font-weight:400; }
+.pair-selected { background:#e9f0e7; }
+.pairing-insight { padding-top:16px; border-top:1px solid #dfe5df; line-height:1.7; max-width:90ch; }
+.pairing-insight b { display:block; }
+.meal-combo-line, .nutrition-values { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin:20px 0; }
+.meal-combo-line dt, .nutrition-values dt { color:#627169; font-size:12px; margin-bottom:6px; }
+.meal-combo-line dd, .nutrition-values dd { margin:0; overflow-wrap:anywhere; }
+.meal-combo-line { border-block:1px solid #dfe5df; padding:16px 0; }
+.nutrition-panel { margin-bottom:24px; }
+.nutrition-panel.compact { background:#f3f6ef; padding:16px; border-radius:8px; margin-block:16px; }
+.nutrition-values dd { font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; }
+.nutrition-values dd small { font-size:12px; font-weight:400; }
+.nutrition-action { font-weight:500; line-height:1.7; }
+.evidence-list > div { display:grid; grid-template-columns:180px 1fr; gap:24px; padding:16px 0; border-bottom:1px solid #dfe5df; }
+.evidence-list dt { font-weight:600; }
+.evidence-list dd { margin:0; line-height:1.7; max-width:75ch; }
+.roadmap-panel table { min-width:1100px; }
+.roadmap-panel td { min-width:160px; vertical-align:top; line-height:1.6; }
+.roadmap-panel th p { font-weight:400; min-width:160px; }
+.live-dialog .nutrition-values { gap:8px; }
+.live-dialog .nutrition-values dd { font-size:24px; }
+.live-dialog .capture-breakdown { grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media (max-width: 900px) {
+  .adapter-switcher > span { display:none; }
+  .meal-combo-line, .nutrition-values { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 600px) {
+  .topbar-right { flex-wrap:wrap; }
+  .adapter-switcher select { max-width:130px; }
+  .evidence-list > div { grid-template-columns:1fr; gap:6px; }
+  .nutrition-panel .section-heading { align-items:flex-start; flex-direction:column; gap:8px; }
+  .nutrition-panel .segmented { flex-wrap:wrap; }
+  .live-dialog .capture-breakdown { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+.live-dialog .nutrition-values { grid-template-columns:repeat(2,minmax(0,1fr)); margin:12px 0; }
+.live-dialog .nutrition-panel .section-heading { margin-bottom:8px; }
+.live-dialog .nutrition-panel h3 { font-size:15px; }
+.live-dialog .nutrition-panel p { font-size:12px; }
+.live-dialog .verification { padding:16px 12px; }
+.live-dialog .verification > span { display:none; }
+.live-dialog .stage-method { margin-top:16px; font-size:12px; }
+.live-dialog .decision-card { gap:12px; }
+.live-dialog .pipeline-step { padding:18px; }
+.live-dialog .step-heading h2 { font-size:15px; }
+.live-dialog .step-heading p { font-size:11px; }
+.live-dialog .fine { font-size:11px; }
+.roi-section { padding-top:20px; margin-top:20px; border-top:1px solid #dfe5df; }
+@media (min-width:1251px) and (max-height:800px) {
+  .live-dialog { padding:16px; }
+  .live-dialog .pipeline-step { padding:12px; }
+  .live-dialog .capture-preview { height:130px; }
+  .live-dialog .nutrition-panel.compact { padding:10px; }
+  .live-dialog .verification p { font-size:11px; }
+  .live-dialog .nutrition-action { display:none; }
+}
+.product-workspace .adapter-active { color:#50634e; font-size:12px; margin:0 0 20px; line-height:1.6; }
+.adapter-active span { color:#627169; }
+/* Stage primary story is sized for projection; supporting detail stays secondary. */
+.live-dialog .decision-card h3 { font-size:24px; line-height:1.3; }
+.live-dialog .decision-card > p { font-size:20px; line-height:1.5; }
+.live-dialog .decision-card > p.fine { font-size:12px; }
+.live-dialog .nutrition-panel h3 { font-size:20px; line-height:1.35; }
+.live-dialog .nutrition-values dd { font-size:30px; }
+.live-dialog .terminal-counters strong { font-size:30px; }
+.live-dialog .decision-card > button { font-size:16px; min-height:48px; }
+.vision-iqr { margin-top:20px; padding-top:16px; border-top:1px solid #dfe5df; }
+.combo-fields small { display:block; margin-top:4px; }

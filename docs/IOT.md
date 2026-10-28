@@ -111,3 +111,7 @@ Không có firmware thay thế được cài lên thiết bị từ repo này. T
 3. Gửi JPEG đúng header → 202/QUEUED; worker gửi PROCESSING rồi COMPLETED hoặc FAILED. Thử lại giữ nguyên trạng thái cuối.
 4. Mở dashboard nhập khóa đọc, kiểm tra cập nhật tự động, ảnh và ba thành phần; mẫu lạ không làm cắt khẩu phần chung. Thử ngắt Wi-Fi, chạy `1`, `2`, `3`, `Space/4`, reset.
 5. Xác minh trên Vercel sau deployment; test local không chứng minh production, NFC thật hoặc AWS worker thật đã hoạt động.
+
+### Thành phần canh tùy chọn
+
+Kết quả JSON và `capture-result` có thể gửi thêm `soupLeftoverPct` (số hữu hạn 0–100). Khi có trường này, `status.latestCapture.result.soup` và các capture tương ứng giữ giá trị đó để hiển thị; thiếu trường nghĩa là chưa đo, không phải 0%. Ba trường Cơm/Rau/Món chính vẫn theo hợp đồng cũ. Không suy ra gram canh từ phần trăm hoặc trộn vào baseline ba thành phần.

@@ -9,6 +9,10 @@ export type TrayRow = {
   vegetables: number | null;
   main: number | null;
   allergyFlags?: string[];
+  riceDish?: string;
+  vegetableDish?: string;
+  soupDish?: string;
+  soup?: number | null;
 };
 export type Adapter = "lite" | "standard" | "pro";
 export type NfcStatus =
@@ -33,7 +37,7 @@ export interface Capture {
   imageUrl?: string;
   dishId?: string;
   menuName?: string;
-  result?: Values & { isOutlier: boolean; recommendation: string };
+  result?: Values & { isOutlier: boolean; recommendation: string; soup?: number; vegetableServedGrams?: number };
   latencyMs?: number;
   errorMessage?: string;
 }
@@ -112,6 +116,7 @@ export interface CaptureResultRequest {
   riceLeftoverPct?: number;
   vegLeftoverPct?: number;
   mainLeftoverPct?: number;
+  soupLeftoverPct?: number;
   isOutlier?: boolean;
   latencyMs?: number;
 }

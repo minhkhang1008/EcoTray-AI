@@ -1,3 +1,4 @@
+import { NutritionPanel } from "./DecisionSupport";
 import { useEffect, useRef, useState } from "react";
 import { useFinalRound } from "./FinalRoundContext";
 import {
@@ -59,6 +60,8 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
           )[event.key as "1" | "2" | "3"],
         });
       }
+      if (event.key === "5") { event.preventDefault(); f.approve(); }
+      if (event.key.toLowerCase() === "r") { event.preventDefault(); reset(); }
       if (event.key === " " || event.key === "4") {
         if (event.key === " " && target.closest("button,summary")) return;
         event.preventDefault();
@@ -84,7 +87,6 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
     >
       <header className="live-header">
         <div>
-          <div className="eyebrow">SSC 2026 · VÒNG PHẢN HỒI CĂN TIN</div>
           <h1 id="live-title" tabIndex={-1}>
             Live Demo Chung Kết
           </h1>
@@ -100,8 +102,7 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
       </header>
       <ConnectionControls />
       <p className="hotkey-guide">
-        <kbd>1</kbd> Thẻ hợp lệ <kbd>2</kbd> Dị ứng <kbd>3</kbd> Thẻ trùng/chưa
-        đăng ký <kbd>Space</kbd> / <kbd>4</kbd> Nhận ảnh → Kiểm định → Bếp duyệt
+        <kbd>1</kbd> Thẻ hợp lệ <kbd>2</kbd> Dị ứng <kbd>3</kbd> Thẻ chưa đăng ký · lặp 1/2 để thử thẻ trùng <kbd>Space</kbd> / <kbd>4</kbd> Chụp & kiểm định <kbd>5</kbd> Bếp duyệt <kbd>R</kbd> Đặt lại
       </p>
       {f.notice && (
         <div className="toast" role="status">
@@ -179,6 +180,8 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
                 : "Không dùng một khay cá biệt để quyết định khẩu phần của toàn trường."}
             </p>
           </div>
+          {f.state.analyzed && !f.isOutlier && <NutritionPanel served={f.source === "simulation" ? f.state.capture?.result?.vegetableServedGrams : undefined} waste={f.state.capture?.result?.vegetables} compact concise />}
+          <details className="stage-method"><summary>Phương pháp lọc hai lớp</summary>
           <div className="defense-layers">
             <span>
               <b>01 · Trước bữa ăn</b> Cảnh báo cơ địa khi nhận suất.
@@ -193,7 +196,7 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
               ? "Minh họa phương pháp; không gán tỷ lệ 4,2% chưa có trong dữ liệu nguồn."
               : `${f.trimmed.flagged} mẫu có cờ; ${f.trimmed.statistical} mẫu vượt IQR trong ${f.trimmed.total} khay cùng món hiện có.`}{" "}
             IQR phát hiện bất thường, không chẩn đoán dị ứng.
-          </p>
+          </p></details>
         </section>
         <section className="panel pipeline-step">
           <div className="step-heading">
@@ -203,7 +206,7 @@ export default function LiveDemo({ onClose }: { onClose: () => void }) {
               <p>Bếp phê duyệt → thay đổi → đo lại</p>
             </div>
           </div>
-          <DecisionCard />
+          <DecisionCard stage />
         </section>
       </div>
       <details className="live-history">

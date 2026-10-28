@@ -32,6 +32,7 @@ function captureResult(v: unknown) {
     ["rice", "vegetables", "main"].every(
       (k) => finite(v[k]) && Number(v[k]) <= 100,
     ) &&
+    (v.soup === undefined || (finite(v.soup) && v.soup <= 100)) &&
     typeof v.isOutlier === "boolean" &&
     typeof v.recommendation === "string"
   );

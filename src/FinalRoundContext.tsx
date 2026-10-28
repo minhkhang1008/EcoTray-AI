@@ -207,7 +207,7 @@ function useFinalState() {
     values: isDemo
       ? {
           rice: 12.5,
-          vegetables: state.capture?.menuName === "Vịt kho gừng" ? 36.5 : 46.5,
+          vegetables: state.capture?.result?.vegetables ?? 46.5,
           main: 9.5,
         }
       : {
@@ -216,6 +216,7 @@ function useFinalState() {
           main: stats.main.mean,
         },
     isOutlier,
+    vegetableServedGrams: isDemo ? state.capture?.result?.vegetableServedGrams : undefined,
     sampleCount: isDemo
       ? 64
       : Math.min(stats.rice.n, stats.vegetables.n, stats.main.n),

@@ -51,3 +51,27 @@ Mặc định mở dashboard vận hành với dữ liệu mẫu có nhãn ngu�
 - Dữ liệu: tách bản ghi khay, lịch sử can thiệp và cấu hình trường; bộ lọc khay chỉ xuất hiện khi xem bản ghi.
 
 `src/product.css` điều chỉnh giao diện sản phẩm trên các thành phần hiện có; `ProductContext.tsx` trình bày vòng phản hồi theo cấu hình trường. Vẫn dùng CSS thuần và output `dist/`. Ảnh báo cáo được chụp từ bản build local tại `artifacts/product/`, không chứng minh phần cứng hoặc triển khai production. Ảnh Tổng quan/Thực đơn/Dữ liệu dùng số liệu mô phỏng; ảnh Vision dùng ảnh hiệu chuẩn đã gán nhãn.
+
+## Bổ sung hỗ trợ quyết định (27/10/2026)
+
+Giữ màn vận hành mặc định; mở riêng **Live Demo Chung Kết** từ header. Gói Lite/Standard/Pro có bộ chọn nhanh và dòng mô-đun đang cấu hình. Phím `5` duyệt, `R` reset; `3` vẫn là thẻ chưa đăng ký theo hợp đồng hiện tại, lặp `1`/`2` để kiểm tra chống nhận suất hai lần.
+
+`DecisionSupport.tsx` cung cấp ma trận Cơm/Món chính/Rau/Canh, thử quy tắc định lượng, thông tin kiểm chứng và lộ trình. Các cặp món ngày 13/10 và 16/10, 310 suất, tỷ lệ rau/canh nằm riêng trong `lib/decision-scenarios.ts` với `source: simulation`. Chưa có bằng chứng Portal xác nhận các cặp rau/canh trong bộ 20 món; chi tiết món ghi “Chưa xác minh cặp món”, không tự gán kịch bản vào dữ liệu nguồn. CSV cũ tiếp tục nhập được; bản ghi mới có tên Cơm/Rau/Canh và tỷ lệ canh tùy chọn, được lưu và xuất/nhập lại. Không thêm số canh giả để thay đổi 3.131 quan sát hay 81,5%. Chỉ số tổng hợp nguồn vẫn dùng ba thành phần; canh hiển thị riêng trong bản ghi và drawer. IQR có thêm hàng rào riêng cho canh khi có đủ 10 quan sát canh.
+
+`nutritionAudit` tính thực ăn = định lượng × (1 − % thừa), chưa làm tròn khi quyết định. Không có định lượng cân thì khóa đề xuất giảm rau. Dưới ngưỡng thì đổi cách chế biến/cặp món, giữ lượng rau; đủ ngưỡng và thừa cao thì đề xuất thử định lượng ≥ngưỡng và đo lại. Mẫu ngoại lai và thiếu mẫu vẫn được xử lý trước quy tắc khẩu phần. Stage dùng 90 g, 46,5% thừa → 48,15 g thực ăn ước tính. Bảng thử nhánh còn lại dùng 120 g, 25% → 90 g thực ăn, đề xuất thử 95 g. Không khẳng định can thiệp bảo đảm giữ nguyên lượng ăn vào.
+
+**Xung đột cần ghi nhận:** yêu cầu đính kèm gọi 85 g là chuẩn bắt buộc; nguồn chính thức không chứng minh mức này áp dụng chung. [Hướng dẫn Bộ Y tế 3958/QĐ-BYT, bản trên cổng giáo dục](https://f1.hcm.edu.vn/data/doc/2026/hssv/uyen/2026_1/21/3958-byt-hdan-dinh-duong-bua-an-hoc-duong-25-12-25_211202610.pdf) nêu 80–120 g rau cho tiểu học, 100–150 g cho THCS/THPT trong bữa chính. Vì vậy 85 g chỉ là giả định kịch bản; chưa phải cấu hình dinh dưỡng được phê duyệt cho PTNK. Gram rau không phải gram chất xơ. Không công bố MAE 6,8% / độ chính xác 93,2%, tỷ lệ ngoại lai 4,2%, xác nhận CITT hay cải thiện thực ăn +24% khi chưa có hồ sơ đối chứng.
+
+API giữ hợp đồng IoT v1, xác thực và atomic idempotency. Callback/kết quả JSON có thêm `soupLeftoverPct` tùy chọn (0–100); snapshot trả `result.soup`. Client kiểm tra cùng miền giá trị. Trường này không bắt buộc với thiết bị cũ và không nhập vào thống kê ba thành phần nguồn. Raw JPEG tiếp tục chờ worker; không tạo kết quả AI giả hoặc hứa độ trễ dưới một giây.
+
+Calculator thêm đầu đọc tùy chọn, CAPEX, OPEX chín tháng học, tiết kiệm phiếu theo gói và hoàn vốn dự kiến. Chi phí vẫn là giả định README, chưa phải báo giá/invoice mới. Lộ trình ghi mục tiêu 4/12 trường là mốc đề xuất trong phạm vi 3–5/10+ của README; tác động là kế hoạch, không phải đã đạt.
+
+Rà soát độc lập yêu cầu bổ sung và đã sửa: nhập tổ hợp mới/CSV; canh 0% hiển thị trạng thái tốt; chữ quyết định sân khấu 20–24 px và giá trị rau 30 px; Vision có công tắc IQR tính lại trên 20 mẫu nền mô phỏng + mẫu thanh trượt. Bộ 21 mẫu này chỉ phục vụ thử độ nhạy, không cộng vào 1.280 khay hoặc dữ liệu thực địa.
+
+### Kết quả kiểm tra bản bổ sung
+
+Ngày 27/10/2026: `npm test` đạt **54/54**, model smoke đạt (256 features hữu hạn, không phải kiểm định độ chính xác), typecheck theo AGENTS đạt, `npm run build` đạt và sinh offline cache 7 tài nguyên; Vercel vẫn xuất `dist/`. `git diff --check` không có lỗi; không có tham chiếu `demo-data/` trong mã nguồn/runtime được kiểm tra. Không có script lint để công bố.
+
+Main Chrome 48425945: đã kiểm tra nhận thẻ lặp, cảnh báo cơ địa/ngoại lai, chụp → khóa giảm rau → phím 5 phê duyệt → R reset; chọn Lite/Pro; ma trận chọn A/B và hai nhánh định lượng; công tắc IQR đổi 20/21 thành 21/21 mẫu và tính lại trung bình. Kiểm tra kích thước 320/390/768/1024/1440 px; đo trang cấu hình không tràn ngang tại các mốc 320/768/1024, bảng rộng cuộn riêng. Bản production local tại 127.0.0.1:8766 chạy được stage và phê duyệt, không có thông báo console mới sau khi tải bản cuối. Không tạo khay thử vào dữ liệu thực địa.
+
+Reviewer độc lập Impeccable: `ship` cho bốn sửa đổi được chấm (tổ hợp mới/CSV, phân cấp sân khấu, canh theo tỷ lệ, IQR Vision). Không coi verdict này là chứng nhận toàn bộ sản phẩm. Đối chiếu thiết kế lưu tại `.impeccable/review/design-conformance.md`; giữ DESIGN.md hiện có. Detector chỉ báo advisory; timestamp sidecar đã cũ từ trước và không được sửa ngoài phạm vi. Chưa tổng duyệt khả năng đọc ở 15 m, chưa kiểm chứng phần cứng/AWS/Vercel, chưa push/deploy.

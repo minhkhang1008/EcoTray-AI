@@ -99,6 +99,7 @@ function resultFrom(body) {
         body[k] < 0 ||
         body[k] > 100,
     ) ||
+    ("soupLeftoverPct" in body && (typeof body.soupLeftoverPct !== "number" || !Number.isFinite(body.soupLeftoverPct) || body.soupLeftoverPct < 0 || body.soupLeftoverPct > 100)) ||
     ("isOutlier" in body && typeof body.isOutlier !== "boolean")
   )
     fail("INVALID_PERCENTAGES", "Phần còn lại phải là số từ 0 đến 100.");
@@ -113,6 +114,7 @@ function resultFrom(body) {
     rice: body.riceLeftoverPct,
     vegetables: body.vegLeftoverPct,
     main: body.mainLeftoverPct,
+    ...(body.soupLeftoverPct !== undefined ? { soup: body.soupLeftoverPct } : {}),
     isOutlier: body.isOutlier ?? false,
   };
   // A single inference cannot establish a school-wide portion recommendation.
