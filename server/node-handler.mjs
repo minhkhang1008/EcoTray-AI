@@ -28,8 +28,6 @@ export function configuredService(env = process.env) {
   }
   return createIotService({
     store,
-    writeToken: env.IOT_WRITE_TOKEN,
-    readToken: env.IOT_READ_TOKEN,
     uidSecret: env.IOT_UID_HMAC_SECRET,
     schoolId: env.IOT_SCHOOL_ID ?? "ptnk",
     imageOrigins: (env.IOT_IMAGE_ORIGINS ?? "").split(",").filter(Boolean),

@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { MemoryStore, digest } from "./store.mjs";
 import { operationalDecision } from "../lib/final-round.mjs";
 export { MemoryStore };
@@ -28,15 +28,6 @@ const iso = (x) =>
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(x) &&
   Number.isFinite(Date.parse(x)) &&
   new Date(x).toISOString().slice(0, 19) === x.slice(0, 19);
-const auth = (request, token) => {
-  const actual = Buffer.from(request.headers.get("authorization") ?? ""),
-    expected = Buffer.from(`Bearer ${token}`);
-  return (
-    !!token &&
-    actual.length === expected.length &&
-    timingSafeEqual(actual, expected)
-  );
-};
 const initial = () => ({
   days: {},
   captures: [],
@@ -127,11 +118,9 @@ function resultFrom(body) {
     }).text,
   };
 }
-/** Authenticated hardware boundary. Production uses shared Redis, never instance memory. */
+/** Public hardware boundary. Production uses shared Redis, never instance memory. */
 export function createIotService({
   store,
-  writeToken,
-  readToken,
   profiles = [],
   schoolId = "ptnk",
   uidSecret = "",
@@ -177,16 +166,6 @@ export function createIotService({
             headers: { Allow: method, "Content-Type": "application/json" },
           },
         );
-      if (!auth(request, writeToken)) {
-        if (!auth(request, readToken))
-          fail("UNAUTHORIZED", "Cần khóa truy cập IoT hợp lệ.", 401);
-        if (!isRead)
-          fail(
-            "WRITE_ACCESS_REQUIRED",
-            "Thao tác này cần khóa ghi IoT. Khóa đọc chỉ dùng để xem trạng thái.",
-            403,
-          );
-      }
       if (!store)
         fail(
           "STORAGE_NOT_CONFIGURED",

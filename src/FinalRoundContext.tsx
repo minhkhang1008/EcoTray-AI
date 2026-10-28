@@ -107,15 +107,14 @@ function useFinalState() {
   );
   const [stage, dispatch] = useReducer(stageReducer, undefined, initialStage);
   const [source, setSource] = useState<"simulation" | "hardware">("simulation");
-  const [token, setToken] = useState(""),
-    [watching, setWatching] = useState(false),
+  const [watching, setWatching] = useState(false),
     [remote, setRemote] = useState<IotStatus | null>(null),
     [error, setError] = useState(""),
     [connected, setConnected] = useState(false),
     [notice, setNotice] = useState("");
   const [hardwareApproved, setHardwareApproved] = useState<string[]>([]);
   useEffect(() => {
-    if (source !== "hardware" || !watching || !token) {
+    if (source !== "hardware" || !watching) {
       setConnected(false);
       return;
     }
@@ -127,7 +126,6 @@ function useFinalState() {
         const r = await fetch(
           `/api/iot/status?schoolId=${encodeURIComponent(schoolId)}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
             signal: AbortSignal.any([
               controller.signal,
               AbortSignal.timeout(4500),
@@ -156,11 +154,11 @@ function useFinalState() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [source, watching, token]);
+  }, [source, watching]);
   useEffect(() => {
     setRemote(null);
     setError("");
-  }, [token]);
+  }, [source]);
   const hardwareRows: TrayRow[] = (remote?.captures ?? [])
     .filter((c) => c.status === "COMPLETED" && c.result)
     .map((c) => ({
@@ -273,8 +271,6 @@ function useFinalState() {
     setSource,
     state,
     remote,
-    token,
-    setToken,
     watching,
     setWatching,
     connected,

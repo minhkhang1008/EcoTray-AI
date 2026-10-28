@@ -34,8 +34,6 @@ try {
   const make = () =>
     createIotService({
       store,
-      writeToken: "test-only",
-      readToken: "test-read",
       profiles: [
         {
           cardUidHash: hash,
@@ -58,7 +56,6 @@ try {
     new Request("http://localhost/api/iot/nfc-scan", {
       method: "POST",
       headers: {
-        Authorization: "Bearer test-only",
         "Content-Type": "application/json",
         "Idempotency-Key": "e1",
       },
@@ -79,9 +76,7 @@ try {
   const fresh = make();
   const state = await (
     await fresh(
-      new Request("http://localhost/api/iot/status?schoolId=ptnk", {
-        headers: { Authorization: "Bearer test-read" },
-      }),
+      new Request("http://localhost/api/iot/status?schoolId=ptnk"),
     )
   ).json();
   assert.equal(state.servedCount, 1);

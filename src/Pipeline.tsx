@@ -35,20 +35,9 @@ export function ConnectionControls() {
       {f.source === "hardware" && (
         <details className="connection-settings">
           <summary>Thiết lập kết nối IoT</summary>
-          <label>
-            Khóa truy cập IoT
-            <input
-              type="password"
-              autoComplete="off"
-              value={f.token}
-              placeholder="Nhập khóa đọc hoặc khóa ghi"
-              onChange={(e) => f.setToken(e.target.value.trim())}
-            />
-          </label>
           <p>
-            Chỉ xem trạng thái: dùng IOT_READ_TOKEN. Quét Web NFC: dùng
-            IOT_WRITE_TOKEN; khóa ghi cũng xem được trạng thái. Đổi khóa rồi bật
-            lại đọc NFC. Khóa chỉ dùng trong phiên này.
+            API IoT đang mở công khai; dashboard và trạm phần cứng không cần
+            khóa truy cập.
           </p>
         </details>
       )}
@@ -59,9 +48,7 @@ export function ConnectionControls() {
           ? f.offlineReady
             ? "DEMO · Sẵn sàng ngoại tuyến"
             : "DEMO · Dữ liệu mô phỏng"
-          : !f.token
-            ? "Chưa nhập khóa"
-            : f.connected
+          : f.connected
               ? f.remote?.online
                 ? "Trạm đang hoạt động"
                 : "API kết nối · trạm chưa gửi sự kiện"
@@ -88,7 +75,7 @@ export function NfcTerminal() {
     controller.current?.abort();
     setReading(false);
     setMessage("");
-  }, [f.source, f.token]);
+  }, [f.source]);
   async function webNfc() {
     const Reader = (window as unknown as { NDEFReader?: ReaderConstructor })
       .NDEFReader;
@@ -147,7 +134,6 @@ export function NfcTerminal() {
               await fetch("/api/iot/nfc-scan", {
                 method: "POST",
                 headers: {
-                  Authorization: `Bearer ${f.token}`,
                   "Content-Type": "application/json",
                   "Idempotency-Key": eventId,
                 },
@@ -299,7 +285,7 @@ export function TrayPreview({
   capture: Capture | null;
   scanning?: boolean;
 }) {
-  const { token, source } = useFinalRound();
+  const { source } = useFinalRound();
   const [image, setImage] = useState(""),
     [failed, setFailed] = useState(false);
   useEffect(() => {
@@ -314,10 +300,7 @@ export function TrayPreview({
     let alive = true,
       objectUrl = "";
     const abort = new AbortController();
-    fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-      signal: abort.signal,
-    })
+    fetch(url, { signal: abort.signal })
       .then(async (r) => {
         if (!r.ok) throw Error("Ảnh không khả dụng");
         objectUrl = URL.createObjectURL(await r.blob());
@@ -332,7 +315,7 @@ export function TrayPreview({
       abort.abort();
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [capture?.captureId, capture?.imageUrl, token]);
+  }, [capture?.captureId, capture?.imageUrl]);
   return (
     <>
       <div

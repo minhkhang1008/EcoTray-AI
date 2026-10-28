@@ -4,23 +4,21 @@
 
 Dùng `api/iot/[action].mjs` trên Vercel, output frontend vẫn là `dist`. Thiết lập các biến trong `.env.example` ở môi trường server. Không đặt khóa trong biến `VITE_*`.
 
-- `IOT_WRITE_TOKEN`: khóa ghi riêng cho trạm/Lambda, sinh ngẫu nhiên đủ mạnh.
-- `IOT_READ_TOKEN`: khóa chỉ đọc để dashboard xem trạng thái/ảnh.
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`: Redis dùng chung cho mọi Vercel instance. Thao tác state + idempotency dùng Lua compare-and-set nguyên tử, không dùng biến toàn cục để giả lập cơ sở dữ liệu.
-- `IOT_SCHOOL_ID`: mặc định `ptnk`. Khóa chỉ truy cập trường được cấu hình. Đặt `VITE_IOT_SCHOOL_ID` cùng giá trị khi build frontend; `VITE_SCHOOL_NAME` là tên hiển thị công khai.
+- `IOT_SCHOOL_ID`: mặc định `ptnk`. API chỉ chấp nhận trường được cấu hình. Đặt `VITE_IOT_SCHOOL_ID` cùng giá trị khi build frontend; `VITE_SCHOOL_NAME` là tên hiển thị công khai.
 - `IOT_UID_HMAC_SECRET`: bí mật HMAC SHA-256, chỉ cần khi nhận UID từ Web NFC. Chuẩn hóa UID bỏ `:`/`-`, chuyển chữ thường trước HMAC.
 - `IOT_PROFILES_JSON`: mảng `{ "schoolId", "cardUidHash", "menuId", "menuName", "allergyFlags": [] }`. Chỉ giữ hash, không tên học sinh/ảnh định danh. Không có hồ sơ thẻ thật đi kèm repo. Đưa registry vào cơ sở dữ liệu quản lý khi triển khai nhiều trường.
 - `IOT_IMAGE_ORIGINS`: danh sách origin HTTPS cho ảnh đã lưu tại S3, cách nhau dấu phẩy. Server không tải URL tùy ý.
 
-Dev: sao chép `.env.example` sang `.env.local`, điền khóa thử riêng và bật `IOT_LOCAL_MEMORY=true` nếu chưa có Redis. Chạy `npm run dev`, hoặc `npm run build` rồi `npm start`. Bộ nhớ dev mất khi restart, chỉ dùng local; Vercel luôn vô hiệu hóa fallback RAM. Thiếu Redis trên Vercel trả 503, không nhận giả thành công.
+Dev: sao chép `.env.example` sang `.env.local` và bật `IOT_LOCAL_MEMORY=true` nếu chưa có Redis. Chạy `npm run dev`, hoặc `npm run build` rồi `npm start`. Bộ nhớ dev mất khi restart, chỉ dùng local; Vercel luôn vô hiệu hóa fallback RAM. Thiếu Redis trên Vercel trả 503, không nhận giả thành công.
 
-Trong Live Demo/Vision/NFC, chọn **Kết nối phần cứng → Thiết lập kết nối IoT**, nhập khóa đọc. Khóa chỉ ở RAM trong phiên. Muốn gửi sự kiện bằng Web NFC thì nhập giá trị `IOT_WRITE_TOKEN` vào cùng ô này; khóa ghi cũng xem được trạng thái. Nếu đã bật đọc NFC bằng khóa đọc, hãy dừng đọc, đổi khóa, rồi bật đọc lại. Trình đọc sẽ tự dừng khi khóa thay đổi để không giữ khóa cũ. Không phân phối khóa ghi cho dashboard công cộng. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
+Trong Live Demo/Vision/NFC, chọn **Kết nối phần cứng**; dashboard, Web NFC, ESP32 và worker đều gọi API trực tiếp mà không cần khóa truy cập. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
 
 Tài liệu nền: [Vercel Node Functions](https://vercel.com/docs/functions/runtimes/node-js), [Upstash REST](https://upstash.com/docs/redis/features/restapi), [Redis Lua atomicity](https://redis.io/docs/latest/develop/programmability/eval-intro/), [Web NFC trên Android](https://developer.chrome.com/docs/capabilities/nfc).
 
 ## Quy ước chung
 
-Mọi endpoint yêu cầu `Authorization: Bearer <token>`. GET cho phép khóa đọc hoặc ghi; POST chỉ khóa ghi. Dùng khóa đọc cho POST trả 403 `WRITE_ACCESS_REQUIRED`; khóa sai/thiếu trả 401 `UNAUTHORIZED`. Mỗi POST cần `Idempotency-Key` ổn định cho cùng một sự kiện, chữ/số/`_`/`-`, tối đa 100 ký tự. Giữ nguyên cả body và thời gian khi thử lại. Khóa đã dùng với body khác trả 409 `IDEMPOTENCY_CONFLICT`. `eventId` NFC cũng được bảo vệ khỏi gửi lại dưới khóa khác. Biên nhận giữ 48 giờ; sau cửa sổ này thiết bị phải đối soát, không tự gửi lại sự kiện cũ.
+Mọi endpoint đều mở công khai và không yêu cầu header `Authorization`. Mỗi POST vẫn cần `Idempotency-Key` ổn định cho cùng một sự kiện, chữ/số/`_`/`-`, tối đa 100 ký tự. Giữ nguyên cả body và thời gian khi thử lại. Khóa đã dùng với body khác trả 409 `IDEMPOTENCY_CONFLICT`. `eventId` NFC cũng được bảo vệ khỏi gửi lại dưới khóa khác. Biên nhận giữ 48 giờ; sau cửa sổ này thiết bị phải đối soát, không tự gửi lại sự kiện cũ.
 
 Thời gian ISO-8601 UTC dạng `2026-10-22T04:00:00.000Z`. Lỗi: `{ "error": { "code", "message", "details": null } }`. JSON/binary tối đa 250 KB; JPEG tối đa 150 KB, 800×600; thiết bị nên gửi khoảng 45 KB. Body được giới hạn tại adapter HTTP.
 
@@ -63,15 +61,15 @@ X-Captured-At: 2026-10-22T04:10:00.000Z
 Idempotency-Key: tray-20261022-001
 ```
 
-Trả 202 `{ "captureId", "status": "QUEUED", "statusUrl" }`. Dashboard không tự sinh phần trăm từ ảnh vừa nhận. Worker AWS của nhóm phải lấy ảnh/xử lý rồi gửi callback. GET `statusUrl` dùng khóa đọc/ghi, trả snapshot với `latestCapture` được chọn theo `captureId`.
+Trả 202 `{ "captureId", "status": "QUEUED", "statusUrl" }`. Dashboard không tự sinh phần trăm từ ảnh vừa nhận. Worker AWS của nhóm phải lấy ảnh/xử lý rồi gửi callback. GET `statusUrl` trả snapshot với `latestCapture` được chọn theo `captureId`.
 
 Tương thích payload từ Lambda đã phân tích: JSON `{ "schoolId": "ptnk", "stationId": "cam-1", "capturedAt": "...", "dishId": "vit", "imageUrl": "https://<approved-S3-origin>/tray.jpg", "riceLeftoverPct": 8, "vegLeftoverPct": 62, "mainLeftoverPct": 5, "isOutlier": false, "latencyMs": 680 }`. `imageBase64` JPEG có thể dùng thay `imageUrl`. Phần trăm bắt buộc đủ cả ba và trong 0–100; không tin số phần trăm gửi từ client công cộng. 202 là biên nhận tiếp nhận; snapshot đã là `COMPLETED` nếu Lambda cung cấp kết quả hợp lệ.
 
-URL ảnh không được lưu kèm khuôn mặt; cấu hình lifecycle S3 xóa ảnh thô sau 30 ngày. Bridge Redis giữ JPEG TTL 30 ngày. API ảnh bridge là GET `/api/iot/image?schoolId=ptnk&captureId=...`, có xác thực. Ảnh hết TTL trả 404, metadata vẫn đọc được trong snapshot gần nhất. URL S3 ký sẵn hết hạn phải do pipeline AWS cấp lại.
+URL ảnh không được lưu kèm khuôn mặt; cấu hình lifecycle S3 xóa ảnh thô sau 30 ngày. Bridge Redis giữ JPEG TTL 30 ngày. API ảnh bridge là GET `/api/iot/image?schoolId=ptnk&captureId=...`, mở công khai. Ảnh hết TTL trả 404, metadata vẫn đọc được trong snapshot gần nhất. URL S3 ký sẵn hết hạn phải do pipeline AWS cấp lại.
 
 ## POST /api/iot/capture-result
 
-Worker gọi bằng khóa ghi, `Idempotency-Key` riêng cho mỗi lần chuyển trạng thái:
+Worker gọi với `Idempotency-Key` riêng cho mỗi lần chuyển trạng thái:
 
 ```json
 {
@@ -109,7 +107,7 @@ Không có firmware thay thế được cài lên thiết bị từ repo này. T
 1. Điền registry hash và bí mật, thiết lập Redis, cấu hình S3 lifecycle và origin ảnh. Chỉ dùng hồ sơ được nhà trường cho phép; không đưa tên hoặc UID gốc vào log.
 2. Gửi cùng NFC event nhiều lần và đồng thời: chỉ cộng một suất. Thử lại với nội dung khác phải 409. Thẻ dị ứng hiển thị cảnh báo, thẻ lạ/trùng không cộng.
 3. Gửi JPEG đúng header → 202/QUEUED; worker gửi PROCESSING rồi COMPLETED hoặc FAILED. Thử lại giữ nguyên trạng thái cuối.
-4. Mở dashboard nhập khóa đọc, kiểm tra cập nhật tự động, ảnh và ba thành phần; mẫu lạ không làm cắt khẩu phần chung. Thử ngắt Wi-Fi, chạy `1`, `2`, `3`, `Space/4`, reset.
+4. Mở dashboard, kiểm tra cập nhật tự động, ảnh và ba thành phần; mẫu lạ không làm cắt khẩu phần chung. Thử ngắt Wi-Fi, chạy `1`, `2`, `3`, `Space/4`, reset.
 5. Xác minh trên Vercel sau deployment; test local không chứng minh production, NFC thật hoặc AWS worker thật đã hoạt động.
 
 ### Thành phần canh tùy chọn
