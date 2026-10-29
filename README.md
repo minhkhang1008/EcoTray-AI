@@ -246,8 +246,16 @@ Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [H
 
 ### Vision thực địa và luồng thiết bị
 
-Tab EcoTray Vision ưu tiên gallery 18 ảnh và sandbox hiệu chỉnh bốn thành phần. Phản hồi cập nhật trọng số trong phiên trình duyệt; không thay trọng số máy chủ hoặc kết quả kiểm định gốc. Khối lượng là ước tính từ khẩu phần giả định 200/110/90/150 g (Cơm/Món chính/Rau/Canh), chưa phải số đo cân. W_min = 85 g là chính sách bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng xác thực.
+Tab EcoTray Vision mở Trạm căn tin; Kiểm tra ảnh giữ gallery 18 ảnh và hiệu chỉnh bốn thành phần, Thử kịch bản giữ các ví dụ mô phỏng riêng. Phản hồi cập nhật trọng số trong phiên trình duyệt; không thay trọng số máy chủ hoặc kết quả kiểm định gốc. Khối lượng là ước tính từ khẩu phần giả định 200/110/90/150 g (Cơm/Món chính/Rau/Canh), chưa phải số đo cân. W_min = 85 g là chính sách bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng xác thực.
 
-Luồng `/api/ai/analyze-tray` tích hợp trong tab Vision và Phân tích thực đơn, thăm dò mỗi 1,5 giây. NFC và phễu vận hành sử dụng nguồn riêng. Không có nút hoặc màn hình sân khấu; các phím dự phòng chạy nền và luôn giữ nguồn tham chiếu/mô phỏng tách biệt. Không xác nhận thiết bị online chỉ vì API trả 200.
+Luồng `/api/ai/analyze-tray` tích hợp trong tab Vision, thăm dò mỗi 1,5 giây. Màn trạm hiển thị một kết quả mới nhất từ API này hoặc callback worker IoT; ảnh dự phòng luôn có nhãn riêng. NFC và phễu vận hành sử dụng nguồn riêng. Không có nút hoặc màn hình sân khấu; các phím dự phòng chạy nền và luôn giữ nguồn tham chiếu/mô phỏng tách biệt. Không xác nhận thiết bị online chỉ vì API trả 200.
 
 Xem [hợp đồng Vision và tái huấn luyện](docs/VISION-PTNK.md). Vercel vẫn dùng React/Vite, `api/*` và output `dist/`; `src/app/api/ai/analyze-tray/route.ts` chỉ là điểm vào tương thích Web Request/Response, không làm dự án thành Next.js.
+
+### Tinh giản giao diện vận hành (29/10/2026)
+
+Thực đơn mặc định dùng danh sách gọn; ví dụ phối món và thử định lượng chuyển sang Vision → Thử kịch bản. Chi tiết món chỉ hiển thị số liệu riêng, không chèn ví dụ 90 g rau hoặc kịch bản 63,1 → 52,5 kg. Một ngày dữ liệu hiển thị bảng thay cho biểu đồ xu hướng.
+
+Dữ liệu → Thông tin dự án chứa minh chứng, lộ trình, kịch bản trước/sau và dự toán. Cấu hình trường giữ bộ chọn Lite/Standard/Pro. Ghi nhận quyết định từ Vision và worker dùng chung lịch sử trên trình duyệt, chống lặp và giữ ba nguồn `hardware`, `simulation`, `reference-fallback`. Tải lại trang giữ lịch sử; R đặt lại sự kiện và lịch sử dự phòng, giữ quyết định phần cứng. Đây chưa phải lệnh gửi tới bếp.
+
+Mẫu cân dùng để quy đổi gram trong Vision → Thử kịch bản; mô hình PTNK vẫn dùng định lượng giả định, không tự thay trọng số hoặc kết quả kiểm định từ mẫu cân. Các màn UI cũ không còn được App mở đã được gỡ; các thư viện, test và script model vẫn giữ nguyên mục đích.

@@ -17,12 +17,14 @@ export default function Overview({
   onDish,
   onMenus,
   onRecord,
+  onImport,
 }: {
   rows: TrayRow[];
   mode: string;
   onDish: (name: string) => void;
   onMenus: () => void;
   onRecord: () => void;
+  onImport: () => void;
 }) {
   const menus = menuStats(rows),
     stats = summarize(rows),
@@ -92,6 +94,7 @@ export default function Overview({
                   : "Ghi nhận khay đầu tiên"}
               <Icon name="arrow" size={17} />
             </button>
+            {!rows.length && <button onClick={onImport}>Nhập CSV</button>}
             <span>
               {first
                 ? "Bếp duyệt trước khi điều chỉnh"
@@ -118,17 +121,10 @@ export default function Overview({
               </small>
             </div>
           </div>
-        ) : (
-          <div className="next-step">
-            <Icon name="leaf" size={32} />
-            <h3>
-              {rows.length ? "Mỗi bữa ăn tốt hơn." : "Một quy trình đơn giản"}
-            </h3>
-            <p>Ghi nhận khay → Xem phân tích → Bếp duyệt thay đổi → Đo lại.</p>
-          </div>
-        )}
+        ) : null}
       </section>
 
+      {rows.length > 0 && <>
       <section
         className="overview-metrics"
         aria-label="Số liệu trong kỳ đang xem"
@@ -217,6 +213,7 @@ export default function Overview({
           onSelect={onDish}
         />
       </section>
+      </>}
     </div>
   );
 }

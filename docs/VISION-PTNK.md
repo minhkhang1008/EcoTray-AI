@@ -42,11 +42,11 @@ Production yêu cầu `UPSTASH_REDIS_REST_URL` và `UPSTASH_REDIS_REST_TOKEN` đ
 
 ## Tương tác vận hành
 
-Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Gallery và sandbox đứng đầu Vision; luồng IoT và phê duyệt có ở Vision/Phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.
+Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Vision mở màn trạm; gallery và hiệu chỉnh ảnh ở mục Kiểm tra ảnh, ví dụ mô phỏng ở mục Thử kịch bản. Luồng IoT và ghi nhận quyết định có ở màn trạm, không chèn vào phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.
 
 Phím nền: 1/2/3 = NFC hợp lệ/dị ứng/chưa đăng ký; lặp 1/2 kiểm tra trùng thẻ. Space/4 luân phiên 18 ảnh tham chiếu; 5 ghi phê duyệt; R đặt lại nguồn dự phòng. Không can thiệp input/select/textarea hoặc tổ hợp Ctrl/Alt/Meta. Space trên button/link/summary giữ hành vi gốc. Nguồn tham chiếu vẫn được ghi rõ trên UI và không cộng vào dữ liệu phần cứng, bản ghi thực địa hay bộ 1.280 khay mô phỏng.
 
-Phê duyệt luồng Vision lưu trong phiên trình duyệt, giữ nguồn và chống nhấn lặp; chưa phải lệnh gửi tới bếp hoặc cấu hình thực đơn lưu trên máy chủ. 18 ảnh chuẩn hóa được cache ngoại tuyến cùng mã ứng dụng. Không cache API.
+Quyết định luồng Vision lưu chung tại Dữ liệu → Lịch sử quyết định trên trình duyệt, giữ nguồn và chống nhấn lặp; chưa phải lệnh gửi tới bếp hoặc cấu hình thực đơn lưu trên máy chủ. 18 ảnh chuẩn hóa được cache ngoại tuyến cùng mã ứng dụng. Không cache API.
 
 ## Kiểm chứng
 

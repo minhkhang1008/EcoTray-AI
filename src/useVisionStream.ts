@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import type { Intervention } from "../lib/contracts";
+import { recordVisionDecision } from "../lib/final-round.mjs";
 import {
   evaluateTrayWithTrainedModel,
   isVisionFeed,
@@ -11,14 +13,11 @@ export interface StreamTray {
   revision: string;
   source: "hardware" | "reference-fallback";
 }
-export function useVisionStream(schoolId: string) {
+export function useVisionStream(schoolId: string, history: Intervention[], setHistory: Dispatch<SetStateAction<Intervention[]>>) {
   const [hardware, setHardware] = useState<StreamTray | null>(null),
     [fallback, setFallback] = useState<StreamTray | null>(null),
     [online, setOnline] = useState(false),
-    [error, setError] = useState(""),
-    [approvals, setApprovals] = useState<
-      { revision: string; source: string; at: string; recommendation: string }[]
-    >([]);
+    [error, setError] = useState("");
   const revision = useRef(""),
     sequence = useRef(0);
   useEffect(() => {
@@ -78,30 +77,17 @@ export function useVisionStream(schoolId: string) {
     setFallback({
       analysis: evaluateTrayWithTrainedModel({ sampleId, allergyFlags }),
       imageUrl: "./ptnk-normalized/" + sampleId,
-      revision: "reference-" + sequence.current,
+      revision: "reference-" + crypto.randomUUID(),
       source: "reference-fallback",
     });
   }
   function approve() {
-    if (!active || active.analysis.referenceOnly) return;
-    setApprovals((old) =>
-      old.some((a) => a.revision === active.revision)
-        ? old
-        : [
-            {
-              revision: active.revision,
-              source: active.source,
-              at: new Date().toISOString(),
-              recommendation: active.analysis.decisionLoop.recommendation,
-            },
-            ...old,
-          ].slice(0, 100),
-    );
+    setHistory(old => recordVisionDecision(old, active, new Date().toISOString()));
   }
   function reset() {
     sequence.current = 0;
     setFallback(null);
-    setApprovals((a) => a.filter((v) => v.source === "hardware"));
+    setHistory(old => old.filter(entry => entry.source !== "reference-fallback"));
   }
   return {
     active,
@@ -111,9 +97,8 @@ export function useVisionStream(schoolId: string) {
     cycle,
     approve,
     reset,
-    approvals,
     usingFallback: !!fallback,
     resume: () => setFallback(null),
-    approved: !!active && approvals.some((a) => a.revision === active.revision),
+    approved: !!active && history.some(entry => entry.id === `vision-${active.source}-${active.revision}`),
   };
 }

@@ -56,7 +56,7 @@ export interface Intervention {
   menu: string;
   kind: string;
   text: string;
-  source: "simulation" | "hardware";
+  source: "simulation" | "hardware" | "reference-fallback";
   captureId: string;
 }
 export interface StageState {

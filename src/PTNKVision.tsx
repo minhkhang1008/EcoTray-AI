@@ -15,6 +15,7 @@ import {
 } from "./lib/ecotrayVisionEngine";
 import { useFinalRound } from "./FinalRoundContext";
 import { number } from "./format";
+import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 export function VisionResult({
   analysis,
   imageUrl,
@@ -83,95 +84,42 @@ export function VisionResult({
           </tbody>
         </table>
       </div>
-      <p className="badge">
-        {analysis.nutritionalFloorLocked ? "🔒" : "✓"} Ngưỡng bảo vệ dinh dưỡng
-        W_min ≥ 85g ·{" "}
-        {analysis.nutritionalFloorLocked ? "Khóa giảm rau" : "Giữ mức bảo vệ"}
-      </p>
-      <p className="fine">
-        Ngưỡng chính sách thử nghiệm. Vùng khay cố định; lọc nước kho và dụng cụ
-        bằng màu/texture, có thể còn nhiễu.
-      </p>
+      <p className="fine">{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau." : "Tiếp tục theo dõi lượng thực ăn."} Ngưỡng 85 g và định lượng ban đầu là giả định thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Vùng đọc cố định có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
     </>
   );
 }
 export function VisionStreamPanel() {
-  const { vision } = useFinalRound();
+  const f = useFinalRound(), { vision } = f;
   const tray = vision.active;
-  return (
-    <section className="panel ptnk-stream">
-      <div className="section-heading">
-        <div>
-          <h2>Luồng ảnh từ trạm IoT</h2>
-          <p>NFC → Phân tích khay → Kiểm định → Phê duyệt</p>
-        </div>
-        <span className="badge">
-          {vision.usingFallback
-            ? "Ảnh tham chiếu · sự kiện dự phòng"
-            : vision.online
-              ? "API đã kết nối"
-              : "Chưa kết nối API"}
-        </span>
+  const legacy = f.state.capture;
+  const showVision = f.showVision && !!tray;
+  return <section className="panel ptnk-stream">
+    <div className="section-heading">
+      <div><h2>Trạm căn tin</h2><p>Ảnh mới nhất và quyết định của bếp</p></div>
+      <span className="badge">{showVision ? vision.usingFallback ? "Ảnh tham chiếu · dự phòng" : "Ảnh từ thiết bị" : legacy ? f.source === "simulation" ? "Mô phỏng" : "Khay từ thiết bị" : "Chờ ảnh từ thiết bị"}</span>
+    </div>
+    {showVision ? <div className="ptnk-workbench">
+      <div><VisionResult analysis={tray.analysis} imageUrl={tray.imageUrl} /></div>
+      <div>
+        <h3>{tray.analysis.comboName}</h3>
+        <p>{tray.analysis.decisionLoop.headline}</p>
+        <p>{tray.analysis.decisionLoop.recommendation}</p>
+        <p className="fine">{tray.analysis.referenceOnly ? "Mốc hiệu chuẩn · không tính vào thống kê khay trả" : tray.analysis.isDietaryOutlier ? "Ngoại lai · tách khỏi tính khẩu phần chung" : `IQR: ${tray.analysis.iqrEligibleCount} khay cùng thực đơn/ngày; ${tray.analysis.iqrEligibleCount < 10 ? "chưa đủ 10 mẫu nền" : "đã kiểm tra ngưỡng"}.`}</p>
+        <button className="primary" disabled={vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
+        <p className="fine">Lưu tại Dữ liệu → Lịch sử quyết định trên trình duyệt này. Bếp thực hiện thay đổi và đo lại; đây chưa phải lệnh gửi tới bếp.</p>
+        {vision.usingFallback && <button onClick={() => { vision.resume(); f.setSource("hardware"); }}>Trở về luồng thiết bị</button>}
       </div>
-      {!tray ? (
-        <p role="status">
-          Chờ ESP32-CAM gửi ảnh. Chưa có dữ liệu thiết bị để phân tích.
-        </p>
-      ) : (
-        <div className="ptnk-workbench">
-          <div>
-            <VisionResult analysis={tray.analysis} imageUrl={tray.imageUrl} />
-          </div>
-          <div>
-            <h3>{tray.analysis.comboName}</h3>
-            <p>{tray.analysis.decisionLoop.headline}</p>
-            <p>{tray.analysis.decisionLoop.recommendation}</p>
-            <p className="fine">
-              {tray.analysis.referenceOnly
-                ? "Mốc đối chứng · loại khỏi thống kê khay trả"
-                : tray.analysis.isDietaryOutlier
-                  ? "Ngoại lai · không tính vào điều chỉnh khẩu phần"
-                  : `IQR: ${tray.analysis.iqrEligibleCount} khay độc lập cùng ngày và thực đơn; ${tray.analysis.iqrEligibleCount < 10 ? "chưa đủ 10 mẫu để kết luận" : "đã kiểm tra ngưỡng"}.`}
-            </p>
-            <button
-              className="primary"
-              disabled={vision.approved || tray.analysis.referenceOnly}
-              onClick={vision.approve}
-            >
-              {vision.approved
-                ? "Đã ghi nhận phê duyệt"
-                : "Phê duyệt điều chỉnh thực đơn"}
-            </button>
-            <p className="fine">
-              Phê duyệt lưu trong phiên trình duyệt; bếp triển khai và đo lại ở
-              chu kỳ sau.
-            </p>
-            {vision.usingFallback && (
-              <button onClick={vision.resume}>Trở về luồng thiết bị</button>
-            )}
-          </div>
-        </div>
-      )}
-      {vision.error && !vision.usingFallback && (
-        <p className="fine" role="status">
-          {vision.error}
-        </p>
-      )}
-      {vision.approvals.length > 0 && (
-        <details>
-          <summary>
-            Lịch sử phê duyệt trong phiên ({vision.approvals.length})
-          </summary>
-          {vision.approvals.map((a) => (
-            <p key={a.revision}>
-              {a.source === "hardware" ? "Từ trạm" : "Ảnh tham chiếu"} ·{" "}
-              {new Date(a.at).toLocaleTimeString("vi-VN")} · {a.recommendation}
-            </p>
-          ))}
-        </details>
-      )}
-    </section>
-  );
+    </div> : legacy ? <>
+      <p role="status">{legacy.status === "QUEUED" ? "Đã nhận ảnh · chờ worker phân tích" : legacy.status === "PROCESSING" ? "Worker đang phân tích" : legacy.status === "FAILED" ? legacy.errorMessage : "Đã nhận kết quả từ worker"}</p>
+      <div className="ptnk-workbench"><div><TrayPreview capture={legacy} /></div><DecisionCard /></div>
+    </> : <p role="status">Chưa có ảnh khay. Khi trạm gửi ảnh hoặc kết quả, chúng sẽ xuất hiện tại đây.</p>}
+    <details className="method-details">
+      <summary>Kết nối & nguồn ảnh</summary>
+      <ConnectionControls />
+      <p className="fine">API phân tích ảnh: {vision.online ? "đã kết nối" : vision.error || "chưa kết nối"}. API NFC/worker: {f.connected ? "đã kết nối" : f.error || "chưa kết nối"}. API phản hồi không xác nhận camera đang hoạt động.</p>
+      <p className="fine">Nhận JPEG 800×600 qua API phân tích, hoặc kết quả qua worker AWS. Nếu cả hai có ảnh, hiển thị sự kiện mới hơn; ảnh dự phòng luôn ghi rõ nguồn.</p>
+    </details>
+  </section>;
 }
 export function RealtimeFunnel() {
   const f = useFinalRound(),
@@ -324,7 +272,7 @@ export default function PTNKVision() {
     <section className="panel ptnk-lab">
       <div className="section-heading">
         <div>
-          <h2>Bộ dữ liệu Huấn luyện & Kiểm định Thực địa PTNK</h2>
+          <h2>Kiểm tra ảnh khay PTNK</h2>
           <p>
             18 ảnh thật · 28–29/10/2026 · nhãn phần còn lại ước lượng bằng mắt
           </p>
@@ -332,7 +280,7 @@ export default function PTNKVision() {
         <span className="badge">ẢNH THỰC ĐỊA</span>
       </div>
       <p className="ptnk-evaluation">
-        MAE kiểm định theo nhóm:{" "}
+        Sai số kiểm định theo nhóm (MAE):{" "}
         <b>{number(MODEL.validation.overallMAE)} điểm phần trăm</b> · 16 ảnh
         được chấm, 2 mốc hiệu chuẩn không chấm. Chưa có độ chính xác phân loại
         được xác thực.
@@ -368,9 +316,9 @@ export default function PTNKVision() {
       </div>
       <div className="section-heading">
         <div>
-          <h3>Hiệu chỉnh trực tuyến · Online Calibration Sandbox</h3>
+          <h3>Sửa kết quả ước lượng</h3>
           <p>
-            {sampleId || "Ảnh tải lên"} · Trọng số phiên {version}
+            {sampleId || "Ảnh tải lên"} · Lần hiệu chỉnh {version}
             {version > 0 ? " · chưa kiểm định lại" : ""}
           </p>
         </div>
@@ -415,7 +363,7 @@ export default function PTNKVision() {
         <div>
           <h3>{analysis.comboName}</h3>
           <p className="badge">
-            {manual ? "Nhãn hiệu chỉnh thủ công" : "Dự đoán Ridge từ pixel"}
+            {manual ? "Nhãn hiệu chỉnh thủ công" : "Ước lượng từ ảnh"}
           </p>
           {sampleId && (
             <p className="fine">
@@ -434,7 +382,7 @@ export default function PTNKVision() {
               ? "chưa đủ 10 mẫu nền để kết luận."
               : "đã kiểm tra ngưỡng ngoại lai."}
           </p>
-          <h3>Phản hồi người kiểm định</h3>
+          <h3>Sửa tỷ lệ phần còn lại</h3>
           {visionKeys.map((k, i) => (
             <label className="scenario-slider" key={k}>
               {analysis.components[k].nameVi} ·{" "}
@@ -473,7 +421,7 @@ export default function PTNKVision() {
                 sampleId === MODEL.anchors.full
               }
             >
-              Cập nhật Trọng số Mô hình (Active Learning)
+              Áp dụng hiệu chỉnh trong phiên
             </button>
             <button
               onClick={() => {
@@ -483,7 +431,7 @@ export default function PTNKVision() {
                 setMessage("Đã khôi phục trọng số gốc.");
               }}
             >
-              Khôi phục trọng số gốc
+              Khôi phục mô hình gốc
             </button>
           </div>
           <p className="fine">

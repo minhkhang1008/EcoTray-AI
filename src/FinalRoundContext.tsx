@@ -14,6 +14,7 @@ import {
   operationalDecision,
   trimOutliers,
   calibrateWeights,
+  isVisionLatest,
 } from "../lib/final-round.mjs";
 import { summarize } from "../lib/core.mjs";
 import type {
@@ -85,12 +86,11 @@ const validHistory = (v: unknown): v is Intervention[] =>
       Number.isFinite(Date.parse(r.at)) &&
       typeof r.text === "string" &&
       typeof r.menu === "string" &&
-      ["simulation", "hardware"].includes(r.source),
+      ["simulation", "hardware", "reference-fallback"].includes(r.source),
   );
 function useFinalState() {
   const offlineReady = useOfflineStage();
   const schoolId = import.meta.env.VITE_IOT_SCHOOL_ID || "ptnk";
-  const vision = useVisionStream(schoolId);
   const schoolName = import.meta.env.VITE_SCHOOL_NAME || "PTNK";
   const [adapter, setAdapter, adapterError] = useStored(
     "ecotray-adapter-v1",
@@ -107,6 +107,7 @@ function useFinalState() {
     [],
     validHistory,
   );
+  const vision = useVisionStream(schoolId, history, setHistory);
   const [stage, dispatch] = useReducer(stageReducer, undefined, initialStage);
   const [source, setSource] = useState<"simulation" | "hardware">("hardware");
   const [watching, setWatching] = useState(true),
@@ -114,7 +115,6 @@ function useFinalState() {
     [error, setError] = useState(""),
     [connected, setConnected] = useState(false),
     [notice, setNotice] = useState("");
-  const [hardwareApproved, setHardwareApproved] = useState<string[]>([]);
   useEffect(() => {
     if (source !== "hardware" || !watching) {
       setConnected(false);
@@ -171,6 +171,7 @@ function useFinalState() {
       rice: c.result!.rice,
       vegetables: c.result!.vegetables,
       main: c.result!.main,
+      soup: c.result!.soup,
       allergyFlags: c.result!.isOutlier ? ["Cờ ngoại lai từ trạm"] : [],
     }));
   const hardware: StageState = {
@@ -179,12 +180,13 @@ function useFinalState() {
     nfc: remote?.latestNfc ?? null,
     capture: remote?.latestCapture ?? null,
     analyzed: remote?.latestCapture?.status === "COMPLETED",
-    approved: hardwareApproved.includes(remote?.latestCapture?.captureId ?? ""),
+    approved: history.some(entry => entry.id === `hardware-${remote?.latestCapture?.captureId}`),
     history: history.filter((h) => h.source === "hardware"),
     redeemed: [],
     sequence: 0,
   };
   const state = source === "simulation" ? stage : hardware;
+  const showVision = isVisionLatest(vision.active, state.capture);
   const activeRows = hardwareRows.filter(
     (r) =>
       !!state.capture?.dishId &&
@@ -238,13 +240,12 @@ function useFinalState() {
         : [intervention, ...old].slice(0, 500),
     );
     if (isDemo) dispatch({ type: "approve", at: intervention.at });
-    else setHardwareApproved((ids) => [...ids, state.capture!.captureId]);
     setNotice(
       decision.kind === "outlier"
         ? "Đã xác nhận tách mẫu ngoại lai; giữ nguyên khẩu phần chung."
         : decision.kind === "insufficient"
           ? "Đã ghi nhận yêu cầu thu thập thêm mẫu."
-          : "Bếp đã phê duyệt và ghi vào lịch sử trên thiết bị này.",
+          : "Đã ghi nhận quyết định trong lịch sử trên trình duyệt này.",
     );
   }
   function resetStage() {
@@ -262,7 +263,7 @@ function useFinalState() {
       } else if (event.key === '4' || event.key === ' ') {
         if (event.key === ' ' && target.closest('button,summary,a')) return;
         event.preventDefault(); setSource('simulation'); vision.cycle(stage.nfc?.allergyFlags ?? []);
-      } else if (event.key === '5') { event.preventDefault(); vision.approve(); }
+      } else if (event.key === '5') { event.preventDefault(); if (showVision) vision.approve(); else approve(); }
       else if (event.key.toLowerCase() === 'r') { event.preventDefault(); resetStage(); vision.reset(); setSource('hardware'); }
     };
     window.addEventListener('keydown',listener);
@@ -275,6 +276,7 @@ function useFinalState() {
   return {
     offlineReady,
     vision,
+    showVision,
     schoolId,
     schoolName,
     adapter,

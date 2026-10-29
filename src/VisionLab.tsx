@@ -1,7 +1,6 @@
-import { NutritionPanel } from "./DecisionSupport";
+import { NutritionPanel, PairingMatrix } from "./DecisionSupport";
 import { useState } from "react";
 import PTNKVision, { VisionStreamPanel } from "./PTNKVision";
-import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 import { useFinalRound } from "./FinalRoundContext";
 import {
   componentKeys,
@@ -12,11 +11,6 @@ import {
 import type { Values } from "../lib/contracts";
 import { number } from "./format";
 const presets = [
-  {
-    title: "Ảnh khay thực tế",
-    real: true,
-    values: { rice: 50, vegetables: 100, main: 100 },
-  },
   {
     title: "Rau thừa cao",
     real: false,
@@ -95,7 +89,7 @@ function ScenarioSandbox({ initial }: { initial: Values }) {
             );
           })}
           <p className="fine">
-            Thêm mẫu cân trong Ghi nhận khay → QuickLog để cập nhật hệ số tại
+            Thêm mẫu cân trong Ghi nhận khay → Cân mẫu để cập nhật hệ số tại
             đây.
           </p>
         </div>
@@ -106,153 +100,26 @@ function ScenarioSandbox({ initial }: { initial: Values }) {
   );
 }
 export default function VisionLab() {
-  const f = useFinalRound(),
-    [view, setView] = useState<"sandbox" | "iot">("sandbox"),
-    [preset, setPreset] = useState(1);
-  return (
-    <>
-      <PTNKVision />
-      <VisionStreamPanel />
-      <div className="subtabs" role="group" aria-label="Chế độ Vision">
-        <button
-          aria-pressed={view === "iot"}
-          className={view === "iot" ? "selected" : ""}
-          onClick={() => setView("iot")}
-        >
-          Trạm phần cứng
-        </button>
-        <button
-          aria-pressed={view === "sandbox"}
-          className={view === "sandbox" ? "selected" : ""}
-          onClick={() => setView("sandbox")}
-        >
-          Phân tích ảnh khay
-        </button>
-      </div>
-      {view === "iot" ? (
-        <>
-          <ConnectionControls />
-          <div className="iot-metrics">
-            <article>
-              <span>Định dạng thiết bị</span>
-              <strong>800×600 JPEG</strong>
-              <small>~45 KB/ảnh</small>
-            </article>
-            <article>
-              <span>Độ trễ xử lý</span>
-              <strong>
-                {f.source === "hardware" &&
-                f.state.capture?.latencyMs !== undefined
-                  ? f.state.capture.latencyMs + " ms"
-                  : "Chưa đo"}
-              </strong>
-              <small>Chỉ hiển thị thời gian đo từ trạm</small>
-            </article>
-            <article>
-              <span>Trạng thái khay</span>
-              <strong>
-                {
-                  (
-                    {
-                      QUEUED: "Đang xếp hàng",
-                      PROCESSING: "Đang phân tích",
-                      COMPLETED: "Đã xử lý",
-                      FAILED: "Xử lý thất bại",
-                    } as const
-                  )[f.state.capture?.status ?? "QUEUED"]
-                }
-              </strong>
-              <small>{f.state.capture?.captureId ?? "Chưa có khay"}</small>
-            </article>
-          </div>
-          <div className="vision-layout">
-            <section className="panel">
-              <div className="section-heading">
-                <h2>Ảnh từ trạm</h2>
-                <span className="badge">
-                  {f.source === "hardware" ? "Phần cứng" : "Mô phỏng"}
-                </span>
-              </div>
-              <TrayPreview capture={f.state.capture} />
-              {f.state.capture?.status === "FAILED" && (
-                <p role="status">{f.state.capture.errorMessage}</p>
-              )}
-              <p className="fine">
-                Ảnh JPEG thô được xếp hàng; AWS/Lambda gửi kết quả về mới hiển
-                thị phần trăm.
-              </p>
-            </section>
-            <section className="panel">
-              <h2>Quy đổi & quyết định</h2>
-              <div className="gram-results">
-                {componentKeys.map((k) => {
-                  const g = estimateGrams(
-                    f.state.capture?.result?.[k],
-                    f.fullPortion(k),
-                  );
-                  return (
-                    <p key={k}>
-                      {componentLabels[k]}{" "}
-                      <b>
-                        {g === null ? "Chưa có mẫu cân" : g + " g (ước lượng)"}
-                      </b>
-                    </p>
-                  );
-                })}
-              </div>
-              <DecisionCard />
-            </section>
-          </div>
-        </>
-      ) : (
-        <>
-
-          <details className="vision-scenarios"><summary>Thử kịch bản mô phỏng <span>Khám phá các mức phần còn lại</span></summary>
-          <p className="sandbox-note">
-            Có 18 ảnh thực địa trong thư viện phía trên và 5 kịch bản số liệu để thử tương
-            tác. Ảnh món ăn từ Portal không được dùng thay cho ảnh khay thừa.
-            Tải ảnh cùng bố cục đã hiệu chuẩn để thử phân tích.
-          </p>
-          <div className="preset-grid">
-            {presets.map((p, i) => p.real ? null : (
-              <button
-                key={p.title}
-                aria-pressed={preset === i}
-                className={preset === i ? "selected" : ""}
-                onClick={() => setPreset(i)}
-              >
-                {p.real ? (
-                  <img
-                    src="./tray-demo/portal.ptnk.png"
-                    alt="Khay thực tế đã gán nhãn"
-                  />
-                ) : (
-                  <span className="preset-tray" aria-hidden="true">
-                    ▥
-                  </span>
-                )}
-                <strong>{p.title}</strong>
-                <small>
-                  {p.real ? "Ảnh thật · nhãn tham chiếu" : "Kịch bản mô phỏng"}
-                </small>
-              </button>
-            ))}
-          </div>
-          <ScenarioSandbox key={preset} initial={presets[preset].values} />
-          </details>
-        </>
-      )}
-      <details className="method-details">
-        <summary>Giới hạn phương pháp & dữ liệu</summary>
-        <p>
-          Mô hình Ridge dùng vùng khay cố định và các đặc trưng màu, texture.
-          Ảnh khác bố cục cần hiệu chỉnh vùng đọc; kết quả không thay thế phép cân.
-        </p>
-        <p>
-          Khối lượng ước lượng lấy hệ số từ QuickLog; ảnh nguồn và bản ghi cân
-          được lưu tách biệt. Không dùng nhận diện khuôn mặt.
-        </p>
+  const [view, setView] = useState("stream"), [preset, setPreset] = useState(0);
+  return <>
+    <div className="subtabs" role="group" aria-label="Chế độ Vision">
+      {[["stream", "Trạm căn tin"], ["photos", "Kiểm tra ảnh"], ["scenarios", "Thử kịch bản"]].map(([id, label]) => (
+        <button key={id} aria-pressed={view === id} className={view === id ? "selected" : ""} onClick={() => setView(id)}>{label}</button>
+      ))}
+    </div>
+    {view === "stream" && <VisionStreamPanel />}
+    {view === "photos" && <PTNKVision />}
+    {view === "scenarios" && <>
+      <p className="source-notice">Các kịch bản dưới đây là mô phỏng, tách khỏi ảnh thực địa và thống kê khay.</p>
+      <details className="vision-scenarios" open>
+        <summary>Thử tỷ lệ phần còn lại</summary>
+        <div className="preset-grid">
+          {presets.map((p, i) => <button key={p.title} aria-pressed={preset === i} className={preset === i ? "selected" : ""} onClick={() => setPreset(i)}>{p.title}</button>)}
+        </div>
+        <ScenarioSandbox key={preset} initial={presets[preset].values} />
       </details>
-    </>
-  );
+      <PairingMatrix />
+      <NutritionPanel />
+    </>}
+  </>;
 }

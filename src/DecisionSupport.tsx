@@ -1,18 +1,15 @@
 import { useState } from "react";
-import { nutritionAudit, adapters } from "../lib/final-round.mjs";
+import { nutritionAudit } from "../lib/final-round.mjs";
 import { pairingScenarios, roadmap } from "../lib/decision-scenarios";
-import { useFinalRound } from "./FinalRoundContext";
-import type { Adapter, TrayRow } from "../lib/contracts";
+import type { TrayRow } from "../lib/contracts";
 import { number } from "./format";
 
-export function AdapterSwitcher() {
-  const f = useFinalRound();
-  return <label title={f.adapterInfo.input + " · ESP32-CAM · " + (f.adapterInfo.nfc ? "NFC + cảnh báo dị ứng" : "Không yêu cầu NFC/Portal")} className="adapter-switcher"><span>Gói trường</span><select aria-label="Gói trường học" value={f.adapter} onChange={e => f.setAdapter(e.target.value as Adapter)}>{(Object.keys(adapters) as Adapter[]).map(k => <option key={k} value={k}>{adapters[k].name}</option>)}</select></label>;
-}
-
 export function MealComboLine({ main, rows = [] }: { main: string; rows?: TrayRow[] }) {
-  const names = (key: "riceDish" | "vegetableDish" | "soupDish") => [...new Set(rows.map(r => r[key]).filter(Boolean))].join(" / ") || "Chưa xác minh cặp món";
-  return <dl className="meal-combo-line" aria-label="Tổ hợp bốn thành phần">{[["Cơm / Tinh bột", names("riceDish")], ["Món chính", main], ["Món rau đi kèm", names("vegetableDish")], ["Món canh đi kèm", names("soupDish")]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>;
+  const sides = ([['riceDish', 'Cơm / Tinh bột'], ['vegetableDish', 'Món rau đi kèm'], ['soupDish', 'Món canh đi kèm']] as const)
+    .map(([key, label]) => [label, [...new Set(rows.map(r => r[key]).filter(Boolean))].join(" / ")])
+    .filter(([, value]) => value);
+  if (!sides.length) return null;
+  return <dl className="meal-combo-line" aria-label={"Món đi kèm " + main}>{sides.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>;
 }
 
 export function PairingMatrix() {
@@ -33,7 +30,7 @@ export function NutritionPanel({ served, waste, compact = false, concise = false
   const pct = interactive ? example === "locked" ? 46.5 : 25 : waste;
   const audit = nutritionAudit(grams, pct);
   return <section className={"nutrition-panel " + (compact ? "compact" : "panel")} aria-label="Bảo vệ định lượng rau">
-    <div className="section-heading"><div><h3>{audit.kind === "locked" ? "Khóa giảm định lượng rau" : "Bảo vệ định lượng rau"}</h3><p>Ngưỡng cấu hình minh họa W_min = 85 g rau/khay</p></div>{!concise && <span className="badge demo">{interactive ? "THỬ QUY TẮC" : "GIẢ ĐỊNH CẤU HÌNH"}</span>}</div>
+    <div className="section-heading"><div><h3>{audit.kind === "locked" ? "Khóa giảm định lượng rau" : "Bảo vệ định lượng rau"}</h3><p>Ngưỡng thử nghiệm: 85 g rau/khay</p></div>{!concise && <span className="badge demo">{interactive ? "THỬ QUY TẮC" : "GIẢ ĐỊNH CẤU HÌNH"}</span>}</div>
     {interactive && <div className="segmented" role="group" aria-label="Kịch bản định lượng rau">{[["locked", "Thực ăn dưới ngưỡng"], ["calibrate", "Dư định lượng múc"]].map(([id, label]) => <button key={id} aria-pressed={example === id} className={example === id ? "selected" : ""} onClick={() => setExample(id)}>{label}</button>)}</div>}
     {audit.kind === "unknown" ? <p>Chưa có định lượng đã cân. Chưa cho phép giảm rau; bổ sung mẫu cân trước khi quyết định.</p> : <><dl className="nutrition-values">{[["Múc ban đầu", audit.served], ["Bỏ thừa ước tính", audit.wasted], ["Thực ăn ước tính", audit.consumed], ["Ngưỡng minh họa", audit.minimum]].map(([label, v]) => <div key={String(label)}><dt>{label}</dt><dd>{number(Number(v))} <small>g</small></dd></div>)}</dl><p className="nutrition-action">{audit.kind === "locked" ? `Giữ ${number(audit.served!)} g rau; thử đổi cách chế biến hoặc cặp rau–canh. Không giảm lượng khi thực ăn còn dưới ngưỡng.` : audit.kind === "calibrate" ? `Thử ${number(audit.proposed!)} g/khay; đo lại lượng thực ăn và mức đủ ăn ở chu kỳ sau.` : "Giữ nguyên và tiếp tục theo dõi."}</p></>}
     {!concise && <p className="fine">85 g là giả định trong kịch bản, chưa phải chuẩn áp dụng tại trường. Khối lượng rau không tương đương khối lượng chất xơ. Định lượng theo lứa tuổi cần người phụ trách dinh dưỡng xác nhận; dự báo thực ăn phải được đo lại.</p>}
@@ -42,7 +39,7 @@ export function NutritionPanel({ served, waste, compact = false, concise = false
 
 export function EvidenceRoadmap() {
   return <>
-    <section className="panel"><h2>Kiểm chứng & đồng hành</h2><dl className="evidence-list"><div><dt>Thực địa PTNK</dt><dd>144 khay quan sát · khoảng 44 g/khay; pilot 07/10: 51 khay. Nguồn theo README.</dd></div><div><dt>Hiệu chuẩn Vision</dt><dd>Hiện có một ảnh khay gán nhãn. Chưa có bộ cân đối chứng n = 30 để công bố MAE 6,8% hay độ chính xác 93,2%.</dd></div><div><dt>Phối hợp dự kiến</dt><dd>Thầy Nguyễn Phạm Bá Duy hướng dẫn dự án theo README. Phối hợp bếp và định hướng ươm tạo CITT cần hồ sơ xác nhận; chưa ghi là bảo trợ.</dd></div></dl></section>
+    <section className="panel"><h2>Kiểm chứng & đồng hành</h2><dl className="evidence-list"><div><dt>Thực địa PTNK</dt><dd>144 khay quan sát · khoảng 44 g/khay; pilot 07/10: 51 khay. Nguồn theo README.</dd></div><div><dt>Hiệu chuẩn Vision</dt><dd>18 ảnh PTNK, có góc chụp lặp và hai mốc hiệu chuẩn. MAE kiểm định theo nhóm: 27,28 điểm phần trăm trên 16 ảnh; nhãn ước lượng bằng mắt, chưa có bộ cân đối chứng độc lập.</dd></div><div><dt>Phối hợp dự kiến</dt><dd>Thầy Nguyễn Phạm Bá Duy hướng dẫn dự án theo README. Phối hợp bếp và định hướng ươm tạo CITT cần hồ sơ xác nhận; chưa ghi là bảo trợ.</dd></div></dl></section>
     <section className="panel roadmap-panel"><div className="section-heading"><div><h2>Lộ trình hành động 3 năm</h2><p>Đề xuất để lập kế hoạch · chưa phải kết quả đạt được</p></div><span className="badge demo">MỤC TIÊU</span></div><p className="fine">README đặt phạm vi năm 2 là 3–5 trường và năm 3 là 10+ trường. Mốc 4/12 trường dưới đây cụ thể hóa đề xuất; cần chốt nguồn lực và đối tác.</p><div className="table-scroll" tabIndex={0} role="region" aria-label="Bảng có thể cuộn ngang"><table><caption>Đầu ra → Kết quả → Tác động dự kiến</caption><thead><tr>{["Giai đoạn / Mục tiêu SMART", "Hoạt động / Nhân sự", "Nguồn lực", "Đầu ra", "Kết quả / KPI", "Tác động dự kiến"].map(h => <th scope="col" key={h}>{h}</th>)}</tr></thead><tbody>{roadmap.map(r => <tr key={r.year}><th scope="row">{r.year}<p>{r.goal}</p></th><td>{r.work}<p className="fine">{r.owners}</p></td><td>{r.resources}</td><td>{r.output}</td><td>{r.outcome}</td><td>{r.impact}</td></tr>)}</tbody></table></div><p className="fine">Không quy đổi CO₂e thành tác động đã kiểm chứng khi chưa chốt hệ số và phương pháp đo.</p></section>
   </>;
 }

@@ -2,70 +2,11 @@ import { useState } from "react";
 import { useFinalRound } from "./FinalRoundContext";
 import { adapters, cloudEstimate, roiEstimate } from "../lib/final-round.mjs";
 import { number, dateLabel, csvCell, downloadCsv } from "./format";
-import type { Adapter } from "../lib/contracts";
+import type { Adapter, Intervention } from "../lib/contracts";
 
-export function OperationalOverview({ mode }: { mode: string }) {
-  const f = useFinalRound();
+export function OperationalOverview() {
   return (
     <>
-      <section className="operational-funnel panel">
-        <div className="section-heading">
-          <div>
-            <h2>Đăng ký → Thực nhận → Khay phân tích</h2>
-            <p>
-              {mode === "demo"
-                ? "Kịch bản vận hành một ngày · độc lập với bộ 1.280 khay"
-                : mode === "hardware"
-                  ? "Sự kiện từ phần cứng · tối đa 100 khay gần nhất"
-                  : "Dữ liệu cân/ghi nhận trên thiết bị chưa có số suất đăng ký"}
-            </p>
-          </div>
-          <span className="badge demo">
-            {mode === "demo" ? "MÔ PHỎNG" : "NGUỒN RIÊNG"}
-          </span>
-        </div>
-        <div className="funnel-stages">
-          {[
-            [
-              "01",
-              f.adapterInfo.portal
-                ? "Đăng ký trên Portal"
-                : f.adapterInfo.input,
-              mode === "demo" ? "1.017 suất" : "Chưa có số liệu",
-            ],
-            [
-              "02",
-              f.adapterInfo.nfc
-                ? "Thực nhận qua NFC"
-                : f.adapter === "standard"
-                  ? "Sĩ số theo lớp"
-                  : "Suất do bếp báo",
-              mode === "demo"
-                ? number(f.stage.served) + " suất · mô phỏng"
-                : mode === "hardware"
-                  ? number(f.remote?.servedCount ?? 0) + " suất"
-                  : "Chưa ghi nhận",
-            ],
-            [
-              "03",
-              "Khay đã phân tích",
-              mode === "demo"
-                ? (f.vision.usingFallback ? "1 khay tham chiếu" : "Chưa ghi nhận")
-                : mode === "hardware"
-                  ? number(f.hardwareRows.length) + " khay"
-                  : "Xem thống kê bên dưới",
-            ],
-          ].map(([n, label, value]) => (
-            <article key={n}>
-              <span>{n}</span>
-              <div>
-                <small>{label}</small>
-                <strong>{value}</strong>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
       <section className="sustainability-strip">
         <div className="strip-intro">
           <h2>Bền vững & kinh tế</h2>
@@ -260,7 +201,7 @@ export function CloudCalculator() {
           <div><dt>Hoàn vốn dự kiến</dt><dd>{roi.paybackMonths === null ? "Chưa xác định" : number(roi.paybackMonths)} <small>tháng học</small></dd></div>
         </dl>
         <p className="fine">Một trạm Vision: ESP32-CAM 135.000đ + cảm biến/LED 45.000đ + nguồn/khung 110.000đ. Dự toán nguyên liệu {number(roi.ingredients)}đ/năm; phiếu giấy {number(roi.paper)}đ/năm {f.adapterInfo.nfc ? "(180 ngày × 30đ/phiếu)" : "(gói không dùng NFC: chưa tính thay phiếu)"}. Hoàn vốn = CAPEX / [(tiết kiệm năm − OPEX 9 tháng) / 9]. Chưa tính nhân công, bảo trì, triển khai và số trạm cần theo lưu lượng; chưa phải lợi nhuận thực đo.</p>
-        <p className="fine">Dự phòng giảm 50% kinh phí: ưu tiên một trạm Lite 290.000đ, tận dụng thiết bị sẵn có; vẫn cần đối chiếu mức ngân sách thực được cấp.</p>
+
       </div>
       <details>
         <summary>Giả định, công thức & giới hạn của dự toán</summary>
@@ -282,61 +223,28 @@ export function CloudCalculator() {
   );
 }
 export function InterventionHistory() {
-  const f = useFinalRound(),
-    history = f.history.filter((h) => h.source === f.source);
+  const f = useFinalRound();
+  const [source, setSource] = useState("all");
+  const names: Record<Intervention["source"], string> = {hardware: "Phần cứng", simulation: "Mô phỏng NFC", "reference-fallback": "Ảnh tham chiếu"};
+  const history = f.history.filter(entry => source === "all" || entry.source === source);
   function exportHistory() {
-    downloadCsv(
-      "EcoTray-can-thiep-" + f.source + ".csv",
-      [
-        "at,menu,kind,recommendation,source",
-        ...history.map((h) =>
-          [h.at, h.menu, h.kind, h.text, h.source].map(csvCell).join(","),
-        ),
-      ].join("\n"),
-    );
+    downloadCsv("EcoTray-quyet-dinh-" + source + ".csv", [
+      "at,menu,kind,recommendation,source",
+      ...history.map(entry => [entry.at, entry.menu, entry.kind, entry.text, entry.source].map(csvCell).join(",")),
+    ].join("\n"));
   }
-  return (
-    <section className="intervention-history">
-      <div className="section-heading">
-        <div>
-          <h2>Lịch sử bếp phê duyệt</h2>
-          <p>
-            {f.source === "simulation" ? "Mô phỏng" : "Phần cứng"} · lưu riêng
-            trên trình duyệt
-          </p>
-        </div>
-        <button disabled={!history.length} onClick={exportHistory}>
-          Xuất lịch sử CSV
-        </button>
-      </div>
-      {history.length ? (
-        <div className="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Thời gian</th>
-                <th>Món</th>
-                <th>Quyết định</th>
-                <th>Nguồn</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((h) => (
-                <tr key={h.id}>
-                  <td>{dateLabel(h.at)}</td>
-                  <td>{h.menu}</td>
-                  <td className="wrap-cell">{h.text}</td>
-                  <td>{h.source === "simulation" ? "Mô phỏng" : "Từ trạm"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="empty">
-          Chưa có phê duyệt. Xem luồng ảnh trong EcoTray Vision để thực hiện vòng phản hồi.
-        </p>
-      )}
-    </section>
-  );
+  return <section className="intervention-history">
+    <div className="section-heading">
+      <div><h2>Lịch sử quyết định</h2><p>Lưu trên trình duyệt này; chưa gửi lệnh tới bếp.</p></div>
+      <button disabled={!history.length} onClick={exportHistory}>Xuất lịch sử CSV</button>
+    </div>
+    <label className="history-source">Nguồn quyết định<select value={source} onChange={e => setSource(e.target.value)}>
+      <option value="all">Tất cả nguồn</option>
+      {Object.entries(names).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+    </select></label>
+    {history.length ? <div className="table-scroll"><table>
+      <thead><tr>{["Thời gian", "Món", "Quyết định", "Nguồn"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
+      <tbody>{history.map(entry => <tr key={entry.id}><td>{dateLabel(entry.at)}</td><td>{entry.menu}</td><td className="wrap-cell">{entry.text}</td><td>{names[entry.source]}</td></tr>)}</tbody>
+    </table></div> : <p className="empty">Chưa có quyết định thuộc nguồn này. Ghi nhận tại Vision → Trạm căn tin.</p>}
+  </section>;
 }

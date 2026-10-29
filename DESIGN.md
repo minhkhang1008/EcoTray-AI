@@ -305,3 +305,9 @@ Giữ skip link hiện khi focus để tới nội dung chính. Dùng phần t�
 - **Don't** làm mất phạm vi lọc đang xem khi thu gọn các điều khiển.
 - **Don't** thêm emoji, icon font hoặc bộ biểu tượng có nét khác vào thanh điều hướng và các hành động sản phẩm.
 - **Don't** dùng ảnh mặt, tên học sinh hoặc hình học sinh nhận diện được trong bản ghi khay.
+
+## Tinh giản luồng công việc (30/10/2026)
+
+Giữ nguyên màu, typography và năm tab. Danh sách thực đơn là chế độ mặc định; ở mobile mỗi món có tên và một hàng bốn giá trị (Khay/Cơm/Rau/Món chính), không kéo ngang để tìm tỷ lệ. Thẻ ảnh là chế độ phụ. Khi chưa có khay, Tổng quan chỉ hiển thị hướng dẫn cùng hành động ghi nhận/nhập CSV; không dựng biểu đồ và chỉ số rỗng.
+
+Vision tách trạm, kiểm tra ảnh và kịch bản mô phỏng. Thuật ngữ mô hình và phương pháp ở phần kiểm định; nhãn nguồn, giới hạn ước lượng và trạng thái lưu ở gần kết quả liên quan. Cấu hình trường giữ lựa chọn gói; lộ trình, minh chứng và dự toán chuyển sang Thông tin dự án. Chi tiết món không chèn số liệu toàn căn tin hoặc ví dụ định lượng không thuộc món.

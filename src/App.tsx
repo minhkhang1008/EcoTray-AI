@@ -1,4 +1,4 @@
-import { PairingMatrix, NutritionPanel, EvidenceRoadmap, AdapterSwitcher, ComboFields } from "./DecisionSupport";
+import { EvidenceRoadmap, ComboFields } from "./DecisionSupport";
 import { useEffect, useMemo, useState } from "react";
 import { parseCSV, exportCSV, keys, labels } from "../lib/core.mjs";
 import {
@@ -10,9 +10,9 @@ import {
 import Overview from "./Overview";
 import MenuTable from "./MenuTable";
 import Icon, { type IconName } from "./Icon";
-import ProductContext from "./ProductContext";
+import InterventionScenario from "./InterventionScenario";
 import Vision from "./VisionLab";
-import { VisionStreamPanel, RealtimeFunnel } from "./PTNKVision";
+import { RealtimeFunnel } from "./PTNKVision";
 import DishDrawer from "./DishDrawer";
 import QuickLog from "./QuickLog";
 import { useFinalRound } from "./FinalRoundContext";
@@ -84,9 +84,8 @@ export default function App() {
     main: "NA",
     soup: "NA", riceDish: "", vegetableDish: "", soupDish: "",
   });
-  const [aiApplied, setAiApplied] = useState(false);
   const [dataView, setDataView] = useState("records"),
-    [menuView, setMenuView] = useState("cards");
+    [menuView, setMenuView] = useState("table");
   useEffect(() => {
     final.setWatching(
       tab === "vision" || tab === "log" || mode === "hardware",
@@ -183,7 +182,7 @@ export default function App() {
       id: crypto.randomUUID(),
       date: entry.date,
       menu: entry.menu.trim(),
-      source: aiApplied ? "ai-reviewed" : "manual",
+      source: "manual",
       riceDish: entry.riceDish.trim(), vegetableDish: entry.vegetableDish.trim(), soupDish: entry.soupDish.trim(),
       soup: entry.soup === "NA" ? null : Number(entry.soup),
       rice: null,
@@ -203,9 +202,12 @@ export default function App() {
     setMode("real");
     reset();
     setMessage("Đã lưu bản ghi.");
-    setAiApplied(false);
     setEntry({ ...entry, rice: "NA", vegetables: "NA", main: "NA", soup: "NA" });
   }
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [tab, dataView]);
+  const viewingRows = tab === "overview" || tab === "menus" || (tab === "data" && dataView === "records");
   const table = filtered
     .slice()
     .reverse()
@@ -284,7 +286,6 @@ export default function App() {
             <b>{navigation.find((n) => n[0] === tab)?.[1]}</b>
           </div>
           <div className="topbar-right">
-            <AdapterSwitcher />
             <span className="iot-header-status" role="status">
               <i className={final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'online' : ''} />
               Trạm IoT Căn tin · {final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'NFC có tín hiệu' : 'Chờ NFC'} · {final.vision.online && final.vision.hardware && Date.now()-Date.parse(final.vision.hardware.analysis.timestamp)<60000 ? 'Camera có tín hiệu' : 'Chờ ESP32-CAM'}
@@ -297,10 +298,6 @@ export default function App() {
             >
               <Icon name="info" size={18} />
             </button>
-            <span className="local-status">
-              <i />
-              Lưu trên thiết bị
-            </span>
             <span className="avatar">VL</span>
           </div>
         </div>
@@ -331,15 +328,9 @@ export default function App() {
               </p>
             </div>
             <div className="header-actions">
-              {!["vision", "log"].includes(tab) && (
+              {viewingRows && (
                 <label className="source-switch">
-                  <span className={mode === "demo" ? "badge demo" : "badge"}>
-                    {mode === "demo"
-                      ? "MẪU"
-                      : mode === "hardware"
-                        ? "TRẠM"
-                        : "CÁ NHÂN"}
-                  </span>
+
                   <select
                     aria-label="Không gian dữ liệu"
                     value={mode}
@@ -356,7 +347,7 @@ export default function App() {
                   </select>
                 </label>
               )}
-              {tab !== "vision" && tab !== "log" && (
+              {viewingRows && (
                 <button
                   className="export-action"
                   aria-label="Xuất CSV"
@@ -384,7 +375,7 @@ export default function App() {
               )}
             </div>
           </header>
-          {tab === "vision" || tab === "log" ? (
+          {tab === "data" && dataView !== "records" ? null : tab === "vision" || tab === "log" ? (
             <div className="source-notice">
               <span className="badge">
                 {tab === "vision"
@@ -397,7 +388,7 @@ export default function App() {
               </span>
               <p>
                 {tab === "vision"
-                  ? "18 ảnh thực địa, phản hồi hiệu chỉnh và luồng IoT được tách nguồn; xem phương pháp kiểm định bên dưới."
+                  ? "Mỗi kết quả ghi rõ nguồn: thiết bị, ảnh tham chiếu hoặc mô phỏng."
                   : logView === "nfc"
                     ? "Quét thẻ nhận suất và kiểm tra cảnh báo. Sự kiện mô phỏng được tách khỏi dữ liệu thật."
                     : "Bản ghi mới được lưu trên thiết bị, tách riêng bộ dữ liệu mẫu."}
@@ -437,7 +428,6 @@ export default function App() {
               {final.storageError}
             </div>
           )}
-          {mode === "hardware" && tab !== "vision" && <ConnectionControls />}
           {message && (
             <div className="toast" role="status">
               {message}
@@ -449,7 +439,7 @@ export default function App() {
               </button>
             </div>
           )}
-          <p className="adapter-active" role="status">{final.adapterInfo.name} · {final.adapterInfo.input} · Vision + IQR{final.adapterInfo.nfc ? " · NFC + cảnh báo dị ứng" : " · Không yêu cầu thẻ NFC / Portal"}<span> Cấu hình đề xuất; chưa xác nhận kết nối.</span></p>
+
           {help && (
             <section className="help-panel">
               <div className="section-heading">
@@ -550,6 +540,7 @@ export default function App() {
               rows={filtered}
               mode={mode}
               onDish={setSelectedDish}
+              onImport={() => { setTab("data"); setDataView("records"); }}
               onMenus={() => setTab("menus")}
               onRecord={() => {
                 setTab("log");
@@ -557,30 +548,9 @@ export default function App() {
               }}
             />
           )}
-          {tab === "overview" && (
-            <ProductContext
-              mode={mode}
-              onRecord={() => {
-                setTab("log");
-                setLogView("manual");
-              }}
-            />
-          )}
-          {tab === "overview" && <RealtimeFunnel />}
-          {tab === "overview" && (
-            <details className="operational-details">
-              <summary>
-                Kịch bản vận hành & dự toán tác động{" "}
-                <span>Ước tính riêng · Không phải kết quả thực địa</span>
-              </summary>
-              <OperationalOverview mode={mode} />
-            </details>
-          )}
+          {tab === "overview" && (final.remote?.latestNfc || final.vision.active || final.state.capture) && <RealtimeFunnel />}
           {tab === "menus" && (
             <section className="menu-catalog">
-              <VisionStreamPanel />
-              {mode === "demo" && <PairingMatrix />}
-              <NutritionPanel />
               <div className="section-heading">
                 <div>
                   <h2>Danh mục thực đơn</h2>
@@ -654,13 +624,7 @@ export default function App() {
                       >
                         Xem phân tích chi tiết ↗
                       </button>
-                      <p>
-                        {m.vegetables.n < 10
-                          ? "Bổ sung quan sát để đánh giá."
-                          : m.vegetables.mean >= 20
-                            ? "Khảo sát khẩu vị, cách chế biến và lượng phục vụ rau trước khi điều chỉnh."
-                            : "Duy trì cách phục vụ, tiếp tục theo dõi các bữa tiếp theo."}
-                      </p>
+
                       <div className="menu-card-metrics">
                         <span>
                           Cơm <b>{pct(m.rice.mean)}</b>
@@ -687,7 +651,7 @@ export default function App() {
               <div className="subtabs" role="group" aria-label="Trạm ghi nhận">
                 {[
                   ["nfc", "Cổng NFC"],
-                  ["calibration", "QuickLog · Cân mẫu"],
+                  ["calibration", "Cân mẫu"],
                   ["manual", "Ghi nhận thủ công"],
                 ].map(([id, label]) => (
                   <button
@@ -718,13 +682,11 @@ export default function App() {
             </>
           )}
           {tab === "log" && logView === "manual" && (
-            <div className="entry-grid">
+            <div className="entry-grid manual-entry">
               <section className="panel">
                 <div className="section-heading">
                   <h2>Thông tin khay</h2>
-                  <span className="badge">
-                    {aiApplied ? "AI · Chờ xác nhận" : "Ghi nhận trực tiếp"}
-                  </span>
+
                 </div>
                 <div className="form-grid">
                   <label>
@@ -755,7 +717,7 @@ export default function App() {
                     </datalist>
                   </label>
                 </div>
-                <ComboFields value={entry} onChange={patch => setEntry(old => ({...old, ...patch}))} />
+                <details className="method-details"><summary>Món đi kèm & canh (không bắt buộc)</summary><ComboFields value={entry} onChange={patch => setEntry(old => ({...old, ...patch}))} /></details>
                 {keys.map((k) => (
                   <fieldset key={k}>
                     <legend>
@@ -778,34 +740,20 @@ export default function App() {
                 <div className="form-footer">
                   <span>Lưu vào dữ liệu của tôi</span>
                   <button className="primary" onClick={save}>
-                    {aiApplied ? "Xác nhận & lưu" : "Lưu bản ghi"} ↗
+                    Lưu bản ghi
                   </button>
                 </div>
               </section>
-              <section className="panel entry-summary">
-                <span className="eyebrow">PHIẾU GHI NHẬN</span>
-                <h2>{entry.menu || "Chưa chọn món"}</h2>
-                <p>{entry.date.split("-").reverse().join("/")}</p>
-                {keys.map((k) => (
-                  <div key={k}>
-                    <span>{labels[k]}</span>
-                    <b>
-                      {entry[k as "rice"] === "NA"
-                        ? "—"
-                        : entry[k as "rice"] + "%"}
-                    </b>
-                  </div>
-                ))}
-                <small>Dữ liệu lưu riêng trên thiết bị này.</small>
-              </section>
+
             </div>
           )}
           {tab === "data" && (
             <div className="subtabs" role="group" aria-label="Quản lý dữ liệu">
               {[
                 ["records", "Bản ghi khay"],
-                ["interventions", "Lịch sử can thiệp"],
+                ["interventions", "Lịch sử quyết định"],
                 ["settings", "Cấu hình trường"],
+                ["project", "Thông tin dự án"],
               ].map(([id, label]) => (
                 <button
                   key={id}
@@ -943,7 +891,13 @@ export default function App() {
           {tab === "data" && dataView === "settings" && (
             <div className="settings-stack">
               <AdapterSettings />
+            </div>
+          )}
+          {tab === "data" && dataView === "project" && (
+            <div className="settings-stack">
               <EvidenceRoadmap />
+              <InterventionScenario />
+              <OperationalOverview />
               <CloudCalculator />
             </div>
           )}
@@ -961,10 +915,12 @@ export default function App() {
               EcoTray <b>·</b> Mỗi khay lên tiếng.
             </span>
             <span>
-              {tab === "vision"
-                ? "Ảnh tham chiếu · Chưa kiểm định độc lập"
+              {tab === "data" && dataView !== "records"
+                ? dataView === "project" ? "Thông tin dự án · nguồn được ghi riêng" : "Lưu trên trình duyệt này"
+                : tab === "vision"
+                ? "Ảnh & kết quả được ghi rõ nguồn"
                 : tab === "log"
-                  ? "Bản ghi khay · Lưu riêng trên thiết bị"
+                  ? "Lưu trên trình duyệt này"
                   : mode === "demo"
                     ? "Dữ liệu mẫu · Số khay và tỷ lệ thừa mô phỏng"
                     : mode === "hardware"

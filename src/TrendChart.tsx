@@ -31,6 +31,15 @@ export default function TrendChart({ data }: { data: DailyPoint[] }) {
     return (
       <div className="empty">Chưa có dữ liệu trong khoảng thời gian này.</div>
     );
+  if (data.length === 1) return (
+    <div className="table-scroll">
+      <table>
+        <caption>Phần còn lại ngày {dateLabel(data[0].date)} · {number(data[0].count)} khay</caption>
+        <thead><tr>{series.map(s => <th scope="col" key={s.key}>{s.label}</th>)}</tr></thead>
+        <tbody><tr>{series.map(s => <td key={s.key}>{percent(data[0][s.key].mean)}</td>)}</tr></tbody>
+      </table>
+    </div>
+  );
   const selected = active === null ? null : data[active];
   return (
     <>

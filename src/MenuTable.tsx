@@ -26,7 +26,7 @@ export default function MenuTable({
 }) {
   return (
     <div className="table-scroll">
-      <table>
+      <table className="menu-table">
         <thead>
           <tr>
             <th>Món ăn</th>
@@ -71,9 +71,10 @@ export default function MenuTable({
                   <span aria-hidden="true">↗</span>
                 </button>
               </td>
-              <td>{fmt(m.count)}</td>
+              <td><span className="menu-cell-label">Khay</span>{fmt(m.count)}</td>
               {(["rice", "vegetables", "main"] as const).map((k) => (
                 <td key={k}>
+                  <span className="menu-cell-label">{{rice: "Cơm", vegetables: "Rau", main: "Món chính"}[k]}</span>
                   <span
                     className={
                       k === "vegetables" && (m[k].mean ?? 0) >= 20

@@ -1,4 +1,4 @@
-import { MealComboLine, NutritionPanel } from "./DecisionSupport";
+import { MealComboLine } from "./DecisionSupport";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { daily, portalMenus } from "../lib/analytics.mjs";
 import { summarize } from "../lib/core.mjs";
@@ -111,8 +111,10 @@ export default function DishDrawer({
         </div>
       </div>
       <MealComboLine main={name} rows={subset} />
-      <p className="fine">Canh: {selected.filter(r => typeof r.soup === "number").length} quan sát; {(() => { const a = selected.flatMap(r => typeof r.soup === "number" ? [r.soup] : []); return a.length ? percent(a.reduce((x,y) => x+y,0)/a.length) + " còn lại trung bình" : "chưa có tỷ lệ đo"; })()}</p>
-      <NutritionPanel />
+      {selected.some(r => typeof r.soup === "number") && <p className="fine">Canh: {(() => {
+        const values = selected.flatMap(r => typeof r.soup === "number" ? [r.soup] : []);
+        return `${values.length} quan sát · ${percent(values.reduce((x, y) => x + y, 0) / values.length)} còn lại trung bình`;
+      })()}</p>}
       <section className="dish-trend">
         <h3>Phần còn lại theo ngày phục vụ</h3>
         {days.length === 1 && (
@@ -122,78 +124,9 @@ export default function DishDrawer({
           </p>
         )}
         <TrendChart data={days} />
-        <div className="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Ngày</th>
-                <th>Khay</th>
-                {componentKeys.map((k) => (
-                  <th key={k}>{componentLabels[k]}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {days.map((d) => (
-                <tr key={d.date}>
-                  <td>{d.date.split("-").reverse().join("/")}</td>
-                  <td>{d.count}</td>
-                  {componentKeys.map((k) => (
-                    <td key={k}>{percent(d[k].mean)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+
       </section>
-      <section className="before-after">
-        <div className="section-heading">
-          <div>
-            <h3>Trước & sau can thiệp</h3>
-            <p>
-              Kịch bản mô phỏng toàn căn tin · không phải kết quả riêng của món
-              này
-            </p>
-          </div>
-          <span className="badge demo">−16,8%</span>
-        </div>
-        {[
-          ["Trước", 63.1, 16.8, 31.4, 14.9],
-          ["Sau", 52.5, 16.1, 21.9, 14.5],
-        ].map(([label, total, rice, veg, main]) => (
-          <div className="comparison-row" key={label}>
-            <span>{label}</span>
-            <div
-              className="stacked-bar"
-              style={{ width: `${(Number(total) / 63.1) * 100}%` }}
-              aria-label={`${label}: Cơm ${rice} kg, Rau ${veg} kg, Món chính ${main} kg`}
-            >
-              {[rice, veg, main].map((v, i) => (
-                <span
-                  key={i}
-                  className={"food-bg-" + i}
-                  style={{ width: `${(Number(v) / Number(total)) * 100}%` }}
-                />
-              ))}
-            </div>
-            <b>{number(Number(total))} kg</b>
-          </div>
-        ))}
-        <div className="chart-key">
-          {componentKeys.map((k, i) => (
-            <span key={k}>
-              <i className={"food-bg-" + i} />
-              {componentLabels[k]}
-            </span>
-          ))}
-        </div>
-        <p className="fine">
-          Khảo sát cặp món và định lượng, bảo vệ ngưỡng rau đã cấu hình; giữ nguyên tổng số suất. 63,1 →
-          52,5 kg/ngày là mô phỏng theo README, chưa có dữ liệu sau can thiệp
-          thực địa.
-        </p>
-      </section>
+
     </dialog>
   );
 }

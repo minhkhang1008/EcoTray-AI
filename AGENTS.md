@@ -26,15 +26,15 @@ Canonical values (do not invent alternatives):
 This is a static React 19 + TypeScript + Vite application, not a backend. There is no React Router: `src/App.tsx` switches five tabs (`Tổng quan`, `Phân tích thực đơn`, `EcoTray Vision`, `Ghi nhận khay`, `Dữ liệu`) with component state.
 
 - `src/main.tsx`: React entry. `src/App.tsx`: tabs, filters, CSV I/O, manual records, data separation, and local persistence under `ecotray-records`.
-- `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/LiveDemo.tsx`, `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
-- `src/PTNKVision.tsx`: mounted 18-image PTNK gallery, calibration sandbox, stream and approval. `src/useVisionStream.ts` polls `/api/ai/analyze-tray`; hidden fallback listeners live in `FinalRoundContext`. `src/EcoVision.tsx`: legacy reference view, no longer mounted. `src/TrendChart.tsx`: trend chart. `src/imageFeatures.ts`: browser-side TensorFlow.js/MobileNet features. `src/vision.tsx` and `src/DishVision.tsx`: calibration/classification components not mounted by `App.tsx`.
+- `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
+- `src/PTNKVision.tsx`: mounted 18-image PTNK gallery, calibration sandbox, stream and approval. `src/useVisionStream.ts` polls `/api/ai/analyze-tray`; hidden fallback listeners live in `FinalRoundContext`. `src/TrendChart.tsx`: trend chart (table for one day). Legacy unmounted UI screens were removed; MobileNet remains in model scripts/tests.
 - `src/styles.css` and `src/final-round.css`: responsive, accessible “EcoTray Intelligence” visual system.
 - `src/lib/ecotrayVisionEngine.ts` exposes typed contracts over `lib/ptnk-vision.mjs` and shared pixel features. `scripts/train_ecotray_vision.py` generates `src/lib/ecotrayModels.json` from source images and metadata; see `docs/VISION-PTNK.md`. `api/ai/analyze-tray.mjs` is the deployed Vercel Function; `src/app/api/ai/analyze-tray/route.ts` is a Web Request/Response compatibility entry, not a Next.js migration.
 - `lib/`: pure analytics, CSV/decision rules, tray measurement, dish classification, and vision logic; `lib/*.test.mjs` are Node tests.
 - `data/`: canonical demo CSV/summary and Portal/evaluation metadata. Active paths use `data/`, never the obsolete `demo-data/` path.
 - `public/`: food images, `food-bank.json`, MobileNet files, tray images, and calibration data copied into the build.
 - `scripts/`: production offline-cache generation, calibration, dish-bank generation, model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
-- `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` now exposes authenticated Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
+- `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` exposes public Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
 
 ## 4. Hardware–Cloud–Web Integration & Live Stage Demo Contract
 
@@ -63,3 +63,9 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 - There is currently no ESLint dependency, config, or `lint` script. Do not claim `npm run lint` passes. If linting is introduced, add an explicit `lint` script to `package.json`, commit its config, update this guide, and run it before handoff.
 - Before completing any task, always run typechecking and `npm run build`; for logic/data/model changes also run `npm test` and `npm run test:model`. Search for stale paths and verify that Vercel still builds to `dist/`.
 - Use TypeScript for UI code, keep analytics deterministic and testable in `lib/`, validate files/API input at boundaries, and avoid `any` in new contracts. Use existing CSS classes/tokens and responsive patterns; this repository does not use Tailwind CSS, so do not describe or introduce Tailwind without an explicit migration decision.
+
+## 7. Operational UI cleanup (29/10/2026)
+
+Menu analysis opens a compact list. Photo inspection and simulated pairing/nutrition examples live under separate Vision views; station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live in Data → Thông tin dự án. Do not restore generic nutrition examples inside individual dish drawers.
+
+Vision and legacy worker decisions share `ecotray-interventions-v1`, retain `hardware|simulation|reference-fallback`, and are local records, not commands sent to the kitchen. The station chooses the latest device capture, with explicit reference fallback. Scale samples affect the simulated gram conversion only; PTNK model portions remain clearly labelled assumptions.

@@ -27,7 +27,7 @@ export function ConnectionControls() {
         <button
           className={f.source === "hardware" ? "selected" : ""}
           aria-pressed={f.source === "hardware"}
-          onClick={() => f.setSource("hardware")}
+          onClick={() => { f.setSource("hardware"); f.vision.resume(); }}
         >
           Kết nối phần cứng
         </button>
@@ -362,7 +362,7 @@ export function TrayPreview({
   );
 }
 
-export function DecisionCard({ stage = false }: { stage?: boolean }) {
+export function DecisionCard() {
   const f = useFinalRound(),
     result = f.state.capture?.result;
   return (
@@ -380,8 +380,8 @@ export function DecisionCard({ stage = false }: { stage?: boolean }) {
       </p>
       {f.state.analyzed ? (
         <>
-          <p>{stage && f.source === "simulation" && f.decision.kind === "portion" ? "Giữ số suất và 90 g rau/khay. Thử đổi Bắp cải luộc + Canh bí đỏ sang Rau muống xào tỏi + Canh rong biển; cân lại ở chu kỳ sau." : f.decision.text}</p>
-          {!stage && <NutritionPanel served={f.source === "simulation" ? result?.vegetableServedGrams : undefined} waste={result?.vegetables} compact />}
+          <p>{f.decision.text}</p>
+          <NutritionPanel served={f.source === "simulation" ? result?.vegetableServedGrams : undefined} waste={result?.vegetables} compact />
           {f.source === "simulation" && !result?.isOutlier && (
             <p className="fine">
               64 mẫu mô phỏng cùng món · Rau trung bình{" "}
@@ -407,7 +407,7 @@ export function DecisionCard({ stage = false }: { stage?: boolean }) {
             ? "✓ Xác nhận tách mẫu ngoại lai"
             : f.decision.kind === "insufficient"
               ? "✓ Ghi nhận cần thêm mẫu"
-              : "Phê duyệt điều chỉnh thực đơn"}
+          : "Ghi nhận quyết định"}
       </button>
       {f.state.approved &&
         f.source === "simulation" &&

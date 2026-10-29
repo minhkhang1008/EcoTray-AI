@@ -75,3 +75,11 @@ Ngày 27/10/2026: `npm test` đạt **54/54**, model smoke đạt (256 features 
 Main Chrome 48425945: đã kiểm tra nhận thẻ lặp, cảnh báo cơ địa/ngoại lai, chụp → khóa giảm rau → phím 5 phê duyệt → R reset; chọn Lite/Pro; ma trận chọn A/B và hai nhánh định lượng; công tắc IQR đổi 20/21 thành 21/21 mẫu và tính lại trung bình. Kiểm tra kích thước 320/390/768/1024/1440 px; đo trang cấu hình không tràn ngang tại các mốc 320/768/1024, bảng rộng cuộn riêng. Bản production local tại 127.0.0.1:8766 chạy được stage và phê duyệt, không có thông báo console mới sau khi tải bản cuối. Không tạo khay thử vào dữ liệu thực địa.
 
 Reviewer độc lập Impeccable: `ship` cho bốn sửa đổi được chấm (tổ hợp mới/CSV, phân cấp sân khấu, canh theo tỷ lệ, IQR Vision). Không coi verdict này là chứng nhận toàn bộ sản phẩm. Đối chiếu thiết kế lưu tại `.impeccable/review/design-conformance.md`; giữ DESIGN.md hiện có. Detector chỉ báo advisory; timestamp sidecar đã cũ từ trước và không được sửa ngoài phạm vi. Chưa tổng duyệt khả năng đọc ở 15 m, chưa kiểm chứng phần cứng/AWS/Vercel, chưa push/deploy.
+
+## Hiện trạng sau tinh giản giao diện (30/10/2026)
+
+Các mô tả UI theo ngày phía trên là lịch sử. Hiện tại Thực đơn mở danh sách trước; mỗi hàng mobile hiển thị số khay và ba tỷ lệ, không buộc kéo ngang. Không đặt luồng camera, bảng phối món hoặc ví dụ định lượng lên trước danh mục. Drawer chỉ giữ số liệu món; một ngày dùng bảng gọn. Kịch bản toàn căn tin chuyển sang Dữ liệu → Thông tin dự án cùng minh chứng, lộ trình và dự toán.
+
+Vision có ba mục: Trạm căn tin, Kiểm tra ảnh, Thử kịch bản. Màn trạm dùng chung phép chọn sự kiện mới nhất cho cả hiển thị và phím 5; phân tích trực tiếp và callback worker không dựng hai màn cạnh tranh. Phím 1/2/3, Space/4, 5 và R vẫn chạy nền. Quyết định lưu chung trên trình duyệt với nguồn phần cứng, mô phỏng NFC hoặc ảnh tham chiếu; ghi lặp cùng sự kiện không tạo thêm hàng. Mỗi sự kiện tham chiếu mới có revision riêng, kể cả sau tải lại trang. R chỉ đặt lại dữ liệu dự phòng, giữ quyết định phần cứng.
+
+Mẫu cân cập nhật quy đổi tại Thử kịch bản. Mô hình PTNK giữ định lượng giả định và kết quả kiểm định gốc. Đã gỡ các UI cũ không còn được App gọi; vẫn giữ thư viện, script và kiểm thử model. Không thay đổi API triển khai hoặc tự xác nhận nghiệm thu phần cứng.
