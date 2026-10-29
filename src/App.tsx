@@ -12,7 +12,7 @@ import MenuTable from "./MenuTable";
 import Icon, { type IconName } from "./Icon";
 import ProductContext from "./ProductContext";
 import Vision from "./VisionLab";
-import LiveDemo from "./LiveDemo";
+import { VisionStreamPanel, RealtimeFunnel } from "./PTNKVision";
 import DishDrawer from "./DishDrawer";
 import QuickLog from "./QuickLog";
 import { useFinalRound } from "./FinalRoundContext";
@@ -45,7 +45,7 @@ const navigation = [
   ["data", "Dữ liệu & cấu hình"],
 ] as const;
 // Stage remains separate from the operational workspace.
-const SHOW_STAGE_DEMO = true;
+
 const mobileNavigation = {
   overview: "Tổng quan",
   menus: "Thực đơn",
@@ -63,11 +63,10 @@ function download(name: string, data: string, type = "text/csv;charset=utf-8") {
 
 export default function App() {
   const final = useFinalRound();
-  const [live, setLive] = useState(false),
-    [selectedDish, setSelectedDish] = useState(""),
+  const [selectedDish, setSelectedDish] = useState(""),
     [logView, setLogView] = useState("manual");
   const [tab, setTab] = useState("overview"),
-    [mode, setMode] = useState("demo"),
+    [mode, setMode] = useState("hardware"),
     [rows, setRows] = useState<Row[]>([]),
     [ready, setReady] = useState(false),
     [message, setMessage] = useState("");
@@ -90,9 +89,9 @@ export default function App() {
     [menuView, setMenuView] = useState("cards");
   useEffect(() => {
     final.setWatching(
-      live || tab === "vision" || tab === "log" || mode === "hardware",
+      tab === "vision" || tab === "log" || mode === "hardware",
     );
-  }, [live, tab, mode]);
+  }, [tab, mode]);
   useEffect(() => {
     try {
       const a = JSON.parse(localStorage.getItem("ecotray-records") || "[]");
@@ -165,7 +164,7 @@ export default function App() {
       const data = parseCSV(await file.text());
       if (data.some((r) => r.source === "simulation"))
         throw Error(
-          "File chứa dữ liệu mô phỏng. Sử dụng không gian Demo để xem bộ dữ liệu này.",
+          "File chứa dữ liệu mô phỏng. Sử dụng không gian dữ liệu mô phỏng để xem bộ dữ liệu này.",
         );
       setRows((old) => [...old, ...data]);
       setMode("real");
@@ -286,17 +285,10 @@ export default function App() {
           </div>
           <div className="topbar-right">
             <AdapterSwitcher />
-            {SHOW_STAGE_DEMO && (
-            <button
-              className="live-launch"
-              onClick={() => {
-                setLive(true);
-                final.setNotice("");
-              }}
-            >
-              <Icon name="play" size={14} /> Live Demo Chung Kết
-            </button>
-            )}
+            <span className="iot-header-status" role="status">
+              <i className={final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'online' : ''} />
+              Trạm IoT Căn tin · {final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'NFC có tín hiệu' : 'Chờ NFC'} · {final.vision.online && final.vision.hardware && Date.now()-Date.parse(final.vision.hardware.analysis.timestamp)<60000 ? 'Camera có tín hiệu' : 'Chờ ESP32-CAM'}
+            </span>
             <button
               className="mobile-help"
               aria-label="Phương pháp và trợ giúp"
@@ -405,7 +397,7 @@ export default function App() {
               </span>
               <p>
                 {tab === "vision"
-                  ? "Ảnh tham chiếu và kịch bản thử được tách riêng. Kết quả theo mẫu hiệu chuẩn, chưa có kiểm định độc lập."
+                  ? "18 ảnh thực địa, phản hồi hiệu chỉnh và luồng IoT được tách nguồn; xem phương pháp kiểm định bên dưới."
                   : logView === "nfc"
                     ? "Quét thẻ nhận suất và kiểm tra cảnh báo. Sự kiện mô phỏng được tách khỏi dữ liệu thật."
                     : "Bản ghi mới được lưu trên thiết bị, tách riêng bộ dữ liệu mẫu."}
@@ -445,7 +437,7 @@ export default function App() {
               {final.storageError}
             </div>
           )}
-          {mode === "hardware" && <ConnectionControls />}
+          {mode === "hardware" && tab !== "vision" && <ConnectionControls />}
           {message && (
             <div className="toast" role="status">
               {message}
@@ -476,7 +468,7 @@ export default function App() {
                 và theo dõi mức đủ ăn.
               </p>
               <p>
-                Không gian Demo dùng tên món, ngày và ảnh thật từ Portal PTNK
+                Bộ dữ liệu mô phỏng dùng tên món, ngày và ảnh thật từ Portal PTNK
                 (12–16/10/2026); 1.280 khay và mức phần thừa được mô phỏng bằng
                 chương trình; xu hướng không phản ánh kết quả thực địa. Dữ liệu
                 thật được lưu riêng trên trình duyệt. CSV nhập sẽ thêm dòng;
@@ -574,6 +566,7 @@ export default function App() {
               }}
             />
           )}
+          {tab === "overview" && <RealtimeFunnel />}
           {tab === "overview" && (
             <details className="operational-details">
               <summary>
@@ -585,6 +578,7 @@ export default function App() {
           )}
           {tab === "menus" && (
             <section className="menu-catalog">
+              <VisionStreamPanel />
               {mode === "demo" && <PairingMatrix />}
               <NutritionPanel />
               <div className="section-heading">
@@ -961,7 +955,7 @@ export default function App() {
               onClose={() => setSelectedDish("")}
             />
           )}
-          {live && <LiveDemo onClose={() => setLive(false)} />}
+
           <footer>
             <span>
               EcoTray <b>·</b> Mỗi khay lên tiếng.

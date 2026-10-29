@@ -1,0 +1,272 @@
+{
+  "IMG_20261028_114612.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      75,
+      85,
+      85,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "group": "IMG_20261028_114612.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261028_114613.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      75,
+      84,
+      85,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "group": "IMG_20261028_114612.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261028_114807.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      75,
+      80,
+      80,
+      0
+    ],
+    "combo": "Thịt kho trứng + Cà tím xào + Canh bầu",
+    "group": "IMG_20261028_114807.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261028_114814.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      30,
+      25,
+      35,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "group": "IMG_20261028_114814.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261028_115429.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào (Ăn sạch 0%)",
+    "group": "IMG_20261028_115429.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115432.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      45,
+      75,
+      20,
+      50
+    ],
+    "combo": "Thịt kho trứng + Cà tím đậu đũa + Canh bầu",
+    "group": "IMG_20261028_115432.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 180
+  },
+  "IMG_20261028_115435.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      90,
+      65,
+      50,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "group": "IMG_20261028_115435.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115435_1.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      90,
+      65,
+      48,
+      0
+    ],
+    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "group": "IMG_20261028_115435.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115444.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      85,
+      70,
+      85,
+      65
+    ],
+    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "group": "IMG_20261028_115444.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115444_1.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      85,
+      70,
+      85,
+      65
+    ],
+    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "group": "IMG_20261028_115444.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115445.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      84,
+      70,
+      85,
+      65
+    ],
+    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "group": "IMG_20261028_115444.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 0
+  },
+  "IMG_20261028_115447.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      25,
+      60,
+      30,
+      45
+    ],
+    "combo": "Thịt kho trứng + Đậu đũa xào + Canh bầu",
+    "group": "IMG_20261028_115447.jpg",
+    "date": "2026-10-28",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 180
+  },
+  "IMG_20261029_112143.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      65,
+      75,
+      2,
+      80
+    ],
+    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "group": "IMG_20261029_112143.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261029_112146.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      100,
+      95,
+      90,
+      90
+    ],
+    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ (Chuẩn 100%)",
+    "group": "IMG_20261029_112146.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": true,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": -90
+  },
+  "IMG_20261029_112148.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      35,
+      60,
+      85,
+      0
+    ],
+    "combo": "Gà kho sả gừng + Su su xào + Canh bí đỏ",
+    "group": "IMG_20261029_112148.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 90
+  },
+  "IMG_20261029_112154.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      65,
+      65,
+      75,
+      0
+    ],
+    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "group": "IMG_20261029_112154.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 180
+  },
+  "IMG_20261029_112159.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      55,
+      60,
+      60,
+      0
+    ],
+    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "group": "IMG_20261029_112159.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 180
+  },
+  "IMG_20261029_112201.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      55,
+      65,
+      80,
+      75
+    ],
+    "combo": "Gà kho sả gừng + Giá hẹ su su + Canh bí đỏ",
+    "group": "IMG_20261029_112201.jpg",
+    "date": "2026-10-29",
+    "referenceOnly": false,
+    "labelSource": "supplied-visual-estimate",
+    "rotation": 180
+  }
+}

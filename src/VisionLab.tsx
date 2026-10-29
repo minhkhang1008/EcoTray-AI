@@ -1,6 +1,6 @@
 import { NutritionPanel } from "./DecisionSupport";
 import { useState } from "react";
-import EcoVision from "./EcoVision";
+import PTNKVision, { VisionStreamPanel } from "./PTNKVision";
 import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 import { useFinalRound } from "./FinalRoundContext";
 import {
@@ -111,6 +111,8 @@ export default function VisionLab() {
     [preset, setPreset] = useState(1);
   return (
     <>
+      <PTNKVision />
+      <VisionStreamPanel />
       <div className="subtabs" role="group" aria-label="Chế độ Vision">
         <button
           aria-pressed={view === "iot"}
@@ -144,7 +146,7 @@ export default function VisionLab() {
                   ? f.state.capture.latencyMs + " ms"
                   : "Chưa đo"}
               </strong>
-              <small>Trung bình 680ms</small>
+              <small>Chỉ hiển thị thời gian đo từ trạm</small>
             </article>
             <article>
               <span>Trạng thái khay</span>
@@ -204,10 +206,10 @@ export default function VisionLab() {
         </>
       ) : (
         <>
-          <EcoVision />
+
           <details className="vision-scenarios"><summary>Thử kịch bản mô phỏng <span>Khám phá các mức phần còn lại</span></summary>
           <p className="sandbox-note">
-            Có 1 ảnh khay thực tế đã gán nhãn và 5 kịch bản số liệu để thử tương
+            Có 18 ảnh thực địa trong thư viện phía trên và 5 kịch bản số liệu để thử tương
             tác. Ảnh món ăn từ Portal không được dùng thay cho ảnh khay thừa.
             Tải ảnh cùng bố cục đã hiệu chuẩn để thử phân tích.
           </p>
@@ -243,9 +245,8 @@ export default function VisionLab() {
       <details className="method-details">
         <summary>Giới hạn phương pháp & dữ liệu</summary>
         <p>
-          Mô hình hiện tại dùng vùng khay cố định và diện tích màu so với một
-          ảnh gán nhãn. Chưa có bộ đánh giá độc lập đủ lớn để công bố độ chính
-          xác. Ảnh khác bố cục bị từ chối, không tạo dự đoán tùy ý.
+          Mô hình Ridge dùng vùng khay cố định và các đặc trưng màu, texture.
+          Ảnh khác bố cục cần hiệu chỉnh vùng đọc; kết quả không thay thế phép cân.
         </p>
         <p>
           Khối lượng ước lượng lấy hệ số từ QuickLog; ảnh nguồn và bản ghi cân

@@ -46,8 +46,8 @@ export function ConnectionControls() {
       >
         {f.source === "simulation"
           ? f.offlineReady
-            ? "DEMO · Sẵn sàng ngoại tuyến"
-            : "DEMO · Dữ liệu mô phỏng"
+            ? "Dữ liệu tham chiếu · ngoại tuyến"
+            : "Dữ liệu mô phỏng"
           : f.connected
               ? f.remote?.online
                 ? "Trạm đang hoạt động"
@@ -56,7 +56,7 @@ export function ConnectionControls() {
       </span>
       {f.source === "hardware" && f.error && (
         <p className="inline-status" role="status">
-          {f.error} Chuyển về mô phỏng để tiếp tục trình diễn.
+          {f.error} Luồng dự phòng cục bộ vẫn khả dụng.
         </p>
       )}
     </div>
@@ -190,7 +190,7 @@ export function NfcTerminal() {
                     : "Thẻ chưa đăng ký"}
           </strong>
           <small>
-            {event?.studentCode ??
+            {(f.source === "simulation" ? "Thẻ tham chiếu ẩn danh" : event?.studentCode) ??
               (event
                 ? "Mã thẻ ẩn danh"
                 : "Không lưu tên học sinh hoặc UID gốc")}
@@ -198,7 +198,7 @@ export function NfcTerminal() {
           <code>
             {event?.cardUidHash
               ? "UID băm: " + event.cardUidHash.slice(0, 12) + "…"
-              : "Chạm thẻ hoặc chọn kịch bản"}
+              : "Chạm thẻ để nhận suất"}
           </code>
         </div>
       </div>
@@ -233,22 +233,12 @@ export function NfcTerminal() {
           <strong>{number(f.state.savedTickets)}</strong>
           <small>
             {f.source === "simulation"
-              ? "Phiếu giấy thay thế trong lượt demo"
+              ? "Phiếu giấy thay thế · mô phỏng"
               : "Sự kiện nhận suất được ghi hôm nay"}
           </small>
         </div>
       </div>
       <div className="nfc-actions">
-        {f.source === "simulation" &&
-          (["normal", "allergy", "unknown"] as const).map((scenario, i) => (
-            <button
-              key={scenario}
-              onClick={() => f.dispatch({ type: "scan", scenario })}
-            >
-              <kbd>{i + 1}</kbd>
-              {["Hợp lệ", "Dị ứng", "Thẻ lỗi"][i]}
-            </button>
-          ))}
         <button
           onClick={
             reading
@@ -417,7 +407,7 @@ export function DecisionCard({ stage = false }: { stage?: boolean }) {
             ? "✓ Xác nhận tách mẫu ngoại lai"
             : f.decision.kind === "insufficient"
               ? "✓ Ghi nhận cần thêm mẫu"
-              : "✓ Bếp Phê Duyệt Điều Chỉnh"}
+              : "Phê duyệt điều chỉnh thực đơn"}
       </button>
       {f.state.approved &&
         f.source === "simulation" &&

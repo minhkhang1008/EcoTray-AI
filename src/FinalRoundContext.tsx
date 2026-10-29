@@ -1,3 +1,4 @@
+import { useVisionStream } from "./useVisionStream";
 import {
   createContext,
   useContext,
@@ -89,6 +90,7 @@ const validHistory = (v: unknown): v is Intervention[] =>
 function useFinalState() {
   const offlineReady = useOfflineStage();
   const schoolId = import.meta.env.VITE_IOT_SCHOOL_ID || "ptnk";
+  const vision = useVisionStream(schoolId);
   const schoolName = import.meta.env.VITE_SCHOOL_NAME || "PTNK";
   const [adapter, setAdapter, adapterError] = useStored(
     "ecotray-adapter-v1",
@@ -106,8 +108,8 @@ function useFinalState() {
     validHistory,
   );
   const [stage, dispatch] = useReducer(stageReducer, undefined, initialStage);
-  const [source, setSource] = useState<"simulation" | "hardware">("simulation");
-  const [watching, setWatching] = useState(false),
+  const [source, setSource] = useState<"simulation" | "hardware">("hardware");
+  const [watching, setWatching] = useState(true),
     [remote, setRemote] = useState<IotStatus | null>(null),
     [error, setError] = useState(""),
     [connected, setConnected] = useState(false),
@@ -248,14 +250,31 @@ function useFinalState() {
   function resetStage() {
     dispatch({ type: "reset" });
     setHistory((h) => h.filter((x) => x.source !== "simulation"));
-    setNotice("Đã đặt lại lượt trình diễn.");
+    setNotice("Đã đặt lại dữ liệu dự phòng.");
   }
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || target.closest('input,select,textarea,[contenteditable=true]') || document.querySelector('dialog[open]')) return;
+      if (['1','2','3'].includes(event.key)) {
+        event.preventDefault(); setSource('simulation');
+        dispatch({type:'scan',scenario:({'1':'normal','2':'allergy','3':'unknown'} as const)[event.key as '1'|'2'|'3']});
+      } else if (event.key === '4' || event.key === ' ') {
+        if (event.key === ' ' && target.closest('button,summary,a')) return;
+        event.preventDefault(); setSource('simulation'); vision.cycle(stage.nfc?.allergyFlags ?? []);
+      } else if (event.key === '5') { event.preventDefault(); vision.approve(); }
+      else if (event.key.toLowerCase() === 'r') { event.preventDefault(); resetStage(); vision.reset(); setSource('hardware'); }
+    };
+    window.addEventListener('keydown',listener);
+    return () => window.removeEventListener('keydown',listener);
+  });
   const fullPortion = (component: ComponentKey) => {
     const subset = samples.filter((s) => s.component === component);
     return subset.length ? calibrateWeights(subset) : null;
   };
   return {
     offlineReady,
+    vision,
     schoolId,
     schoolName,
     adapter,

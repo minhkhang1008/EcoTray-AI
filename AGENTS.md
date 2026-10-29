@@ -27,8 +27,9 @@ This is a static React 19 + TypeScript + Vite application, not a backend. There 
 
 - `src/main.tsx`: React entry. `src/App.tsx`: tabs, filters, CSV I/O, manual records, data separation, and local persistence under `ecotray-records`.
 - `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/LiveDemo.tsx`, `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
-- `src/EcoVision.tsx`: mounted tray demo. `src/TrendChart.tsx`: trend chart. `src/imageFeatures.ts`: browser-side TensorFlow.js/MobileNet features. `src/vision.tsx` and `src/DishVision.tsx`: calibration/classification components not mounted by `App.tsx`.
+- `src/PTNKVision.tsx`: mounted 18-image PTNK gallery, calibration sandbox, stream and approval. `src/useVisionStream.ts` polls `/api/ai/analyze-tray`; hidden fallback listeners live in `FinalRoundContext`. `src/EcoVision.tsx`: legacy reference view, no longer mounted. `src/TrendChart.tsx`: trend chart. `src/imageFeatures.ts`: browser-side TensorFlow.js/MobileNet features. `src/vision.tsx` and `src/DishVision.tsx`: calibration/classification components not mounted by `App.tsx`.
 - `src/styles.css` and `src/final-round.css`: responsive, accessible “EcoTray Intelligence” visual system.
+- `src/lib/ecotrayVisionEngine.ts` exposes typed contracts over `lib/ptnk-vision.mjs` and shared pixel features. `scripts/train_ecotray_vision.py` generates `src/lib/ecotrayModels.json` from source images and metadata; see `docs/VISION-PTNK.md`. `api/ai/analyze-tray.mjs` is the deployed Vercel Function; `src/app/api/ai/analyze-tray/route.ts` is a Web Request/Response compatibility entry, not a Next.js migration.
 - `lib/`: pure analytics, CSV/decision rules, tray measurement, dish classification, and vision logic; `lib/*.test.mjs` are Node tests.
 - `data/`: canonical demo CSV/summary and Portal/evaluation metadata. Active paths use `data/`, never the obsolete `demo-data/` path.
 - `public/`: food images, `food-bank.json`, MobileNet files, tray images, and calibration data copied into the build.

@@ -9,6 +9,7 @@ const urls = [
   "./favicon.svg",
   "./tray-demo/portal.ptnk.png",
   "./tray-demo/calibration.json",
+  ...(await readdir(new URL("../dist/ptnk-normalized/", import.meta.url))).filter(file => file.endsWith(".jpg")).map(file => "./ptnk-normalized/"+file),
   ...assets.map((file) => "./assets/" + file),
 ];
 const hash = createHash("sha256");

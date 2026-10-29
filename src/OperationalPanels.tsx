@@ -41,7 +41,7 @@ export function OperationalOverview({ mode }: { mode: string }) {
                   ? "Sĩ số theo lớp"
                   : "Suất do bếp báo",
               mode === "demo"
-                ? "1.004 suất · 13 vắng"
+                ? number(f.stage.served) + " suất · mô phỏng"
                 : mode === "hardware"
                   ? number(f.remote?.servedCount ?? 0) + " suất"
                   : "Chưa ghi nhận",
@@ -50,7 +50,7 @@ export function OperationalOverview({ mode }: { mode: string }) {
               "03",
               "Khay đã phân tích",
               mode === "demo"
-                ? "986 khay"
+                ? (f.vision.usingFallback ? "1 khay tham chiếu" : "Chưa ghi nhận")
                 : mode === "hardware"
                   ? number(f.hardwareRows.length) + " khay"
                   : "Xem thống kê bên dưới",
@@ -334,7 +334,7 @@ export function InterventionHistory() {
         </div>
       ) : (
         <p className="empty">
-          Chưa có phê duyệt. Mở Live Demo để thực hiện vòng phản hồi.
+          Chưa có phê duyệt. Xem luồng ảnh trong EcoTray Vision để thực hiện vòng phản hồi.
         </p>
       )}
     </section>

@@ -241,4 +241,13 @@ Database & Vercel Dashboard
 
 Dashboard giữ React/Vite/CSS thuần và output `dist/`. Bản nâng cấp bổ sung Live Demo ngoại tuyến, drawer thực đơn, kiểm định IQR, QuickLog cân mẫu, cấu hình Lite/Standard/Pro, dự toán chi phí và Vercel Functions cho IoT. Dữ liệu sân khấu, bộ khay mô phỏng và phần cứng được tách riêng.
 
-Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [Hợp đồng IoT v1 / cấu hình môi trường](docs/IOT.md). Các mục chiến lược phía trên là yêu cầu dự án, không tự xác nhận phần cứng hoặc AWS/Vercel đã được triển khai. Kho hiện chỉ có một ảnh khay thật đã gán nhãn; chưa có sáu ảnh khay độc lập để công bố kiểm định Vision. Chi phí là dự toán, tác động trước/sau là mô phỏng theo nguồn đã nêu.
+Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [Hợp đồng IoT v1 / cấu hình môi trường](docs/IOT.md). Các mục chiến lược phía trên là yêu cầu dự án, không tự xác nhận phần cứng hoặc AWS/Vercel đã được triển khai. Kho có 18 ảnh PTNK ngày 28–29/10/2026, gồm các góc chụp lặp và hai mốc hiệu chuẩn. Nhãn phần còn lại là ước lượng bằng mắt do nhóm cung cấp, chưa đối chiếu phép cân. Ridge được huấn luyện từ pixel ảnh chuẩn hóa, kiểm định bỏ từng nhóm ảnh liên quan (không chấm hai mốc chuẩn) có MAE 27,28 điểm phần trăm trên 16 ảnh. Chưa có bằng chứng cho MAE 5,8% hay độ chính xác 94,2%. Chi phí là dự toán, tác động trước/sau là mô phỏng theo nguồn đã nêu.
+
+
+### Vision thực địa và luồng thiết bị
+
+Tab EcoTray Vision ưu tiên gallery 18 ảnh và sandbox hiệu chỉnh bốn thành phần. Phản hồi cập nhật trọng số trong phiên trình duyệt; không thay trọng số máy chủ hoặc kết quả kiểm định gốc. Khối lượng là ước tính từ khẩu phần giả định 200/110/90/150 g (Cơm/Món chính/Rau/Canh), chưa phải số đo cân. W_min = 85 g là chính sách bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng xác thực.
+
+Luồng `/api/ai/analyze-tray` tích hợp trong tab Vision và Phân tích thực đơn, thăm dò mỗi 1,5 giây. NFC và phễu vận hành sử dụng nguồn riêng. Không có nút hoặc màn hình sân khấu; các phím dự phòng chạy nền và luôn giữ nguồn tham chiếu/mô phỏng tách biệt. Không xác nhận thiết bị online chỉ vì API trả 200.
+
+Xem [hợp đồng Vision và tái huấn luyện](docs/VISION-PTNK.md). Vercel vẫn dùng React/Vite, `api/*` và output `dist/`; `src/app/api/ai/analyze-tray/route.ts` chỉ là điểm vào tương thích Web Request/Response, không làm dự án thành Next.js.

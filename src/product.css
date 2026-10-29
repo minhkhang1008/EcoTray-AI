@@ -1544,3 +1544,32 @@ textarea {
 .live-dialog .decision-card > button { font-size:16px; min-height:48px; }
 .vision-iqr { margin-top:20px; padding-top:16px; border-top:1px solid #dfe5df; }
 .combo-fields small { display:block; margin-top:4px; }
+
+/* PTNK field calibration workspace: inherit product tokens and table patterns. */
+.ptnk-lab, .ptnk-stream { margin-bottom: 24px; }
+.ptnk-evaluation { padding: 12px 0; border-block: 1px solid var(--line); color: var(--muted); }
+.ptnk-gallery { display: grid; grid-template-columns: repeat(9,minmax(0,1fr)); gap: 8px; margin: 20px 0 28px; }
+.ptnk-gallery button { display: flex; flex-direction: column; align-items: stretch; padding: 5px; min-width: 0; text-align: left; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.ptnk-gallery button[aria-pressed=true] { border: 2px solid var(--green); padding: 4px; background: var(--sage); }
+.ptnk-gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px; }
+.ptnk-gallery strong { font-size: 12px; margin-top: 4px; }
+.ptnk-gallery small { font-size: 10px; color: var(--muted); }
+.ptnk-workbench { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 28px; margin-top: 20px; }
+.ptnk-workbench > div { min-width: 0; }
+.ptnk-overlay { position: relative; aspect-ratio: 4/3; background: var(--sage); overflow: hidden; border-radius: 8px; }
+.ptnk-overlay img { width: 100%; height: 100%; object-fit: contain; }
+.ptnk-box { position: absolute; border: 2px solid #fff; pointer-events: none; }
+.ptnk-box span { display: inline-block; max-width: 100%; background: var(--green); color: #fff; font-size: clamp(10px,1vw,13px); padding: 3px 5px; line-height: 1.2; }
+.ptnk-main { border-style: dashed; } .ptnk-soup { border-style: dotted; }
+.ptnk-results { width: 100%; font-size: 13px; margin-top: 14px; }
+.ptnk-results caption { text-align: left; color: var(--muted); font-size: 12px; padding: 6px 0; }
+.ptnk-results td,.ptnk-results th { padding: 9px 5px; text-align: left; border-bottom: 1px solid var(--line); }
+.ptnk-upload { font-size: 13px; display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
+.ptnk-upload input { max-width: 100%; font-size: 12px; }
+.ptnk-workbench .header-actions { flex-wrap: wrap; }
+.ptnk-workbench .badge { white-space: normal; line-height: 1.5; }
+.iot-header-status { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+.iot-header-status i { width: 7px; height: 7px; background: var(--muted); border-radius: 50%; flex-shrink: 0; }
+.iot-header-status i.online { background: var(--green); }
+@media(max-width:1100px) { .ptnk-gallery { grid-template-columns: repeat(6,minmax(0,1fr)); } .iot-header-status { max-width: 230px; } }
+@media(max-width:760px) { .ptnk-workbench { grid-template-columns: 1fr; gap: 18px; } .ptnk-gallery { grid-template-columns: repeat(3,minmax(0,1fr)); } .iot-header-status { font-size: 10px; max-width: 180px; } .ptnk-box span { font-size: 10px; } }
