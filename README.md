@@ -250,7 +250,7 @@ Tab EcoTray Vision mở Trạm căn tin; Kiểm tra ảnh giữ gallery 18 ảnh
 
 Luồng `/api/ai/analyze-tray` tích hợp trong tab Vision, thăm dò mỗi 1,5 giây. Màn trạm hiển thị một kết quả mới nhất từ API này hoặc callback worker IoT; ảnh dự phòng luôn có nhãn riêng. NFC và phễu vận hành sử dụng nguồn riêng. Không có nút hoặc màn hình sân khấu; các phím dự phòng chạy nền và luôn giữ nguồn tham chiếu/mô phỏng tách biệt. Không xác nhận thiết bị online chỉ vì API trả 200.
 
-Xem [hợp đồng Vision và tái huấn luyện](docs/VISION-PTNK.md). Vercel vẫn dùng React/Vite, `api/*` và output `dist/`; `src/app/api/ai/analyze-tray/route.ts` chỉ là điểm vào tương thích Web Request/Response, không làm dự án thành Next.js.
+Xem [hợp đồng Vision và tái huấn luyện](docs/VISION-PTNK.md) và [firmware ESP32-CAM / hướng dẫn thử ảnh thiết bị](firmware/esp32_cam_gate/README.md). Vercel vẫn dùng React/Vite, `api/*` và output `dist/`; `src/app/api/ai/analyze-tray/route.ts` chỉ là điểm vào tương thích Web Request/Response, không làm dự án thành Next.js.
 
 ### Tinh giản giao diện vận hành (29/10/2026)
 

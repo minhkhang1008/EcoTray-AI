@@ -10,3 +10,6 @@ dist/
 
 # Local browser verification exports and screenshots
 /artifacts/
+
+# ESP32 station credentials and endpoint certificate configuration
+/firmware/esp32_cam_gate/config.h

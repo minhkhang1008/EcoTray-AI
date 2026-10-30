@@ -40,6 +40,10 @@ Kho dùng React/Vite, `dist/`, Vercel Node Functions `api/ai/analyze-tray.mjs`. 
 
 Production yêu cầu `UPSTASH_REDIS_REST_URL` và `UPSTASH_REDIS_REST_TOKEN` đã dùng cho IoT, không dùng biến RAM giữa các serverless instance. Mặc định schoolId từ `IOT_SCHOOL_ID` hoặc `ptnk`; giao diện dùng `VITE_IOT_SCHOOL_ID` tương ứng. RAM chỉ cho máy phát triển; production thiếu Redis trả 503. API công khai theo hợp đồng IoT hiện tại.
 
+## Thử ESP32-CAM
+
+Xem [firmware và hướng dẫn thử ảnh thật](../firmware/esp32_cam_gate/README.md). Firmware mặc định dùng POST JPEG tại API này, kèm đầy đủ header và khóa thử lại ổn định. IO0 là chân XCLK, không dùng BOOT để chụp; dùng lệnh Serial `c`, nút ngoài tùy chọn hoặc cảm biến GPIO13. Không dùng ảnh gallery để tạo bằng chứng thiết bị trên production.
+
 ## Tương tác vận hành
 
 Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Vision mở màn trạm; gallery và hiệu chỉnh ảnh ở mục Kiểm tra ảnh, ví dụ mô phỏng ở mục Thử kịch bản. Luồng IoT và ghi nhận quyết định có ở màn trạm, không chèn vào phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.

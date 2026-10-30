@@ -12,7 +12,7 @@ Dùng `api/iot/[action].mjs` trên Vercel, output frontend vẫn là `dist`. Thi
 
 Dev: sao chép `.env.example` sang `.env.local` và bật `IOT_LOCAL_MEMORY=true` nếu chưa có Redis. Chạy `npm run dev`, hoặc `npm run build` rồi `npm start`. Bộ nhớ dev mất khi restart, chỉ dùng local; Vercel luôn vô hiệu hóa fallback RAM. Thiếu Redis trên Vercel trả 503, không nhận giả thành công.
 
-Trong Live Demo/Vision/NFC, chọn **Kết nối phần cứng**; dashboard, Web NFC, ESP32 và worker đều gọi API trực tiếp mà không cần khóa truy cập. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
+Trong Vision/NFC, chọn **Kết nối phần cứng**; dashboard, Web NFC, ESP32 và worker đều gọi API trực tiếp mà không cần khóa truy cập. Web NFC chỉ đọc được thẻ NDEF tương thích trên Android Chrome, không bảo đảm đọc UID của mọi thẻ MIFARE trường học. Đầu đọc ESP32/PN532 là lựa chọn cho thẻ không tương thích.
 
 Tài liệu nền: [Vercel Node Functions](https://vercel.com/docs/functions/runtimes/node-js), [Upstash REST](https://upstash.com/docs/redis/features/restapi), [Redis Lua atomicity](https://redis.io/docs/latest/develop/programmability/eval-intro/), [Web NFC trên Android](https://developer.chrome.com/docs/capabilities/nfc).
 
@@ -98,9 +98,9 @@ Trả `{ "online", "lastUpdatedAt", "servedCount", "latestNfc", "latestCapture",
 - `captures`: tối đa 100 khay gần nhất, lọc theo `since` dựa trên thời gian cập nhật. Các trường latest vẫn là snapshot mới nhất để kết nối lại được. Đây không phải kho lịch sử toàn trường; lưu analytics dài hạn ở AWS/database riêng.
 - Dashboard polling mỗi giây sau khi xong lần gọi trước, không chồng yêu cầu; có timeout và hủy khi rời chế độ nghe. Mất mạng giữ snapshot cuối kèm trạng thái lỗi; người trình diễn có thể chuyển sang fallback riêng.
 
-## Hợp đồng cảm biến của firmware (đội phần cứng triển khai)
+## Hợp đồng cảm biến của firmware
 
-Không có firmware thay thế được cài lên thiết bị từ repo này. Thiết bị phải giữ ổn định 300 ms, chụp đúng một frame, khóa, chỉ mở lại khi cảm biến vắng liên tục >1.000 ms. 600 ms trên màn hình sân khấu là hoạt ảnh mô phỏng, không phải chứng cứ đạt độ trễ cảm biến.
+Có [firmware mẫu ESP32-CAM và hướng dẫn nạp](../firmware/esp32_cam_gate/README.md); chưa xác nhận đã nạp/nghiệm thu thiết bị thật. Mặc định firmware gửi JPEG vào `/api/ai/analyze-tray` để phân tích trực tiếp; `/api/iot/tray-capture` vẫn cần worker bên ngoài. Thiết bị phải giữ ổn định 300 ms, chụp đúng một frame, khóa, chỉ mở lại khi cảm biến vắng liên tục >1.000 ms. 600 ms trên màn hình sân khấu là hoạt ảnh mô phỏng, không phải chứng cứ đạt độ trễ cảm biến.
 
 ## Kiểm thử tích hợp trước sân khấu
 
