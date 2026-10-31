@@ -6,6 +6,21 @@
 
 Hai mốc: `IMG_20261028_115429.jpg` = sạch 0%; `IMG_20261029_112146.jpg` = đầy 100%. Nhãn v2 của mọi ảnh khác là % so với ảnh đầy này. Nhãn gốc của ảnh đầy (100/95/90/90) được giữ riêng; trình huấn luyện dùng 100 cho cả bốn thành phần. Ảnh đầy không được đưa vào thống kê khay trả.
 
+## Sửa nhãn và căn góc khay
+
+`tools/label-editor.html` là công cụ sửa nhãn chạy trong trình duyệt, không cần cài thêm gì. Từ thư mục gốc repo:
+
+```sh
+python3 -m http.server 8000
+# mở http://localhost:8000/tools/label-editor.html
+```
+
+- Sửa % còn lại từng thành phần (thanh trượt bước 5% hoặc gõ số chính xác), vị trí ngăn rau, bát canh, cờ nhiễu, thực đơn và ghi chú. Ảnh đã sửa được gắn `labelSource: "manual-edit"` và `editedAt`.
+- **Đánh dấu 4 góc khay** (trên trái → trên phải → dưới phải → dưới trái, mép ngoài khay; kéo để chỉnh). Góc được lưu ở `trayCorners` (tọa độ chuẩn hóa trên ảnh 800×600 trong `public/ptnk-normalized/`). Khi có `trayCorners`, cả bộ trích đặc trưng Node lẫn Python nắn phối cảnh ảnh về khung khay chuẩn `CANONICAL_TRAY_CORNERS` trước khi cắt vùng đọc. Bật “Xem ảnh đã nắn” để kiểm tra khung đọc nằm đúng ngăn.
+- Bản nháp tự lưu trong trình duyệt. Bấm “Tải ptnk-trays.json” (hoặc “Lưu vào file…” trên Chrome/Edge), chép đè `data/ptnk-trays.json`, rồi chạy lại trình huấn luyện. Không đổi tên file ảnh hoặc `group`.
+
+15 ảnh lệch khung hiện có `trayCorners` do Claude ước lượng bằng mắt ngày 31/10; nhóm nên rà lại bằng công cụ này.
+
 ## Tái huấn luyện
 
 ```sh
@@ -19,9 +34,9 @@ Trình huấn luyện đọc mọi ảnh trong danh mục (tối thiểu 18, ph�
 
 Dự đoán là đầu ra Ridge thô (đơn vị %), cắt về 0–100. Bản v3 kéo giãn đầu ra giữa hai mốc `(pred − pred_0%)/(pred_100% − pred_0%)`; bước này làm sai số tăng gần gấp đôi và kém hơn cả việc đoán bằng trung bình nhãn (27,28 so với 22,8), nên đã bỏ ở v4. Hai mốc giờ là điểm huấn luyện thường. Đặc trưng ROI cố định không phân biệt nước kho với thức ăn, nên mô hình đọc ngăn món chính của khay sạch là ~70%; vì vậy khi chọn chính ảnh mốc, kết quả hiển thị theo nhãn mốc với `predictionSource: "anchor-label"`.
 
-Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc trong tập huấn luyện và không chấm hai mốc. 33 ảnh / 27 nhóm được chấm; MAE hiện tại **14,60 điểm phần trăm** (Cơm 16,1 · Món chính 17,0 · Rau 13,1 · Canh 12,3), so với mốc đoán bằng trung bình nhãn 25,25 (`baselineMeanLabelMAE`). Món chính yếu nhất vì thịt thường bị gắp sang ngăn cơm. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác do một người gán lại; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
+Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc trong tập huấn luyện và không chấm hai mốc. 33 ảnh / 27 nhóm được chấm; MAE hiện tại **14,5 điểm phần trăm** sau khi căn góc 15 ảnh lệch khung (Cơm 16,7 · Món chính 16,7 · Rau 13,2 · Canh 11,4; trước khi căn: 14,6 bằng Python, 14,62 bằng Node), so với mốc đoán bằng trung bình nhãn 25,25 (`baselineMeanLabelMAE`). Món chính yếu nhất vì thịt thường bị gắp sang ngăn cơm. Thử nghiệm 31/10: bộ 14 đặc trưng màu/kết cấu (thêm dải màu sắc, tỷ lệ vật tối, độ lệch chuẩn) với Ridge chuẩn hóa chỉ giảm MAE kiểm định khoảng 1 điểm (≈13,5), RandomForest/ExtraTrees tương đương; ở cỡ 27 khay mức này nằm trong nhiễu nên chưa thay hợp đồng vector 6 số. Đòn bẩy lớn hơn là thêm khay, chụp đúng khung và có nhãn cân. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác do một người gán lại; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
 
-Gallery giữ nguyên vùng đọc và mô hình Ridge đã kiểm định ở trên. Ảnh JPEG thiết bị và ảnh tải lên dùng bộ đọc diện tích pixel `ov2640-area-v1` trong `lib/station-vision.mjs`; **MAE 14,60 không áp dụng cho bộ đọc mới**.
+Gallery giữ nguyên vùng đọc và mô hình Ridge đã kiểm định ở trên. Ảnh JPEG thiết bị và ảnh tải lên dùng bộ đọc diện tích pixel `ov2640-area-v1` trong `lib/station-vision.mjs`; **MAE này không áp dụng cho bộ đọc mới**.
 
 Bố cục mặc định `ESP32_STANDARD_TOP_RICE` theo toàn khung hình: Cơm `(0.04,0.05)–(0.55,0.49)`, Canh `(0.57,0.05)–(0.89,0.49)`, Món chính `(0.31,0.52)–(0.62,0.94)`, Rau trái `(0.04,0.52)–(0.29,0.94)` hoặc Rau phải `(0.63,0.52)–(0.89,0.94)`. Đây là phương án tọa độ hiệu chuẩn được yêu cầu, không phải bộ phát hiện biên kim loại tổng quát: dải nền tối bên phải ngoài x=0,90 không tham gia phân tích; không cắt nền rồi áp tọa độ lần nữa.
 
@@ -33,7 +48,7 @@ Cơm dùng Value ≥0,62, saturation <0,24 và độ sáng; phản xạ sáng d�
 
 ## Hiệu chỉnh và quyết định
 
-Sandbox xử lý ảnh tải lên ngay trong trình duyệt; ảnh và phản hồi không gửi máy chủ. Bốn thanh trượt có bước 25%. Nút Active Learning cập nhật trọng số hồi quy trong phiên bằng sai số phản hồi; bước cập nhật được chiếu ra khỏi hai vector đặc trưng mốc nên dự đoán tại hai mốc không đổi. Khôi phục đưa về trọng số gốc; tải lại trang kết thúc phiên. Trọng số sau phản hồi chưa được kiểm định và không thay mô hình trạm. Với ảnh tải lên dùng bộ đọc OV2640, thanh trượt chỉ giữ hiệu chỉnh thủ công cho ảnh trong phiên; không cập nhật trọng số Ridge.
+Sandbox xử lý ảnh tải lên ngay trong trình duyệt; ảnh và phản hồi không gửi máy chủ. Bốn thanh trượt có bước 5% (vạch mốc 0/25/50/75/100%). Nút Active Learning cập nhật trọng số hồi quy trong phiên bằng sai số phản hồi; bước cập nhật được chiếu ra khỏi hai vector đặc trưng mốc nên dự đoán tại hai mốc không đổi. Khôi phục đưa về trọng số gốc; tải lại trang kết thúc phiên. Trọng số sau phản hồi chưa được kiểm định và không thay mô hình trạm. Với ảnh tải lên dùng bộ đọc OV2640, thanh trượt chỉ giữ hiệu chỉnh thủ công cho ảnh trong phiên; không cập nhật trọng số Ridge.
 
 Gram suy từ định lượng giả định Cơm 200g / Món chính 110g / Rau 90g / Canh 150g. `W_min=85g` là chính sách bảo vệ thử nghiệm. Khóa giảm rau bất cứ khi nào lượng rau thực ăn ước tính dưới 85g, không cần thêm điều kiện phần trăm thừa. Không mô tả ngưỡng này là chuẩn y khoa hoặc lượng chất xơ.
 

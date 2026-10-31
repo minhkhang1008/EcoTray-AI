@@ -20,6 +20,40 @@ def get_rois(veg_pos='TR'):
     }
 
 
+CANONICAL_TRAY_CORNERS = [[0.03, 0.05], [0.93, 0.05], [0.93, 0.96], [0.03, 0.96]]
+
+
+def homography(src, dst):
+    a, b = [], []
+    for (x, y), (u, v) in zip(src, dst):
+        a.append([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.append(u)
+        a.append([0, 0, 0, x, y, 1, -v * x, -v * y]); b.append(v)
+    return np.append(np.linalg.solve(np.array(a, float), np.array(b, float)), 1.0)
+
+
+def valid_corners(corners):
+    return (isinstance(corners, list) and len(corners) == 4 and
+            all(isinstance(p, list) and len(p) == 2 and all(-0.1 <= v <= 1.1 for v in p) for p in corners))
+
+
+def warp_to_canonical(rgb, corners):
+    """Same mapping as warpToCanonical in lib/ptnk-features.mjs (nearest neighbour, black outside)."""
+    if not valid_corners(corners):
+        raise ValueError('Bốn góc khay không hợp lệ.')
+    h, w, _ = rgb.shape
+    H = homography(CANONICAL_TRAY_CORNERS, corners)
+    u = (np.arange(w) + 0.5) / w
+    v = (np.arange(h) + 0.5) / h
+    U, V = np.meshgrid(u, v)
+    d = H[6] * U + H[7] * V + H[8]
+    sx = np.floor((H[0] * U + H[1] * V + H[2]) / d * w).astype(np.int64)
+    sy = np.floor((H[3] * U + H[4] * V + H[5]) / d * h).astype(np.int64)
+    ok = (sx >= 0) & (sy >= 0) & (sx < w) & (sy < h)
+    out = np.zeros_like(rgb)
+    out[ok] = rgb[sy[ok], sx[ok]]
+    return out
+
+
 def extract_features(rgb, box):
     """rgb: uint8 array HxWx3. Returns the 6-value vector in featureOrder."""
     h, w, _ = rgb.shape

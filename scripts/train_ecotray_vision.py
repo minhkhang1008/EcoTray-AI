@@ -18,7 +18,7 @@ from PIL import Image, ImageOps
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from ptnk_features import KEYS, extract_features, get_rois  # noqa: E402
+from ptnk_features import KEYS, extract_features, get_rois, warp_to_canonical  # noqa: E402
 
 EMPTY = 'IMG_20261028_115429.jpg'
 FULL = 'IMG_20261029_112146.jpg'
@@ -60,6 +60,8 @@ def features_python(catalog, normalized):
         rgb = np.asarray(Image.open(normalized / filename).convert('RGB'))
         if rgb.shape[:2] != (600, 800):
             raise ValueError(filename + ': expected normalized 800×600')
+        if meta.get('trayCorners'):
+            rgb = warp_to_canonical(rgb, meta['trayCorners'])
         rois = get_rois(meta['veg_pos'])
         out[filename] = {k: extract_features(rgb, rois[k]) for k in KEYS}
     return out
@@ -107,7 +109,9 @@ def main():
     artifact = {
         'modelVersion': MODEL_VERSION, 'realTraysCount': len(ids),
         'independentTrays': len(groups), 'alpha': ALPHA,
-        'labelSource': 'relabel-v2-visual-review', 'featureExtractor': args.features,
+        'alignedImages': sum(1 for m in catalog.values() if m.get('trayCorners')),
+        'labelSource': ' + '.join(sorted({m.get('labelSource', 'unknown') for m in catalog.values()})),
+        'featureExtractor': args.features,
         'prediction': 'raw-ridge-percent-clipped-0-100',
         'validation': {'method': 'leave-one-related-view-group-out; two anchor photos stay in training and are not scored',
                        'groups': len(groups), 'scoredImages': len(scored),

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sửa nhãn khay PTNK</title>
+<style>
+:root{--bg:#f4f6f3;--panel:#fff;--ink:#1d2a22;--muted:#5d6d63;--line:#d8e0da;--accent:#2f6b45;--accent-soft:#e3efe6;--warn:#9a5b00;--warn-soft:#fff3dc;--rice:#e0b000;--main:#d23c2c;--veg:#2e9c48;--soup:#1f88c9}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+header h1{font-size:16px;margin:0}
+header .stat{color:var(--muted)}
+header .actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+button,select,input,textarea{font:inherit}
+button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.banner{margin:10px 16px 0;padding:8px 12px;border-radius:8px;background:var(--warn-soft);color:var(--warn);display:none;gap:8px;align-items:center;flex-wrap:wrap}
+.banner.show{display:flex}
+main{display:grid;grid-template-columns:200px minmax(0,1fr) 320px;gap:12px;padding:12px 16px;align-items:start}
+@media (max-width:1100px){main{grid-template-columns:1fr}#list{max-height:220px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+#list{max-height:calc(100vh - 90px);overflow:auto;padding:6px}
+#list button{display:flex;width:100%;gap:8px;align-items:center;text-align:left;border:0;border-radius:6px;padding:4px;margin:0 0 2px;background:transparent}
+#list button[aria-current="true"]{background:var(--accent-soft)}
+#list img{width:64px;height:48px;object-fit:cover;border-radius:4px;flex:none}
+#list small{display:block;color:var(--muted)}
+#list button > span{min-width:0;font-size:13px}
+.tag{font-size:11px;padding:0 5px;border-radius:4px;background:var(--accent-soft);color:var(--accent);margin-right:2px}
+.tag.edit{background:var(--warn-soft);color:var(--warn)}
+#viewer{padding:10px}
+#viewer .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+#viewer .bar .hint{color:var(--muted)}
+canvas{width:100%;height:auto;display:block;border-radius:8px;background:#222;touch-action:none}
+canvas.picking{cursor:crosshair}
+#form{padding:12px}
+#form h2{font-size:15px;margin:0 0 2px}
+#form .sub{color:var(--muted);margin:0 0 10px;word-break:break-all}
+.slider{margin:0 0 10px}
+.slider .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.slider input[type=range]{width:100%}
+.slider input[type=number]{width:64px}
+.slider .prev{color:var(--muted);font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:8px 10px}
+legend{padding:0 4px;color:var(--muted)}
+.flags{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:13px}
+label.inline{display:flex;gap:6px;align-items:center}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px}
+.note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Sửa nhãn khay PTNK</h1>
+  <span class="stat" id="stat">Đang tải…</span>
+  <div class="actions">
+    <label class="inline"><input type="file" id="openFile" accept="application/json" hidden><button type="button" id="openBtn">Mở file JSON khác</button></label>
+    <button type="button" id="saveFs" hidden>Lưu vào file…</button>
+    <button type="button" class="primary" id="download">Tải ptnk-trays.json</button>
+  </div>
+</header>
+<div class="banner" id="draftBanner" role="status">
+  <span>Có bản nháp chưa lưu từ lần trước.</span>
+  <button type="button" id="restoreDraft">Khôi phục bản nháp</button>
+  <button type="button" id="dropDraft">Bỏ bản nháp</button>
+</div>
+<div class="banner" id="errorBanner" role="alert"></div>
+<main>
+  <nav class="card" id="list" aria-label="Danh sách ảnh"></nav>
+  <section class="card" id="viewer">
+    <div class="bar">
+      <button type="button" id="prev" aria-label="Ảnh trước">←</button>
+      <button type="button" id="next" aria-label="Ảnh sau">→</button>
+      <label class="inline"><input type="checkbox" id="showRoi" checked> Khung đọc</label>
+      <label class="inline"><input type="checkbox" id="showWarp"> Xem ảnh đã nắn</label>
+      <button type="button" id="pickCorners">Đánh dấu 4 góc khay</button>
+      <button type="button" id="clearCorners">Xóa góc</button>
+      <span class="hint" id="hint"></span>
+    </div>
+    <canvas id="canvas" width="800" height="600" aria-label="Ảnh khay đã chuẩn hóa"></canvas>
+    <p class="note">Mẹo: <span class="kbd">←</span>/<span class="kbd">→</span> chuyển ảnh. Khi đánh dấu góc, bấm lần lượt <b>trên trái → trên phải → dưới phải → dưới trái</b> ở mép ngoài khay; có thể kéo góc để chỉnh. Bật “Xem ảnh đã nắn” để kiểm tra khung đọc đã nằm đúng từng ngăn.</p>
+  </section>
+  <section class="card" id="form" aria-label="Nhãn của ảnh đang chọn">
+    <h2 id="title">—</h2>
+    <p class="sub" id="subtitle"></p>
+    <div id="sliders"></div>
+    <fieldset>
+      <legend>Ngăn rau nằm ở</legend>
+      <label class="inline"><input type="radio" name="veg" value="TL"> Trên trái</label>
+      <label class="inline"><input type="radio" name="veg" value="TR"> Trên phải</label>
+    </fieldset>
+    <fieldset>
+      <legend>Bát canh</legend>
+      <select id="soupBowl" aria-label="Bát canh">
+        <option value="present">Có bát, còn canh</option>
+        <option value="empty">Có bát, đã hết</option>
+        <option value="absent">Không lấy bát</option>
+      </select>
+    </fieldset>
+    <fieldset>
+      <legend>Cờ nhiễu</legend>
+      <div class="flags" id="flags"></div>
+    </fieldset>
+    <label>Thực đơn<input type="text" id="combo"></label>
+    <label style="display:block;margin-top:8px">Ghi chú<textarea id="note" rows="3"></textarea></label>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button type="button" id="revert">Hoàn tác ảnh này</button>
+    </div>
+    <p class="note" id="anchorNote" hidden>Ảnh mốc: trình huấn luyện luôn dùng 0% (khay sạch) hoặc 100% (khay đầy) cho cả bốn thành phần.</p>
+  </section>
+</main>
+<script type="module">
+import { getRois, homography, CANONICAL_TRAY_CORNERS } from "../lib/ptnk-features.mjs";
+
+const KEYS = ["rice", "main", "veg", "soup"];
+const NAMES = { rice: "Cơm", main: "Món chính", veg: "Rau", soup: "Canh" };
+const COLORS = { rice: "#e0b000", main: "#d23c2c", veg: "#2e9c48", soup: "#1f88c9" };
+const FLAGS = {
+  main_on_rice: "Thịt nằm trên cơm", main_in_other_slot: "Thịt ở ngăn khác",
+  rice_in_main: "Cơm trong ngăn món", rice_in_soup: "Cơm trong bát canh",
+  veg_in_main: "Rau trong ngăn món", veg_in_soup_slot: "Rau ở ngăn tròn",
+  soup_veg_on_rice: "Rau canh trên cơm", food_outside_roi: "Thức ăn ngoài khung",
+  bones: "Có xương", condiment: "Có nước chấm/sốt",
+  sauce_only_main: "Món chính chỉ còn nước", near_clean: "Gần sạch",
+  utensil: "Có muỗng/đũa", cropped_frame: "Ảnh bị cắt khung",
+  other_tray_in_frame: "Khay khác lọt khung", veg_slot_uncertain: "Không rõ ngăn rau",
+};
+const ANCHORS = ["IMG_20261028_115429.jpg", "IMG_20261029_112146.jpg"];
+const DRAFT_KEY = "ecotray-label-editor-draft-v1";
+const CORNER_NAMES = ["trên trái", "trên phải", "dưới phải", "dưới trái"];
+
+const $ = (id) => document.getElementById(id);
+const canvas = $("canvas"), ctx = canvas.getContext("2d");
+let original = {}, catalog = {}, ids = [], index = 0, picking = false, drag = -1;
+const imageCache = new Map();
+let fileHandle = null;
+
+const clone = (v) => JSON.parse(JSON.stringify(v));
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+function showError(msg) { const b = $("errorBanner"); b.textContent = msg; b.classList.toggle("show", !!msg); }
+function store(fn) { try { return fn(); } catch { return null; } }
+
+async function loadCatalog() {
+  const res = await fetch("../data/ptnk-trays.json", { cache: "no-store" });
+  if (!res.ok) throw Error("Không đọc được ../data/ptnk-trays.json (HTTP " + res.status + ").");
+  return res.json();
+}
+function setCatalog(data) {
+  original = clone(data); catalog = clone(data); ids = Object.keys(catalog); index = 0;
+  renderList(); select(0);
+}
+function editedIds() { return ids.filter((id) => !same(stripMeta(catalog[id]), stripMeta(original[id] ?? {}))); }
+function stripMeta(m) {
+  const { labelSource, editedAt, ...rest } = m;
+  if (rest.flags) rest.flags = [...rest.flags].sort();
+  if (Array.isArray(rest.trayCorners) && !rest.trayCorners.length) delete rest.trayCorners;
+  return rest;
+}
+function touch(id) {
+  const m = catalog[id];
+  if (same(stripMeta(m), stripMeta(original[id] ?? {}))) {
+    m.labelSource = original[id]?.labelSource; delete m.editedAt;
+    if (original[id]?.editedAt) m.editedAt = original[id].editedAt;
+  } else { m.labelSource = "manual-edit"; m.editedAt = new Date().toISOString().slice(0, 10); }
+  store(() => localStorage.setItem(DRAFT_KEY, JSON.stringify({ base: original, catalog })));
+  updateStat(); updateListItem(id);
+}
+function updateStat() {
+  const edited = editedIds().length, aligned = ids.filter((id) => catalog[id].trayCorners).length;
+  $("stat").textContent = `${ids.length} ảnh · ${edited} đã sửa · ${aligned} đã đánh dấu góc khay`;
+}
+
+function renderList() {
+  const nav = $("list"); nav.textContent = "";
+  ids.forEach((id, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.dataset.id = id;
+    b.addEventListener("click", () => select(i));
+    const img = document.createElement("img"); img.loading = "lazy"; img.alt = ""; img.src = "../public/ptnk-normalized/" + id;
+    const t = document.createElement("span");
+    b.append(img, t); nav.append(b); updateListItem(id);
+  });
+  updateStat();
+}
+function updateListItem(id) {
+  const b = $("list").querySelector(`[data-id="${CSS.escape(id)}"]`); if (!b) return;
+  const m = catalog[id], span = b.querySelector("span");
+  span.innerHTML = "";
+  const name = document.createElement("span"); const mm = id.match(/IMG_\d{4}(\d\d)(\d\d)_(\d{6})(_\d+)?/); name.textContent = mm ? `${mm[2]}/${mm[1]} · ${mm[3]}${mm[4] ?? ""}` : id;
+  const small = document.createElement("small"); small.textContent = m.y.join(" / ");
+  span.append(name, small);
+  if (!same(stripMeta(m), stripMeta(original[id] ?? {}))) { const t = document.createElement("span"); t.className = "tag edit"; t.textContent = "đã sửa"; small.append(" ", t); }
+  if (m.trayCorners) { const t = document.createElement("span"); t.className = "tag"; t.textContent = "góc"; small.append(" ", t); }
+  b.setAttribute("aria-current", ids[index] === id ? "true" : "false");
+}
+
+function loadImage(id) {
+  if (!imageCache.has(id)) imageCache.set(id, new Promise((resolve, reject) => {
+    const img = new Image(); img.onload = () => resolve(img);
+    img.onerror = () => reject(Error("Không tải được ảnh " + id)); img.src = "../public/ptnk-normalized/" + id;
+  }));
+  return imageCache.get(id);
+}
+
+function select(i) {
+  if (!ids.length) return;
+  index = (i + ids.length) % ids.length; picking = false; canvas.classList.remove("picking");
+  ids.forEach(updateListItem);
+  $("list").querySelector('[aria-current="true"]')?.scrollIntoView({ block: "nearest" });
+  renderForm(); draw();
+}
+const current = () => catalog[ids[index]];
+
+function renderForm() {
+  const id = ids[index], m = current(), anchor = ANCHORS.includes(id);
+  $("title").textContent = id.replace(/^IMG_|\.jpg$/g, "") + " · " + m.date;
+  $("subtitle").textContent = "Nhóm: " + m.group.replace(/^IMG_|\.jpg$/g, "") + (m.comboConfidence ? " · " + m.comboConfidence : "");
+  $("anchorNote").hidden = !anchor;
+  const box = $("sliders"); box.textContent = "";
+  KEYS.forEach((k, i) => {
+    const wrap = document.createElement("div"); wrap.className = "slider";
+    const row = document.createElement("div"); row.className = "row";
+    const lab = document.createElement("label"); lab.htmlFor = "r-" + k;
+    lab.innerHTML = `<span class="dot" style="background:${COLORS[k]}"></span>${NAMES[k]}`;
+    const num = document.createElement("input"); num.type = "number"; num.min = 0; num.max = 100; num.step = 1; num.value = m.y[i];
+    num.setAttribute("aria-label", NAMES[k] + " (%)");
+    const range = document.createElement("input"); range.type = "range"; range.id = "r-" + k; range.min = 0; range.max = 100; range.step = 5; range.value = m.y[i];
+    const prev = document.createElement("div"); prev.className = "prev";
+    const before = original[id]?.y?.[i];
+    prev.textContent = before === undefined ? "" : "Nhãn gốc: " + before + "%";
+    const set = (v) => {
+      const n = Math.max(0, Math.min(100, Math.round(Number(v))));
+      if (!Number.isFinite(n)) return;
+      m.y[i] = n; num.value = n; range.value = n; touch(id);
+    };
+    range.addEventListener("input", () => set(range.value));
+    num.addEventListener("change", () => set(num.value));
+    range.disabled = num.disabled = anchor;
+    row.append(lab, num); wrap.append(row, range, prev); box.append(wrap);
+  });
+  document.querySelectorAll('input[name=veg]').forEach((r) => { r.checked = r.value === m.veg_pos; });
+  $("soupBowl").value = m.soupBowl ?? "present";
+  const flags = $("flags"); flags.textContent = "";
+  const all = { ...FLAGS }; (m.flags ?? []).forEach((f) => { if (!all[f]) all[f] = f; });
+  Object.entries(all).filter(([f]) => !f.startsWith("anchor_")).forEach(([f, label]) => {
+    const l = document.createElement("label"); l.className = "inline";
+    const c = document.createElement("input"); c.type = "checkbox"; c.checked = (m.flags ?? []).includes(f);
+    c.addEventListener("change", () => {
+      const kept = (m.flags ?? []).filter((x) => x !== f);
+      m.flags = c.checked ? [...kept, f] : kept;
+      touch(id);
+    });
+    l.append(c, label); flags.append(l);
+  });
+  $("combo").value = m.combo ?? ""; $("note").value = m.note ?? "";
+}
+document.querySelectorAll('input[name=veg]').forEach((r) => r.addEventListener("change", () => { current().veg_pos = r.value; touch(ids[index]); draw(); }));
+$("soupBowl").addEventListener("change", (e) => { current().soupBowl = e.target.value; touch(ids[index]); });
+$("combo").addEventListener("change", (e) => { current().combo = e.target.value.trim(); touch(ids[index]); });
+$("note").addEventListener("change", (e) => { current().note = e.target.value.trim(); touch(ids[index]); });
+$("revert").addEventListener("click", () => { const id = ids[index]; catalog[id] = clone(original[id]); touch(id); renderForm(); draw(); });
+
+function warpedImageData(img, corners) {
+  const w = canvas.width, h = canvas.height, tmp = document.createElement("canvas");
+  tmp.width = w; tmp.height = h; const t = tmp.getContext("2d"); t.drawImage(img, 0, 0, w, h);
+  const src = t.getImageData(0, 0, w, h), out = t.createImageData(w, h), H = homography(CANONICAL_TRAY_CORNERS, corners);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const u = (x + 0.5) / w, v = (y + 0.5) / h, d = H[6] * u + H[7] * v + H[8];
+    const sx = Math.floor((H[0] * u + H[1] * v + H[2]) / d * w), sy = Math.floor((H[3] * u + H[4] * v + H[5]) / d * h);
+    const o = (y * w + x) * 4; out.data[o + 3] = 255;
+    if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue;
+    const s = (sy * w + sx) * 4; out.data[o] = src.data[s]; out.data[o + 1] = src.data[s + 1]; out.data[o + 2] = src.data[s + 2];
+  }
+  return out;
+}
+function mapPoint(H, u, v) { const d = H[6] * u + H[7] * v + H[8]; return [(H[0] * u + H[1] * v + H[2]) / d, (H[3] * u + H[4] * v + H[5]) / d]; }
+
+async function draw() {
+  const id = ids[index], m = current(); let img;
+  try { img = await loadImage(id); showError(""); } catch (e) { showError(e.message); return; }
+  if (ids[index] !== id) return;
+  const W = canvas.width, Hh = canvas.height, corners = m.trayCorners, warp = $("showWarp").checked && corners?.length === 4;
+  $("showWarp").disabled = !(corners?.length === 4);
+  if (warp) ctx.putImageData(warpedImageData(img, corners), 0, 0); else ctx.drawImage(img, 0, 0, W, Hh);
+  if ($("showRoi").checked) {
+    const rois = getRois(m.veg_pos);
+    const toCanvas = !warp && corners?.length === 4 ? homography(CANONICAL_TRAY_CORNERS, corners) : null;
+    KEYS.forEach((k, i) => {
+      const [x1, y1, x2, y2] = rois[k];
+      const pts = [[x1, y1], [x2, y1], [x2, y2], [x1, y2]].map(([u, v]) => (toCanvas ? mapPoint(toCanvas, u, v) : [u, v]));
+      ctx.strokeStyle = COLORS[k]; ctx.lineWidth = 3; ctx.beginPath();
+      pts.forEach(([u, v], j) => (j ? ctx.lineTo(u * W, v * Hh) : ctx.moveTo(u * W, v * Hh))); ctx.closePath(); ctx.stroke();
+      ctx.fillStyle = COLORS[k]; ctx.font = "bold 16px system-ui"; ctx.fillText(`${NAMES[k]} ${m.y[i]}%`, pts[0][0] * W + 6, pts[0][1] * Hh + 20);
+    });
+  }
+  if (!warp && corners?.length) {
+    ctx.strokeStyle = "#00e5ff"; ctx.lineWidth = 2; ctx.setLineDash([8, 6]); ctx.beginPath();
+    corners.forEach(([u, v], j) => (j ? ctx.lineTo(u * W, v * Hh) : ctx.moveTo(u * W, v * Hh)));
+    if (corners.length === 4) ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+    corners.forEach(([u, v], j) => { ctx.fillStyle = "#00e5ff"; ctx.beginPath(); ctx.arc(u * W, v * Hh, 8, 0, 7); ctx.fill(); ctx.fillStyle = "#003b44"; ctx.font = "bold 12px system-ui"; ctx.fillText(String(j + 1), u * W - 4, v * Hh + 4); });
+  }
+  const n = corners?.length ?? 0;
+  $("hint").textContent = picking ? `Bấm góc ${CORNER_NAMES[n] ?? ""} (${n}/4)` : n === 4 ? "Đã có 4 góc khay" : "";
+}
+["showRoi", "showWarp"].forEach((id) => $(id).addEventListener("change", draw));
+
+function canvasPoint(e) { const r = canvas.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; }
+const round4 = (v) => Math.round(v * 10000) / 10000;
+$("pickCorners").addEventListener("click", () => {
+  const m = current(); $("showWarp").checked = false;
+  picking = true; m.trayCorners = []; canvas.classList.add("picking"); touch(ids[index]); draw();
+});
+$("clearCorners").addEventListener("click", () => { const m = current(); delete m.trayCorners; picking = false; canvas.classList.remove("picking"); $("showWarp").checked = false; touch(ids[index]); draw(); });
+canvas.addEventListener("pointerdown", (e) => {
+  const m = current(), [u, v] = canvasPoint(e);
+  if (picking) {
+    m.trayCorners.push([round4(u), round4(v)]);
+    if (m.trayCorners.length === 4) { picking = false; canvas.classList.remove("picking"); }
+    touch(ids[index]); draw(); return;
+  }
+  if ($("showWarp").checked || !m.trayCorners) return;
+  const r = canvas.getBoundingClientRect();
+  drag = m.trayCorners.findIndex(([x, y]) => Math.hypot((x - u) * r.width, (y - v) * r.height) < 14);
+  if (drag >= 0) canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove", (e) => {
+  if (drag < 0) return; const [u, v] = canvasPoint(e);
+  current().trayCorners[drag] = [round4(Math.max(-0.1, Math.min(1.1, u))), round4(Math.max(-0.1, Math.min(1.1, v)))]; draw();
+});
+canvas.addEventListener("pointerup", () => { if (drag >= 0) { drag = -1; touch(ids[index]); } });
+
+function serialize() {
+  const out = {};
+  for (const id of ids) { const m = clone(catalog[id]); if (m.trayCorners && m.trayCorners.length !== 4) delete m.trayCorners; out[id] = m; }
+  return JSON.stringify(out, null, 2) + "\n";
+}
+function incomplete() { return ids.filter((id) => catalog[id].trayCorners && catalog[id].trayCorners.length !== 4); }
+function warnIncomplete() {
+  const bad = incomplete();
+  return !bad.length || confirm(`${bad.length} ảnh chưa đủ 4 góc khay; phần góc dở dang sẽ bị bỏ. Tiếp tục?`);
+}
+function afterSave() { original = clone(JSON.parse(serialize())); catalog = clone(original); store(() => localStorage.removeItem(DRAFT_KEY)); ids.forEach(updateListItem); updateStat(); renderForm(); }
+$("download").addEventListener("click", () => {
+  if (!warnIncomplete()) return;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([serialize()], { type: "application/json" }));
+  a.download = "ptnk-trays.json"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  afterSave();
+});
+if ("showSaveFilePicker" in window) {
+  $("saveFs").hidden = false;
+  $("saveFs").addEventListener("click", async () => {
+    if (!warnIncomplete()) return;
+    try {
+      fileHandle ??= await window.showSaveFilePicker({ suggestedName: "ptnk-trays.json", types: [{ description: "JSON", accept: { "application/json": [".json"] } }] });
+      const w = await fileHandle.createWritable(); await w.write(serialize()); await w.close();
+      afterSave(); showError("");
+    } catch (e) { if (e.name !== "AbortError") showError("Không lưu được: " + e.message); }
+  });
+}
+$("openBtn").addEventListener("click", () => $("openFile").click());
+$("openFile").addEventListener("change", async (e) => {
+  const f = e.target.files?.[0]; if (!f) return;
+  try { const data = JSON.parse(await f.text()); if (!Object.values(data).every((m) => Array.isArray(m?.y) && m.y.length === 4)) throw Error("File không đúng định dạng ptnk-trays.json."); setCatalog(data); showError(""); }
+  catch (err) { showError(err.message); }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest("input,textarea,select") || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "ArrowLeft") { select(index - 1); e.preventDefault(); }
+  if (e.key === "ArrowRight") { select(index + 1); e.preventDefault(); }
+});
+$("prev").addEventListener("click", () => select(index - 1));
+$("next").addEventListener("click", () => select(index + 1));
+window.addEventListener("beforeunload", (e) => { if (editedIds().length) e.preventDefault(); });
+
+try {
+  const data = await loadCatalog(); setCatalog(data);
+  const draft = store(() => JSON.parse(localStorage.getItem(DRAFT_KEY) ?? "null"));
+  if (draft?.catalog && same(draft.base, data) && !same(draft.catalog, data)) {
+    $("draftBanner").classList.add("show");
+    $("restoreDraft").addEventListener("click", () => { catalog = clone(draft.catalog); ids.forEach(updateListItem); updateStat(); renderForm(); draw(); $("draftBanner").classList.remove("show"); });
+    $("dropDraft").addEventListener("click", () => { store(() => localStorage.removeItem(DRAFT_KEY)); $("draftBanner").classList.remove("show"); });
+  }
+} catch (e) {
+  $("stat").textContent = "Chưa có dữ liệu";
+  showError(e.message + " Hãy chạy máy chủ tĩnh từ thư mục gốc repo (python3 -m http.server 8000) rồi mở http://localhost:8000/tools/label-editor.html, hoặc bấm “Mở file JSON khác”.");
+}
+</script>
+</body>
+</html>

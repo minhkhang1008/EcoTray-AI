@@ -56,7 +56,25 @@
       "main_on_rice"
     ],
     "note": "1 miếng thịt nằm trên cơm.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.06,
+        0.08
+      ],
+      [
+        0.99,
+        0.07
+      ],
+      [
+        1.0,
+        1.02
+      ],
+      [
+        0.07,
+        1.02
+      ]
+    ]
   },
   "IMG_20261028_114814.jpg": {
     "veg_pos": "TL",
@@ -145,7 +163,25 @@
       "soup_veg_on_rice"
     ],
     "note": "Miếng bầu lẫn trong cơm; đũa che ngăn trống và bát.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.04,
+        0.02
+      ],
+      [
+        0.96,
+        0.05
+      ],
+      [
+        0.95,
+        0.97
+      ],
+      [
+        0.01,
+        0.96
+      ]
+    ]
   },
   "IMG_20261028_115435_1.jpg": {
     "veg_pos": "TR",
@@ -167,7 +203,25 @@
       "soup_veg_on_rice"
     ],
     "note": "Cùng khay với 115435.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.09,
+        0.01
+      ],
+      [
+        0.97,
+        0.04
+      ],
+      [
+        0.98,
+        0.95
+      ],
+      [
+        0.07,
+        0.94
+      ]
+    ]
   },
   "IMG_20261028_115444.jpg": {
     "veg_pos": "TR",
@@ -189,7 +243,25 @@
       "food_outside_roi"
     ],
     "note": "Đũa gắp một khối cơm ra ngoài ngăn.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.02,
+        0.1
+      ],
+      [
+        0.89,
+        0.04
+      ],
+      [
+        0.94,
+        0.92
+      ],
+      [
+        0.05,
+        0.98
+      ]
+    ]
   },
   "IMG_20261028_115444_1.jpg": {
     "veg_pos": "TR",
@@ -211,7 +283,25 @@
       "food_outside_roi"
     ],
     "note": "Cùng khay với 115444.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.02,
+        0.09
+      ],
+      [
+        0.9,
+        0.03
+      ],
+      [
+        0.92,
+        0.95
+      ],
+      [
+        0.05,
+        0.97
+      ]
+    ]
   },
   "IMG_20261028_115445.jpg": {
     "veg_pos": "TR",
@@ -254,7 +344,25 @@
       "veg_in_main"
     ],
     "note": "Một cọng đậu nằm trong ngăn món chính.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.0,
+        0.1
+      ],
+      [
+        0.96,
+        0.04
+      ],
+      [
+        0.98,
+        0.96
+      ],
+      [
+        0.03,
+        1.02
+      ]
+    ]
   },
   "IMG_20261029_112143.jpg": {
     "veg_pos": "TL",
@@ -456,7 +564,25 @@
       "veg_slot_uncertain"
     ],
     "note": "Gần sạch; xương ở ngăn nhỏ; không xác định được ngăn rau.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.07,
+        0.0
+      ],
+      [
+        1.0,
+        0.08
+      ],
+      [
+        0.97,
+        0.98
+      ],
+      [
+        0.05,
+        0.86
+      ]
+    ]
   },
   "IMG_20261030_112909.jpg": {
     "veg_pos": "TL",
@@ -500,7 +626,25 @@
       "condiment"
     ],
     "note": "Ngăn nhỏ còn lại chứa tương ớt ăn kèm (không tính).",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        -0.02,
+        0.03
+      ],
+      [
+        0.92,
+        0.07
+      ],
+      [
+        0.88,
+        1.02
+      ],
+      [
+        -0.04,
+        1.02
+      ]
+    ]
   },
   "IMG_20261030_112912.jpg": {
     "veg_pos": "TR",
@@ -522,7 +666,25 @@
       "condiment"
     ],
     "note": "Ngăn nhỏ còn lại chứa tương ớt ăn kèm (không tính).",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.01,
+        0.02
+      ],
+      [
+        0.97,
+        0.08
+      ],
+      [
+        0.95,
+        0.97
+      ],
+      [
+        0.0,
+        0.97
+      ]
+    ]
   },
   "IMG_20261030_112922.jpg": {
     "veg_pos": "TR",
@@ -566,7 +728,25 @@
       "main_in_other_slot"
     ],
     "note": "1 miếng thịt ở ngăn nhỏ còn lại.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.04,
+        0.06
+      ],
+      [
+        0.99,
+        0.04
+      ],
+      [
+        0.98,
+        0.93
+      ],
+      [
+        0.07,
+        0.95
+      ]
+    ]
   },
   "IMG_20261030_112925.jpg": {
     "veg_pos": "TL",
@@ -587,7 +767,25 @@
       "utensil"
     ],
     "note": "Món chính và rau đã hết; bát canh trống có muỗng.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.11,
+        0.0
+      ],
+      [
+        1.02,
+        0.02
+      ],
+      [
+        0.99,
+        0.93
+      ],
+      [
+        0.1,
+        0.93
+      ]
+    ]
   },
   "IMG_20261030_112927.jpg": {
     "veg_pos": "TR",
@@ -653,7 +851,25 @@
       "main_in_other_slot"
     ],
     "note": "1 miếng thịt ở ngăn nhỏ trái.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        -0.02,
+        0.0
+      ],
+      [
+        1.05,
+        -0.03
+      ],
+      [
+        1.04,
+        0.9
+      ],
+      [
+        -0.02,
+        1.0
+      ]
+    ]
   },
   "IMG_20261030_112933.jpg": {
     "veg_pos": "TR",
@@ -676,7 +892,25 @@
       "other_tray_in_frame"
     ],
     "note": "Cơm sát mép phải ảnh; có khay khác lọt khung.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.15,
+        0.02
+      ],
+      [
+        1.09,
+        0.02
+      ],
+      [
+        1.08,
+        0.9
+      ],
+      [
+        0.16,
+        0.92
+      ]
+    ]
   },
   "IMG_20261030_112937.jpg": {
     "veg_pos": "TR",
@@ -698,7 +932,25 @@
       "main_on_rice"
     ],
     "note": "Miếng thịt ở ngăn cơm; muỗng che ngăn rau.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.03,
+        0.0
+      ],
+      [
+        1.1,
+        0.0
+      ],
+      [
+        1.1,
+        0.98
+      ],
+      [
+        0.03,
+        0.98
+      ]
+    ]
   },
   "IMG_20261030_112939.jpg": {
     "veg_pos": "TL",
@@ -764,6 +1016,24 @@
       "veg_slot_uncertain"
     ],
     "note": "Không thấy rau; thịt ở ngăn nhỏ; khay khác lọt khung; có miếng còn xương sườn, vẫn tính là ba rọi (không thấy thơm của món sườn kho thơm).",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "trayCorners": [
+      [
+        0.06,
+        0.15
+      ],
+      [
+        0.82,
+        0.05
+      ],
+      [
+        0.87,
+        0.88
+      ],
+      [
+        0.1,
+        0.97
+      ]
+    ]
   }
 }

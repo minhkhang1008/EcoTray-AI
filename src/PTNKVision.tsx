@@ -184,6 +184,9 @@ export function RealtimeFunnel() {
     </section>
   );
 }
+/** Sliders move in 5% steps; quarter levels stay as tick marks. */
+const sliderValue = (pct: number) => Math.round(pct / 5) * 5;
+
 export default function PTNKVision() {
   const station = useFinalRound();
   const [uploadMenu,setUploadMenu] = useState<{comboName:string;menuDate:string}|null>(null);
@@ -399,31 +402,37 @@ export default function PTNKVision() {
               : "đã kiểm tra ngưỡng ngoại lai."}
           </p>
           <h3>Sửa tỷ lệ phần còn lại</h3>
+          <datalist id="ptnk-quarter-ticks">
+            {[0, 25, 50, 75, 100].map((v) => (
+              <option key={v} value={v} />
+            ))}
+          </datalist>
           {visionKeys.map((k, i) => (
             <label className="scenario-slider" key={k}>
               {analysis.components[k].nameVi} ·{" "}
-              {manual ? feedback[i] : analysis.components[k].protocolLevel}%
+              {manual ? feedback[i] : sliderValue(analysis.components[k].wastePct)}%
               <input
                 type="range"
                 min="0"
                 max="100"
-                step="25"
+                step="5"
+                list="ptnk-quarter-ticks"
                 aria-label={"Hiệu chỉnh " + analysis.components[k].nameVi}
                 value={
-                  manual ? feedback[i] : analysis.components[k].protocolLevel
+                  manual ? feedback[i] : sliderValue(analysis.components[k].wastePct)
                 }
                 onChange={(e) => {
                   const next: Percentages = manual
                     ? [...feedback]
                     : (visionKeys.map(
-                        (c) => analysis.components[c].protocolLevel,
+                        (c) => sliderValue(analysis.components[c].wastePct),
                       ) as Percentages);
                   next[i] = Number(e.target.value);
                   setFeedback(next);
                   setManual(true);
                 }}
               />
-              <small>0% · 25% · 50% · 75% · 100%</small>
+              <small>Bước 5% · vạch mốc 0 · 25 · 50 · 75 · 100%</small>
             </label>
           ))}
           <div className="header-actions">
