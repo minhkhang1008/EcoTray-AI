@@ -7,7 +7,7 @@
       85,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_114612.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -16,7 +16,7 @@
     "soupBowl": "absent",
     "flags": [],
     "note": "Cơm ~nửa ngăn; món chính 2 miếng thịt + trứng + nước kho.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_114613.jpg": {
     "veg_pos": "TL",
@@ -26,7 +26,7 @@
       85,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_114612.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -35,7 +35,7 @@
     "soupBowl": "absent",
     "flags": [],
     "note": "Cùng khay với 114612.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_114807.jpg": {
     "veg_pos": "TR",
@@ -45,7 +45,7 @@
       80,
       0
     ],
-    "combo": "Thịt kho trứng + Cà tím xào + Canh bầu",
+    "combo": "Thịt kho tàu + Cà tím xào + Canh bầu",
     "group": "IMG_20261028_114807.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -56,7 +56,7 @@
       "main_on_rice"
     ],
     "note": "1 miếng thịt nằm trên cơm.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_114814.jpg": {
     "veg_pos": "TL",
@@ -66,7 +66,7 @@
       30,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_114814.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -78,7 +78,7 @@
       "veg_in_soup_slot"
     ],
     "note": "Cơm trộn vào ngăn món chính; ít bắp cải ở ngăn tròn.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115429.jpg": {
     "veg_pos": "TR",
@@ -88,7 +88,7 @@
       0,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào (Ăn sạch 0%)",
+    "combo": "Thịt kho tàu + Bắp cải xào (Ăn sạch 0%)",
     "group": "IMG_20261028_115429.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -101,7 +101,7 @@
       "anchor_empty"
     ],
     "note": "Mốc 0%: chỉ còn nước kho ở ngăn món chính.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115432.jpg": {
     "veg_pos": "TR",
@@ -111,7 +111,7 @@
       15,
       45
     ],
-    "combo": "Thịt kho trứng + Cà tím đậu đũa + Canh bầu",
+    "combo": "Thịt kho tàu + Cà tím đậu đũa + Canh bầu",
     "group": "IMG_20261028_115432.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -123,7 +123,7 @@
       "rice_in_soup"
     ],
     "note": "Trứng nằm ở ngăn cơm; cơm đổ vào bát canh.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115435.jpg": {
     "veg_pos": "TR",
@@ -133,7 +133,7 @@
       45,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_115435.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -145,7 +145,7 @@
       "soup_veg_on_rice"
     ],
     "note": "Miếng bầu lẫn trong cơm; đũa che ngăn trống và bát.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115435_1.jpg": {
     "veg_pos": "TR",
@@ -155,7 +155,7 @@
       45,
       0
     ],
-    "combo": "Thịt kho trứng + Bắp cải xào + Canh bầu",
+    "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_115435.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -167,7 +167,7 @@
       "soup_veg_on_rice"
     ],
     "note": "Cùng khay với 115435.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115444.jpg": {
     "veg_pos": "TR",
@@ -177,7 +177,7 @@
       85,
       60
     ],
-    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "combo": "Cá nục kho rục xương + Đậu đũa xào + Canh bầu",
     "group": "IMG_20261028_115444.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -189,7 +189,7 @@
       "food_outside_roi"
     ],
     "note": "Đũa gắp một khối cơm ra ngoài ngăn.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115444_1.jpg": {
     "veg_pos": "TR",
@@ -199,7 +199,7 @@
       85,
       60
     ],
-    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "combo": "Cá nục kho rục xương + Đậu đũa xào + Canh bầu",
     "group": "IMG_20261028_115444.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -211,7 +211,7 @@
       "food_outside_roi"
     ],
     "note": "Cùng khay với 115444.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115445.jpg": {
     "veg_pos": "TR",
@@ -221,7 +221,7 @@
       85,
       60
     ],
-    "combo": "Cá sốt cà chua + Đậu đũa xào + Canh bầu",
+    "combo": "Cá nục kho rục xương + Đậu đũa xào + Canh bầu",
     "group": "IMG_20261028_115444.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -233,7 +233,7 @@
       "food_outside_roi"
     ],
     "note": "Cùng khay với 115444.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261028_115447.jpg": {
     "veg_pos": "TR",
@@ -243,7 +243,7 @@
       25,
       60
     ],
-    "combo": "Thịt kho trứng + Đậu đũa xào + Canh bầu",
+    "combo": "Thịt kho tàu + Đậu đũa xào + Canh bầu",
     "group": "IMG_20261028_115447.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
@@ -254,7 +254,7 @@
       "veg_in_main"
     ],
     "note": "Một cọng đậu nằm trong ngăn món chính.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112143.jpg": {
     "veg_pos": "TL",
@@ -264,7 +264,7 @@
       3,
       85
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Giá hẹ xào + Canh bí đỏ",
     "group": "IMG_20261029_112143.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -276,7 +276,7 @@
       "main_on_rice"
     ],
     "note": "Miếng gà trên cơm; rau gần hết.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112146.jpg": {
     "veg_pos": "TR",
@@ -286,7 +286,7 @@
       90,
       90
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ (Chuẩn 100%)",
+    "combo": "Gà kho gừng + Giá hẹ xào + Canh bí đỏ (Chuẩn 100%)",
     "group": "IMG_20261029_112146.jpg",
     "date": "2026-10-29",
     "referenceOnly": true,
@@ -298,7 +298,7 @@
       "extra_rice_unused_slot"
     ],
     "note": "Mốc 100%. Có thêm một phần cơm ở ngăn nhỏ ngoài ROI.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112148.jpg": {
     "veg_pos": "TR",
@@ -308,7 +308,7 @@
       85,
       0
     ],
-    "combo": "Gà kho sả gừng + Su su xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Su su xào + Canh bí đỏ",
     "group": "IMG_20261029_112148.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -320,7 +320,7 @@
       "main_on_rice"
     ],
     "note": "2 miếng gà trên cơm; ngăn tròn chỉ còn vệt nước.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112154.jpg": {
     "veg_pos": "TR",
@@ -330,7 +330,7 @@
       70,
       0
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Giá hẹ xào + Canh bí đỏ",
     "group": "IMG_20261029_112154.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -342,7 +342,7 @@
       "main_on_rice"
     ],
     "note": "Miếng gà trên cơm; đũa che ngăn tròn.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112159.jpg": {
     "veg_pos": "TR",
@@ -352,7 +352,7 @@
       60,
       0
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Giá hẹ xào + Canh bí đỏ",
     "group": "IMG_20261029_112159.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -364,7 +364,7 @@
       "bones"
     ],
     "note": "Món chính còn gần đủ 2 miếng; xương + muỗng ở ngăn tròn.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_112201.jpg": {
     "veg_pos": "TL",
@@ -374,7 +374,7 @@
       75,
       75
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ su su + Canh bí đỏ",
+    "combo": "Gà kho gừng + Giá hẹ su su + Canh bí đỏ",
     "group": "IMG_20261029_112201.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -386,7 +386,7 @@
       "cropped_frame"
     ],
     "note": "Ảnh bị cắt/zoom, ngăn rau lệch khỏi ROI.",
-    "comboConfidence": "supplied"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_113321.jpg": {
     "veg_pos": "TR",
@@ -396,7 +396,7 @@
       75,
       0
     ],
-    "combo": "Gà kho sả gừng + Su su xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Su su xào + Canh bí đỏ",
     "group": "IMG_20261029_113321.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -409,7 +409,7 @@
       "bones"
     ],
     "note": "2 miếng gà nằm ở ngăn cơm; xương ở ngăn tròn.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_113324.jpg": {
     "veg_pos": "TR",
@@ -419,7 +419,7 @@
       3,
       0
     ],
-    "combo": "Gà kho sả gừng + Giá hẹ xào + Canh bí đỏ",
+    "combo": "Gà kho gừng + Giá hẹ xào + Canh bí đỏ",
     "group": "IMG_20261029_113324.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -431,7 +431,7 @@
       "near_clean"
     ],
     "note": "Gần sạch; ngăn tròn chứa xương (không phải thức ăn thừa).",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261029_113326.jpg": {
     "veg_pos": "TR",
@@ -441,7 +441,7 @@
       0,
       0
     ],
-    "combo": "Gà kho sả gừng + rau chưa rõ + Canh bí đỏ",
+    "combo": "Gà kho gừng + rau chưa rõ + Canh bí đỏ",
     "group": "IMG_20261029_113326.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
@@ -456,7 +456,7 @@
       "veg_slot_uncertain"
     ],
     "note": "Gần sạch; xương ở ngăn nhỏ; không xác định được ngăn rau.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112909.jpg": {
     "veg_pos": "TL",
@@ -466,7 +466,7 @@
       70,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112909.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -478,7 +478,7 @@
       "main_on_rice"
     ],
     "note": "Miếng thịt trên cơm; muỗng nĩa ở ngăn trống.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112911.jpg": {
     "veg_pos": "TR",
@@ -488,7 +488,7 @@
       65,
       70
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Cà tím xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Cà tím xào + Canh bí xanh",
     "group": "IMG_20261030_112911.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -499,8 +499,8 @@
       "utensil",
       "condiment"
     ],
-    "note": "Ngăn nhỏ còn lại chứa nước sốt đỏ (không tính).",
-    "comboConfidence": "visual-guess"
+    "note": "Ngăn nhỏ còn lại chứa tương ớt ăn kèm (không tính).",
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112912.jpg": {
     "veg_pos": "TR",
@@ -510,7 +510,7 @@
       65,
       70
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Cà tím xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Cà tím xào + Canh bí xanh",
     "group": "IMG_20261030_112911.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -521,8 +521,8 @@
       "utensil",
       "condiment"
     ],
-    "note": "Cùng khay với 112911.",
-    "comboConfidence": "visual-guess"
+    "note": "Ngăn nhỏ còn lại chứa tương ớt ăn kèm (không tính).",
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112922.jpg": {
     "veg_pos": "TR",
@@ -532,7 +532,7 @@
       0,
       65
     ],
-    "combo": "Thịt ba chỉ kho hành tây + rau chưa rõ + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + rau chưa rõ + Canh bí xanh",
     "group": "IMG_20261030_112922.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -544,7 +544,7 @@
       "veg_slot_uncertain"
     ],
     "note": "Hai ngăn nhỏ đều trống: rau đã ăn hết hoặc không lấy.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112923.jpg": {
     "veg_pos": "TL",
@@ -554,7 +554,7 @@
       45,
       15
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Cà tím xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Cà tím xào + Canh bí xanh",
     "group": "IMG_20261030_112923.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -566,7 +566,7 @@
       "main_in_other_slot"
     ],
     "note": "1 miếng thịt ở ngăn nhỏ còn lại.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112925.jpg": {
     "veg_pos": "TL",
@@ -576,7 +576,7 @@
       0,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112925.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -587,7 +587,7 @@
       "utensil"
     ],
     "note": "Món chính và rau đã hết; bát canh trống có muỗng.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112927.jpg": {
     "veg_pos": "TR",
@@ -597,7 +597,7 @@
       70,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112927.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -608,8 +608,8 @@
       "utensil",
       "main_on_rice"
     ],
-    "note": "Thịt + hành nằm ở ngăn cơm.",
-    "comboConfidence": "visual-guess"
+    "note": "Thịt + hành nằm ở ngăn cơm; có miếng còn xương sườn, vẫn tính là ba rọi (không thấy thơm của món sườn kho thơm).",
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112927_1.jpg": {
     "veg_pos": "TR",
@@ -619,7 +619,7 @@
       70,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112927.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -630,8 +630,8 @@
       "utensil",
       "main_on_rice"
     ],
-    "note": "Cùng khay với 112927.",
-    "comboConfidence": "visual-guess"
+    "note": "Cùng khay với 112927; có miếng còn xương sườn, vẫn tính là ba rọi (không thấy thơm của món sườn kho thơm).",
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112930.jpg": {
     "veg_pos": "TR",
@@ -641,7 +641,7 @@
       75,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112930.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -653,7 +653,7 @@
       "main_in_other_slot"
     ],
     "note": "1 miếng thịt ở ngăn nhỏ trái.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112933.jpg": {
     "veg_pos": "TR",
@@ -663,7 +663,7 @@
       65,
       70
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112933.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -676,7 +676,7 @@
       "other_tray_in_frame"
     ],
     "note": "Cơm sát mép phải ảnh; có khay khác lọt khung.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112937.jpg": {
     "veg_pos": "TR",
@@ -686,7 +686,7 @@
       55,
       70
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112937.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -698,7 +698,7 @@
       "main_on_rice"
     ],
     "note": "Miếng thịt ở ngăn cơm; muỗng che ngăn rau.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_112939.jpg": {
     "veg_pos": "TL",
@@ -708,7 +708,7 @@
       70,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_112939.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -719,7 +719,7 @@
       "utensil"
     ],
     "note": "Muỗng che ngăn món chính, nĩa trên cơm.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_113406.jpg": {
     "veg_pos": "TR",
@@ -729,7 +729,7 @@
       70,
       0
     ],
-    "combo": "Thịt ba chỉ kho hành tây + Rau muống xào + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + Rau muống xào + Canh bí xanh",
     "group": "IMG_20261030_113406.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -740,7 +740,7 @@
       "utensil"
     ],
     "note": "Ngăn nhỏ còn lại có 1 mẩu thức ăn nhỏ.",
-    "comboConfidence": "visual-guess"
+    "comboConfidence": "main-from-menu; sides-visual"
   },
   "IMG_20261030_113412.jpg": {
     "veg_pos": "TR",
@@ -750,7 +750,7 @@
       0,
       70
     ],
-    "combo": "Thịt ba chỉ kho hành tây + rau chưa rõ + Canh bí xanh",
+    "combo": "Ba rọi vàng giòn sốt mắm tỏi + rau chưa rõ + Canh bí xanh",
     "group": "IMG_20261030_113412.jpg",
     "date": "2026-10-30",
     "referenceOnly": false,
@@ -763,7 +763,7 @@
       "other_tray_in_frame",
       "veg_slot_uncertain"
     ],
-    "note": "Không thấy rau; thịt ở ngăn nhỏ; khay khác lọt khung.",
-    "comboConfidence": "visual-guess"
+    "note": "Không thấy rau; thịt ở ngăn nhỏ; khay khác lọt khung; có miếng còn xương sườn, vẫn tính là ba rọi (không thấy thơm của món sườn kho thơm).",
+    "comboConfidence": "main-from-menu; sides-visual"
   }
 }

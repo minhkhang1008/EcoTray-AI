@@ -69,7 +69,7 @@ Các quy tắc khác:
 
 Nhóm ảnh trùng khay (`group`): 114612/114613, 115435/115435_1, 115444/115444_1/115445, 112911/112912 và 112927/112927_1. Tổng cộng 35 ảnh thuộc 29 khay độc lập (27 khay nếu bỏ hai ảnh mốc).
 
-Thực đơn ngày 30/10 (*Thịt ba chỉ kho hành tây + Rau muống/Cà tím xào + Canh bí xanh*) và tên rau của 113326, 112922, 113412 là **đoán từ ảnh**, ghi `comboConfidence: "visual-guess"`. Nhóm cần xác nhận lại với thực đơn thật.
+Món chính lấy theo thực đơn PTNK do nhóm cung cấp: 28/10 *Thịt kho tàu* hoặc *Cá nục kho rục xương*; 29/10 *Gà kho gừng*; 30/10 *Ba rọi vàng giòn sốt mắm tỏi* (cả 16 ảnh ngày 30/10 đều là ba rọi da giòn, tỏi phi, hành tây; không thấy thơm của món *Sườn kho thơm*; 112927 và 113412 có miếng còn xương sườn nhưng vẫn tính là ba rọi). Rau và canh không có trong danh sách thực đơn nên vẫn là **đoán từ ảnh**; ba ảnh 113326, 112922, 113412 không xác định được rau. Trường `comboConfidence: "main-from-menu; sides-visual"` ghi rõ điều này.
 
 ## Áp dụng trong repo
 
