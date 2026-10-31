@@ -17,7 +17,7 @@ Hai luồng có snapshot riêng. Gửi ảnh vào IoT không tự cập nhật s
 2. Sao chép `config.example.h` thành `config.h`. Điền Wi-Fi 2,4 GHz, trường và mã trạm; `config.h` đã được gitignore. `ROOT_CA` phải chứa PEM CA gốc của chuỗi chứng thư endpoint đang dùng. Xác minh chuỗi bằng trình duyệt/hệ thống CA tin cậy rồi lấy CA từ tổ chức cấp; không tin chứng thư vừa tải qua kết nối chưa xác minh. Dùng `setCACert`, không bỏ kiểm tra TLS. Khi đổi nhà cấp chứng thư cần cập nhật CA.
 3. Giữ `USE_EXTERNAL_SENSOR=false` để thử qua Serial. Giữ flash tắt ban đầu vì inox phản chiếu mạnh. Điền tên thực đơn đã URL encode và ngày nếu biết; để trống nếu chưa biết, không gán ngày/thực đơn giả.
 4. Cắm đế nạp USB, cấp nguồn 5V đủ dòng theo thông số board. Nếu cần chế độ nạp thủ công: nối IO0–GND khi reset để nạp, **tháo nối rồi reset sau khi nạp**. Không nhấn BOOT/IO0 để chụp: IO0 được dùng làm XCLK của camera.
-5. Mở Serial Monitor 115200. Chờ Wi-Fi và NTP; gõ `c` để chụp. Không có cam kết độ trễ 0,5s: cần đo thực tế cả chụp, TLS, tải lên và suy luận.
+5. Mở Serial Monitor 115200. Gõ `t` để thử lấy JPEG tại chỗ, không cần Wi-Fi/CA và không gửi API. Chờ Wi-Fi và NTP; gõ `c` để chụp và gửi. Không có cam kết độ trễ 0,5s: cần đo thực tế cả chụp, TLS, tải lên và suy luận.
 
 Nguồn chính thức: [sơ đồ chân CameraWebServer](https://github.com/espressif/arduino-esp32/blob/3.3.2/libraries/ESP32/examples/Camera/CameraWebServer/camera_pins.h), [ESP32 camera driver](https://github.com/espressif/esp32-camera), [TLS client](https://github.com/espressif/arduino-esp32/blob/3.3.2/libraries/NetworkClientSecure/src/NetworkClientSecure.h).
 
@@ -66,11 +66,23 @@ c++ -std=c++11 -Wall -Wextra -Werror firmware/tests/tray_gate_test.cpp -o /tmp/e
 
 Kiểm tra này dùng đúng lớp C++ của firmware, bao gồm nhiễu ngắn, giữ khay, ngắt khoảng vắng, mốc 1.000ms và tràn `millis()`. Không thay thế nghiệm thu điện, camera, TLS/NTP hoặc độ trễ thực tế. Đặt camera thẳng xuống khay và giới hạn vùng chụp trước khi dùng tại trường.
 
+## Đối chiếu khi CameraWebServer chạy nhưng EcoTray lỗi 0x106
+
+Nhóm đã báo mẫu Arduino CameraWebServer chạy được với `CAMERA_MODEL_AI_THINKER`. Sơ đồ chân EcoTray khớp AI Thinker; log cũ chỉ xác nhận lỗi nhận diện cảm biến, chưa xác định nguyên nhân. Không kết luận camera hỏng hoặc khẳng định thay độ phân giải sẽ sửa được lỗi probe.
+
+Bản đối chiếu khởi tạo camera trước các chân nút/flash/cảm biến, dùng UXGA + PSRAM + quality 10 như mẫu đã chạy, rồi gọi sensor để chuyển về **SVGA 800×600, quality 12** trước khi chụp. Vẫn giữ khởi tạo zero cho các trường cấu hình không dùng. Đây là bước cô lập khác biệt, chưa được nghiệm thu trên mạch bị lỗi.
+
+1. Giữ nguyên board, phiên bản esp32 core và các thiết lập Tools đã dùng cho mẫu chạy được. Khi cần log chi tiết, chọn **Tools → Core Debug Level → Verbose** rồi nạp lại sketch EcoTray.
+2. Mở Serial 115200, reset và giữ toàn bộ log từ `[CAM] Arduino=...`. Log này chỉ in phiên bản, PSRAM, chân camera và PID khi đọc được; không in mật khẩu Wi-Fi/CA.
+3. Nếu thấy `[CAM] Sẵn sàng`, gõ `t`. Kỳ vọng log có `[CAM] Ảnh thử JPEG 800x600`, số byte và `không gửi API`. Bước này không cần Wi-Fi, NTP hay ROOT_CA. Sau đó mới thử `c` để gửi ảnh.
+4. Nếu vẫn lỗi, gửi toàn bộ log khởi động và phần `CAMERA_MODEL_AI_THINKER` trong `camera_pins.h` của mẫu chạy được. `board_config.h` chỉ chọn model; định nghĩa chân thực tế nằm trong `camera_pins.h`.
+
 ## Kết quả kiểm tra mã ngày 30/10/2026
 
-- Sketch biên dịch thành công với `esp32:esp32@3.3.2`, FQBN `esp32:esp32:esp32cam`: 1.143.383 byte chương trình, 58.972 byte biến toàn cục. Cấu hình kiểm tra dùng thông tin giữ chỗ, không có mật khẩu/chứng thư thật và không nạp thiết bị.
+- Bản đối chiếu có log và lệnh `t` biên dịch thành công với `esp32:esp32@3.3.2`, FQBN `esp32:esp32:esp32cam:DebugLevel=verbose`: 1.196.567 byte chương trình, 58.972 byte biến toàn cục. Chưa xác nhận hết lỗi 0x106 trên mạch của nhóm.
+- Bản đầu (trước bổ sung log và lệnh `t`) biên dịch thành công với `esp32:esp32@3.3.2`, FQBN `esp32:esp32:esp32cam`: 1.143.383 byte chương trình, 58.972 byte biến toàn cục. Cấu hình kiểm tra dùng thông tin giữ chỗ, không có mật khẩu/chứng thư thật và không nạp thiết bị.
 - Kiểm thử C++ máy trạng thái, 69 test Node, model smoke, typecheck và build `dist/` đều qua. Model smoke chỉ kiểm tra chạy được, không đo độ chính xác.
-- GET production: API Vision trả 200 nhưng chưa có ảnh/kết quả; IoT status trả 200, `online:false`, chưa có capture. Chưa POST ảnh vào production trong lần kiểm tra này; chưa xác nhận commit đang deploy, nạp ESP32, chụp ảnh thật hay NFC vật lý.
+- Lần kiểm tra production ban đầu (chưa chạy lại khi bổ sung log camera): API Vision trả 200 nhưng chưa có ảnh/kết quả; IoT status trả 200, `online:false`, chưa có capture. Chưa POST ảnh vào production trong lần kiểm tra này; chưa xác nhận commit đang deploy, nạp ESP32, chụp ảnh thật hay NFC vật lý.
 
 Sau khi tạo `config.h`, có thể biên dịch bằng CLI đã cài core tương ứng:
 

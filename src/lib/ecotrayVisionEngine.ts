@@ -1,3 +1,4 @@
+import * as station from "../../lib/station-vision.mjs";
 import * as engine from "../../lib/ptnk-vision.mjs";
 export type VisionKey = "rice" | "main" | "veg" | "soup";
 export type FeatureVectors = Record<VisionKey, number[]>;
@@ -19,13 +20,19 @@ export interface VisionAnalysisResponse {
   comboName: string;
   menuDate: string | null;
   modelVersion: string;
-  predictionSource: "ridge-pixels" | "manual-calibration";
+  predictionSource: "ridge-pixels" | "manual-calibration" | "ov2640-area";
+  stationLayout?: {
+    orientation: 0 | 180;
+    rotation: 0 | 90;
+    uncertain: boolean;
+  } | null;
   calibrationAccuracyPct: null;
   brothFiltered: "heuristic";
   utensilFiltered: "heuristic";
   isDietaryOutlier: boolean;
   referenceOnly: boolean;
   iqrEligibleCount: number;
+  iqrExcludedCount: number;
   nutritionalFloorLocked: boolean;
   totalWasteGrams: number;
   components: Record<VisionKey, ComponentPrediction>;
@@ -45,6 +52,16 @@ export interface EvaluateParams {
   weights?: ModelWeights;
   allergyFlags?: string[];
   vegPos?: "TL" | "TR";
+  pixelMeasurement?: StationMeasurement;
+  cohort?: {
+    id: string;
+    group?: string;
+    combo: string;
+    date: string;
+    pcts: Percentages;
+    isOutlier?: boolean;
+    allergyFlags?: string[];
+  }[];
 }
 export const PTNK_18_TRAYS_CATALOG = engine.PTNK_18_TRAYS_CATALOG;
 export const RIDGE_WEIGHTS: ModelWeights = engine.RIDGE_WEIGHTS;
@@ -94,3 +111,20 @@ export function isVisionFeed(value: unknown): value is VisionFeed {
     )
   );
 }
+
+export interface StationMeasurement {
+  pcts: Percentages;
+  rois: Record<VisionKey, [number, number, number, number]>;
+  orientation: 0 | 180;
+  rotation: 0 | 90;
+  orientationUncertain: boolean;
+}
+
+export const analyzeStationPixels = station.analyzeStationPixels as unknown as (
+  image: {
+    width: number;
+    height: number;
+    data: Uint8Array | Uint8ClampedArray;
+  },
+  options?: { orientation?: "auto" | 0 | 180 },
+) => StationMeasurement;

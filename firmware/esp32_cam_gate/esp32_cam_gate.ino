@@ -3,6 +3,8 @@
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
 #include <esp_system.h>
+#include <esp_log.h>
+#include <esp_arduino_version.h>
 #include <time.h>
 #include "config.h"
 #include "tray_gate.h"
@@ -34,21 +36,53 @@ bool initCamera() {
   config.pin_reset = -1;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_SVGA; // API requires exactly 800x600, no VGA fallback.
-  config.jpeg_quality = 12;
+  // Match CameraWebServer's PSRAM initialization, then select SVGA below.
+  // This comparison baseline is not a confirmed fix for sensor probe failures.
+  config.frame_size = FRAMESIZE_UXGA;
+  config.jpeg_quality = 10;
   config.fb_count = 2;
   config.fb_location = CAMERA_FB_IN_PSRAM;
   config.grab_mode = CAMERA_GRAB_LATEST;
+  Serial.printf("[CAM] Arduino=%s; SDK=%s; chip=%s; PSRAM=%u; PSRAM trống=%u\n",
+    ESP_ARDUINO_VERSION_STR, ESP.getSdkVersion(), ESP.getChipModel(),
+    (unsigned)ESP.getPsramSize(), (unsigned)ESP.getFreePsram());
+  Serial.printf("[CAM] AI Thinker: XCLK=%d; SDA=%d; SCL=%d; PWDN=%d; RESET=%d\n",
+    config.pin_xclk, config.pin_sccb_sda, config.pin_sccb_scl,
+    config.pin_pwdn, config.pin_reset);
   if (!psramFound()) {
     Serial.println("[LỖI] Cần PSRAM để chụp 800×600. Kiểm tra cấu hình bo mạch.");
     return false;
   }
   const esp_err_t result = esp_camera_init(&config);
   if (result != ESP_OK) {
-    Serial.printf("[LỖI] Khởi tạo camera: 0x%x\n", result);
+    Serial.printf("[LỖI] Khởi tạo camera: 0x%x (%s)\n", result, esp_err_to_name(result));
+    Serial.println("[CAM] Chưa nhận diện được camera; chưa bắt đầu Wi-Fi/HTTPS.");
     return false;
   }
+  sensor_t* sensor = esp_camera_sensor_get();
+  if (!sensor || sensor->set_framesize(sensor, FRAMESIZE_SVGA) != 0 ||
+      sensor->set_quality(sensor, 12) != 0) {
+    Serial.println("[LỖI] Không đặt được JPEG 800×600, chất lượng 12.");
+    esp_camera_deinit();
+    return false;
+  }
+  Serial.printf("[CAM] Sẵn sàng; PID=0x%04x; JPEG 800×600. Gõ t để thử ảnh tại chỗ.\n",
+    sensor->id.PID);
   return true;
+}
+
+// Camera-only diagnostic: no Wi-Fi, TLS, API event, or hardware record.
+void testCamera() {
+  if (!cameraReady) { Serial.println("[LỖI] Camera chưa sẵn sàng."); return; }
+  if (pending) { Serial.println("[CHỜ] Gửi lại ảnh đang chờ bằng r trước khi thử camera."); return; }
+  camera_fb_t* frame = esp_camera_fb_get();
+  if (!frame) { Serial.println("[LỖI] Không lấy được ảnh thử."); return; }
+  if (frame->format == PIXFORMAT_JPEG && frame->width == 800 && frame->height == 600)
+    Serial.printf("[CAM] Ảnh thử JPEG %ux%u; %u byte; không gửi API.\n",
+      (unsigned)frame->width, (unsigned)frame->height, (unsigned)frame->len);
+  else
+    Serial.println("[LỖI] Ảnh thử không đúng JPEG 800×600.");
+  esp_camera_fb_return(frame);
 }
 
 bool utcNow(String& result) {
@@ -138,22 +172,28 @@ void captureTray() {
 
 void setup() {
   Serial.begin(115200);
+  Serial.setDebugOutput(true);
+  esp_log_level_set("camera", ESP_LOG_DEBUG);
+  esp_log_level_set("sccb", ESP_LOG_DEBUG);
+  esp_log_level_set("sccb-ng", ESP_LOG_DEBUG);
+  // Keep the camera first, as in the working CameraWebServer example.
+  cameraReady = initCamera();
   pinMode(FLASH_PIN, OUTPUT);
   digitalWrite(FLASH_PIN, LOW);
   if (USE_EXTERNAL_SENSOR) pinMode(SENSOR_PIN, INPUT_PULLUP);
   if (TEST_BUTTON_PIN >= 0) pinMode(TEST_BUTTON_PIN, INPUT_PULLUP);
-  cameraReady = initCamera();
   WiFi.mode(WIFI_STA);
   WiFi.setAutoReconnect(true);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   configTime(0, 0, "pool.ntp.org", "time.google.com");
-  Serial.println("EcoTray: c=chụp; r=gửi lại ảnh đang chờ. Chờ Wi-Fi/NTP.");
+  Serial.println("EcoTray: t=thử camera tại chỗ; c=chụp và gửi; r=gửi lại. Chờ Wi-Fi/NTP để gửi ảnh.");
 }
 
 void loop() {
   bool trigger = false;
   while (Serial.available()) {
     char command = Serial.read();
+    if (command == 't' || command == 'T') testCamera();
     if (command == 'c' || command == 'C') trigger = true;
     if (command == 'r' || command == 'R') uploadPending();
   }

@@ -1598,3 +1598,7 @@ textarea {
   .product-workspace .menu-table .dish-row-button { width: 100%; white-space: normal; text-align: left; }
   .menu-cell-label { display: block; color: var(--muted); font-size: 11px; }
 }
+
+.station-menu-controls { display: grid; gap: .75rem; margin-bottom: 1rem; }
+.station-menu-controls label { display: grid; gap: .375rem; font-size: .875rem; }
+.station-menu-controls select, .station-menu-controls input { width: 100%; min-width: 0; max-width: 100%; }

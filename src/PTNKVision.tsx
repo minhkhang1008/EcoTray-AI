@@ -1,11 +1,12 @@
+import { resolveStationMenu } from "../lib/vision-menu.mjs";
+import { IqrVerification, StationMenuControls } from "./StationMenuControls";
 import { useRef, useState } from "react";
 import {
+  analyzeStationPixels,
   MODEL,
   RIDGE_WEIGHTS,
   PTNK_18_TRAYS_CATALOG,
   evaluateTrayWithTrainedModel,
-  extractFeatures,
-  getRois,
   updateWeights,
   visionKeys,
   type FeatureVectors,
@@ -25,11 +26,11 @@ export function VisionResult({
 }) {
   return (
     <>
-      <div className="ptnk-overlay">
+      <div className="ptnk-overlay" style={analysis.stationLayout?.rotation === 90 ? {aspectRatio:"3/4"} : undefined}>
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt="Khay thức ăn PTNK với bốn vùng phân tích cố định"
+            alt="Khay thức ăn với các vùng phân tích theo chiều khay"
           />
         ) : (
           <p>Ảnh không còn khả dụng.</p>
@@ -84,7 +85,7 @@ export function VisionResult({
           </tbody>
         </table>
       </div>
-      <p className="fine">{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau." : "Tiếp tục theo dõi lượng thực ăn."} Ngưỡng 85 g và định lượng ban đầu là giả định thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Vùng đọc cố định có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
+      <p className="fine">{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau." : "Tiếp tục theo dõi lượng thực ăn."} W_min ≥ 85 g rau/khay và định lượng ban đầu là giả định bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Ước lượng pixel có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
     </>
   );
 }
@@ -98,14 +99,21 @@ export function VisionStreamPanel() {
       <div><h2>Trạm căn tin</h2><p>Ảnh mới nhất và quyết định của bếp</p></div>
       <span className="badge">{showVision ? vision.usingFallback ? "Ảnh tham chiếu · dự phòng" : "Ảnh từ thiết bị" : legacy ? f.source === "simulation" ? "Mô phỏng" : "Khay từ thiết bị" : "Chờ ảnh từ thiết bị"}</span>
     </div>
+    {showVision && !vision.usingFallback && tray.analysis.stationLayout && <div className="header-actions">
+      <button disabled={vision.editing} onClick={() => void vision.reanalyze(tray.analysis.comboName, tray.analysis.menuDate!, tray.analysis.stationLayout?.orientation === 180 ? 0 : 180)}>↻ Đổi chiều khung 180°</button>
+      <button disabled={vision.editing} onClick={() => void vision.reanalyze(tray.analysis.comboName, tray.analysis.menuDate!, "auto")}>Tự nhận chiều khay</button>
+      {tray.analysis.stationLayout.uncertain && <span className="fine">Chiều khay chưa rõ; kiểm tra vùng cơm và canh.</span>}
+    </div>}
+    {vision.editError && <p role="alert">{vision.editError}</p>}
     {showVision ? <div className="ptnk-workbench">
       <div><VisionResult analysis={tray.analysis} imageUrl={tray.imageUrl} /></div>
       <div>
+        {!vision.usingFallback && tray.analysis.stationLayout && <StationMenuControls analysis={tray.analysis} disabled={vision.editing} onChange={(combo,date,angle)=>void vision.reanalyze(combo,date,angle)} />}
         <h3>{tray.analysis.comboName}</h3>
         <p>{tray.analysis.decisionLoop.headline}</p>
         <p>{tray.analysis.decisionLoop.recommendation}</p>
-        <p className="fine">{tray.analysis.referenceOnly ? "Mốc hiệu chuẩn · không tính vào thống kê khay trả" : tray.analysis.isDietaryOutlier ? "Ngoại lai · tách khỏi tính khẩu phần chung" : `IQR: ${tray.analysis.iqrEligibleCount} khay cùng thực đơn/ngày; ${tray.analysis.iqrEligibleCount < 10 ? "chưa đủ 10 mẫu nền" : "đã kiểm tra ngưỡng"}.`}</p>
-        <button className="primary" disabled={vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
+        <IqrVerification analysis={tray.analysis} />
+        <button className="primary" disabled={vision.editing || vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
         <p className="fine">Lưu tại Dữ liệu → Lịch sử quyết định trên trình duyệt này. Bếp thực hiện thay đổi và đo lại; đây chưa phải lệnh gửi tới bếp.</p>
         {vision.usingFallback && <button onClick={() => { vision.resume(); f.setSource("hardware"); }}>Trở về luồng thiết bị</button>}
       </div>
@@ -177,6 +185,8 @@ export function RealtimeFunnel() {
   );
 }
 export default function PTNKVision() {
+  const station = useFinalRound();
+  const [uploadMenu,setUploadMenu] = useState<{comboName:string;menuDate:string}|null>(null);
   const first = Object.keys(PTNK_18_TRAYS_CATALOG)[0];
   const [sampleId, setSampleId] = useState(first),
     [imageUrl, setImageUrl] = useState("./ptnk-normalized/" + first),
@@ -191,25 +201,32 @@ export default function PTNKVision() {
     [manual, setManual] = useState(false),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [vegPos, setVegPos] = useState<"TR" | "TL">("TR");
+    [measurement, setMeasurement] = useState<import("./lib/ecotrayVisionEngine").StationMeasurement | undefined>(undefined);
   const request = useRef(0);
   const analysis = evaluateTrayWithTrainedModel({
     ...(sampleId ? { sampleId } : {}),
     featureVectors: features,
     weights,
     ...(manual ? { overridePcts: feedback } : {}),
-    vegPos,
+    pixelMeasurement: measurement,
+    ...(measurement ? {
+      ...(uploadMenu ?? resolveStationMenu({schoolId:station.schoolId,
+        capturedAt:new Date().toISOString(),comboName:station.vision.hardware?.analysis.comboName,
+        menuDate:station.vision.hardware?.analysis.menuDate ?? undefined})),
+      cohort: [],
+    } : {}),
   });
   function choose(id: string) {
     request.current++;
     setBusy(false);
+    setMeasurement(undefined);
     setSampleId(id);
     setImageUrl("./ptnk-normalized/" + id);
     setFeatures(MODEL.features[id as keyof typeof MODEL.features]);
     setManual(false);
     setMessage("");
   }
-  async function upload(file: File | undefined, pos: "TL" | "TR" = vegPos) {
+  async function upload(file: File | undefined, orientation: "auto" | 0 | 180 = "auto") {
     if (!file) return;
     const token = ++request.current;
     setBusy(true);
@@ -233,20 +250,20 @@ export default function PTNKVision() {
         bitmap.close();
         throw Error("Trình duyệt chưa hỗ trợ đọc ảnh.");
       }
-      ctx.drawImage(bitmap, 0, 0, 800, 600);
+      if (bitmap.height > bitmap.width) {
+        ctx.translate(800, 0); ctx.rotate(Math.PI / 2);
+        ctx.drawImage(bitmap, 0, 0, 600, 800); ctx.setTransform(1,0,0,1,0,0);
+      } else ctx.drawImage(bitmap, 0, 0, 800, 600);
       bitmap.close();
       const pixels = ctx.getImageData(0, 0, 800, 600),
-        rois = getRois(pos);
-      const next = Object.fromEntries(
-        visionKeys.map((k) => [k, extractFeatures(pixels, rois[k])]),
-      ) as FeatureVectors;
+        measured = analyzeStationPixels(pixels, {orientation});
       if (token !== request.current) return;
+      setMeasurement(measured);
       setSampleId("");
       setImageUrl(canvas.toDataURL("image/jpeg", 0.8));
-      setFeatures(next);
       setManual(false);
       setMessage(
-        "Ảnh xử lý trên thiết bị. Cần khay nằm ngang và đúng vùng đọc; ảnh khác bố cục không bảo đảm kết quả.",
+        "Ảnh xử lý trên thiết bị; tự xoay ảnh dọc, chọn chiều khay và ô rau. Cần chụp trọn khay theo vùng hiệu chuẩn ESP32.",
       );
     } catch (e) {
       if (token === request.current) setMessage((e as Error).message);
@@ -257,6 +274,11 @@ export default function PTNKVision() {
   const file = useRef<File | undefined>(undefined);
   function calibrate() {
     try {
+      if (measurement) {
+        setVersion(v=>v+1);
+        setMessage("Đã giữ hiệu chỉnh thủ công cho ảnh này trong phiên; không huấn luyện mô hình trạm.");
+        return;
+      }
       const next = updateWeights(weights, features, feedback);
       setWeights(next);
       setVersion((v) => v + 1);
@@ -280,10 +302,10 @@ export default function PTNKVision() {
         <span className="badge">ẢNH THỰC ĐỊA</span>
       </div>
       <p className="ptnk-evaluation">
-        Sai số kiểm định theo nhóm (MAE):{" "}
+        Mô hình Ridge cho gallery · Sai số kiểm định theo nhóm (MAE):{" "}
         <b>{number(MODEL.validation.overallMAE)} điểm phần trăm</b> · 16 ảnh
         được chấm, 2 mốc hiệu chuẩn không chấm. Chưa có độ chính xác phân loại
-        được xác thực.
+        được xác thực. Bộ đọc OV2640 cho ảnh mới chưa có kiểm định trên tập độc lập.
       </p>
       <div className="ptnk-gallery" aria-label="18 mẫu ảnh khay thực địa">
         {Object.entries(PTNK_18_TRAYS_CATALOG).map(([id, m], i) => (
@@ -340,27 +362,17 @@ export default function PTNKVision() {
         Chỉ dùng ảnh khay, không có khuôn mặt hoặc thông tin nhận diện. Ảnh tải
         lên và phản hồi không được gửi lên máy chủ.
       </p>
-      {!sampleId && (
-        <label>
-          Vị trí rau trên ảnh{" "}
-          <select
-            value={vegPos}
-            onChange={(e) => {
-              const pos = e.target.value as "TL" | "TR";
-              setVegPos(pos);
-              void upload(file.current, pos);
-            }}
-          >
-            <option value="TR">Ô trên bên phải</option>
-            <option value="TL">Ô trên bên trái</option>
-          </select>
-        </label>
-      )}
+      {!sampleId && <div className="header-actions">
+        <button disabled={busy} onClick={()=>void upload(file.current, measurement?.orientation === 180 ? 0 : 180)}>↻ Đổi chiều khung 180°</button>
+        <button disabled={busy} onClick={()=>void upload(file.current)}>Tự nhận chiều khay</button>
+      </div>}
+
       <div className="ptnk-workbench" aria-busy={busy}>
         <div>
           <VisionResult analysis={analysis} imageUrl={imageUrl} />
         </div>
         <div>
+          {measurement && <StationMenuControls analysis={analysis} disabled={busy} onChange={(comboName,menuDate)=>setUploadMenu({comboName,menuDate})} />}
           <h3>{analysis.comboName}</h3>
           <p className="badge">
             {manual ? "Nhãn hiệu chỉnh thủ công" : "Ước lượng từ ảnh"}
@@ -428,6 +440,7 @@ export default function PTNKVision() {
                 setWeights(structuredClone(RIDGE_WEIGHTS));
                 setVersion(0);
                 setManual(false);
+                if (!sampleId) void upload(file.current);
                 setMessage("Đã khôi phục trọng số gốc.");
               }}
             >
@@ -435,8 +448,7 @@ export default function PTNKVision() {
             </button>
           </div>
           <p className="fine">
-            Phản hồi cập nhật hồi quy trong phiên này. Không thay mô hình máy
-            chủ hoặc kết quả kiểm định gốc.
+            {measurement ? "Hiệu chỉnh chỉ áp dụng cho ảnh tải lên trong phiên." : "Phản hồi cập nhật hồi quy trong phiên này."} Không thay mô hình máy chủ hoặc kết quả kiểm định gốc.
           </p>
           {message && <p role="status">{message}</p>}
           <details>

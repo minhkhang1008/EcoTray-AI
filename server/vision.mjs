@@ -1,10 +1,10 @@
+import { analyzeStationPixels } from "../lib/station-vision.mjs";
+import { resolveStationMenu } from "../lib/vision-menu.mjs";
 import jpeg from "jpeg-js";
 import {
   evaluateTrayWithTrainedModel,
   validFeatures,
   PTNK_18_TRAYS_CATALOG,
-  extractFeatures,
-  getRois,
   visionKeys,
 } from "../lib/ptnk-vision.mjs";
 import { RedisStore, MemoryStore, digest } from "./store.mjs";
@@ -58,6 +58,26 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
       )
         return fail("SCHOOL_MISMATCH", "Trường học không hợp lệ.", 403);
       const stateKey = "ecotray:vision:" + schoolId;
+      async function resolveCaptureMenu(comboName, menuDate) {
+        const existing = store
+          ? JSON.parse((await store.get(stateKey)) ?? "null")
+          : null;
+        const iot = store
+          ? JSON.parse(
+              (await store.get(`ecotray:{${schoolId}}:state`)) ?? "null",
+            )
+          : null;
+        return resolveStationMenu({
+          schoolId,
+          comboName,
+          menuDate,
+          capturedAt:
+            request.headers.get("x-captured-at") ?? new Date().toISOString(),
+          activeMenu: existing?.activeMenu,
+          latestNfc: iot?.latestNfc,
+        });
+      }
+
       if (request.method === "GET") {
         if (!store)
           return fail(
@@ -110,10 +130,15 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
         } catch {
           return fail("INVALID_IMAGE", "Không đọc được JPEG.");
         }
-        if (pixels.width !== 800 || pixels.height !== 600)
+        if (
+          !(
+            (pixels.width === 800 && pixels.height === 600) ||
+            (pixels.width === 600 && pixels.height === 800)
+          )
+        )
           return fail(
             "INVALID_LAYOUT",
-            "Cần ảnh chuẩn hóa 800×600, khay nằm ngang và đúng vùng hiệu chuẩn.",
+            "Cần ảnh 800×600 hoặc 600×800; chụp trọn khay trong vùng hiệu chuẩn.",
           );
         let comboName;
         try {
@@ -128,11 +153,12 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
           return fail("INVALID_INPUT", "Tên thực đơn quá dài.");
         if (menuDate && !validMenuDate(menuDate))
           return fail("INVALID_INPUT", "Ngày thực đơn không hợp lệ.");
-        params.comboName = comboName ?? undefined;
-        params.menuDate = menuDate ?? undefined;
-        params.featureVectors = Object.fromEntries(
-          visionKeys.map((k) => [k, extractFeatures(pixels, getRois()[k])]),
+        Object.assign(
+          params,
+          await resolveCaptureMenu(comboName, menuDate ?? undefined),
         );
+        params.pixelMeasurement = analyzeStationPixels(pixels);
+
         image = "data:image/jpeg;base64," + bytes.toString("base64");
         publish = true;
       } else if (type === "application/json") {
@@ -144,6 +170,127 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
         }
         if (!body || typeof body !== "object" || Array.isArray(body))
           return fail("INVALID_INPUT", "Dữ liệu không hợp lệ.");
+        if (body.action === "reanalyze") {
+          if (!store)
+            return fail(
+              "STORAGE_UNAVAILABLE",
+              "Chưa cấu hình Redis dùng chung.",
+              503,
+            );
+          if (request.headers.get("x-school-id") !== schoolId)
+            return fail("SCHOOL_MISMATCH", "Trường học không hợp lệ.", 403);
+          if (
+            typeof body.comboName !== "string" ||
+            !body.comboName.trim() ||
+            body.comboName.length > 180 ||
+            !validMenuDate(body.menuDate) ||
+            !["auto", 0, 180].includes(body.orientation)
+          )
+            return fail(
+              "INVALID_INPUT",
+              "Cần thực đơn, ngày và chiều khay hợp lệ.",
+            );
+          const editKey = request.headers.get("idempotency-key");
+          if (!editKey || editKey.length > 128)
+            return fail("INVALID_HEADERS", "Cần Idempotency-Key hợp lệ.");
+          const editHash = digest(bytes),
+            editReceiptKey = stateKey + ":edit-receipt:" + digest(editKey);
+          const editResponse = async (raw) => {
+            const receipt = JSON.parse(raw);
+            if (receipt.hash !== editHash)
+              return fail(
+                "IDEMPOTENCY_CONFLICT",
+                "Khóa đã dùng cho nội dung khác.",
+                409,
+              );
+            const image = receipt.event.imageKey
+              ? await store.get(receipt.event.imageKey)
+              : null;
+            return json({ ...receipt.event, latestImageUrl: image });
+          };
+          const previousEdit = await store.get(editReceiptKey);
+          if (previousEdit) return editResponse(previousEdit);
+          const expected = await store.get(stateKey),
+            current = expected ? JSON.parse(expected) : null;
+          if (!current || current.revision !== body.revision)
+            return fail(
+              "STALE_CAPTURE",
+              "Ảnh đã thay đổi; chọn lại trên ảnh mới nhất.",
+              409,
+            );
+          const original = current.imageKey
+            ? await store.get(current.imageKey)
+            : null;
+          if (!original?.startsWith("data:image/jpeg;base64,"))
+            return fail(
+              "IMAGE_UNAVAILABLE",
+              "Ảnh gốc không còn khả dụng.",
+              409,
+            );
+          const pixels = jpeg.decode(
+            Buffer.from(original.split(",")[1], "base64"),
+            { useTArray: true, maxResolutionInMP: 1, maxMemoryUsageInMB: 32 },
+          );
+          const pixelMeasurement = analyzeStationPixels(pixels, {
+            orientation: body.orientation,
+          });
+          const cohort = current.cohort ?? [];
+          const analysis = evaluateTrayWithTrainedModel({
+            sampleId: undefined,
+            pixelMeasurement,
+            comboName: body.comboName.trim(),
+            menuDate: body.menuDate,
+            cohort: cohort.filter((r) => r.id !== current.analysis.sampleId),
+          });
+          const next = {
+            ...current,
+            revision: digest(
+              current.revision +
+                JSON.stringify([
+                  body.comboName,
+                  body.menuDate,
+                  body.orientation,
+                ]),
+            ),
+            activeMenu: { combo: body.comboName.trim(), date: body.menuDate },
+            analysis: {
+              ...analysis,
+              sampleId: current.analysis.sampleId,
+              timestamp: current.analysis.timestamp,
+            },
+            cohort: cohort.map((r) =>
+              r.id === current.analysis.sampleId
+                ? {
+                    ...r,
+                    combo: analysis.comboName,
+                    date: analysis.menuDate,
+                    pcts: visionKeys.map(
+                      (k) => analysis.components[k].wastePct,
+                    ),
+                    isOutlier: analysis.isDietaryOutlier,
+                  }
+                : r,
+            ),
+          };
+          const event = { ...next };
+          delete event.cohort;
+          const result = await store.commit(
+            stateKey,
+            [editReceiptKey],
+            expected,
+            JSON.stringify(next),
+            JSON.stringify({ hash: editHash, event }),
+            null,
+          );
+          return result
+            ? editResponse(result)
+            : fail(
+                "STALE_CAPTURE",
+                "Ảnh đã thay đổi; thử lại trên ảnh mới nhất.",
+                409,
+              );
+        }
+
         if (
           body.sampleId !== undefined &&
           (typeof body.sampleId !== "string" ||
@@ -191,6 +338,11 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
           menuDate: body.menuDate,
           allergyFlags: body.allergyFlags,
         };
+        if (!body.sampleId)
+          Object.assign(
+            params,
+            await resolveCaptureMenu(body.comboName, body.menuDate),
+          );
         publish = body.publish === true;
         if (body.sampleId) imageUrl = "/ptnk-normalized/" + body.sampleId;
       } else
@@ -237,8 +389,8 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
                 station,
                 at,
                 type,
-                params.comboName,
-                params.menuDate,
+                request.headers.get("x-menu-name"),
+                request.headers.get("x-menu-date"),
                 params.allergyFlags ?? [],
               ]),
             ),
@@ -297,7 +449,11 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
           stateKey,
           [receiptKey],
           expected,
-          JSON.stringify({ ...event, cohort: nextCohort }),
+          JSON.stringify({
+            ...event,
+            cohort: nextCohort,
+            activeMenu: expected ? JSON.parse(expected).activeMenu : null,
+          }),
           receipt,
           image ? { key: imageKey, value: image } : null,
         );
