@@ -2,7 +2,7 @@
   "IMG_20261028_114612.jpg": {
     "veg_pos": "TL",
     "y": [
-      50,
+      80,
       90,
       85,
       0
@@ -11,17 +11,18 @@
     "group": "IMG_20261028_114612.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": -90,
     "soupBowl": "absent",
     "flags": [],
     "note": "Cơm ~nửa ngăn; món chính 2 miếng thịt + trứng + nước kho.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "editedAt": "2026-10-31"
   },
   "IMG_20261028_114613.jpg": {
     "veg_pos": "TL",
     "y": [
-      50,
+      80,
       90,
       85,
       0
@@ -30,17 +31,18 @@
     "group": "IMG_20261028_114612.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": -90,
     "soupBowl": "absent",
     "flags": [],
     "note": "Cùng khay với 114612.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "editedAt": "2026-10-31"
   },
   "IMG_20261028_114807.jpg": {
     "veg_pos": "TR",
     "y": [
-      55,
+      90,
       65,
       80,
       0
@@ -49,7 +51,7 @@
     "group": "IMG_20261028_114807.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": -90,
     "soupBowl": "absent",
     "flags": [
@@ -67,28 +69,29 @@
         0.07
       ],
       [
-        1.0,
+        1,
         1.02
       ],
       [
         0.07,
         1.02
       ]
-    ]
+    ],
+    "editedAt": "2026-10-31"
   },
   "IMG_20261028_114814.jpg": {
     "veg_pos": "TL",
     "y": [
       20,
       30,
-      30,
+      20,
       0
     ],
     "combo": "Thịt kho tàu + Bắp cải xào + Canh bầu",
     "group": "IMG_20261028_114814.jpg",
     "date": "2026-10-28",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": -90,
     "soupBowl": "absent",
     "flags": [
@@ -96,7 +99,8 @@
       "veg_in_soup_slot"
     ],
     "note": "Cơm trộn vào ngăn món chính; ít bắp cải ở ngăn tròn.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "editedAt": "2026-10-31"
   },
   "IMG_20261028_115429.jpg": {
     "veg_pos": "TR",
@@ -347,7 +351,7 @@
     "comboConfidence": "main-from-menu; sides-visual",
     "trayCorners": [
       [
-        0.0,
+        0,
         0.1
       ],
       [
@@ -367,8 +371,8 @@
   "IMG_20261029_112143.jpg": {
     "veg_pos": "TL",
     "y": [
-      55,
-      75,
+      80,
+      80,
       3,
       85
     ],
@@ -376,7 +380,7 @@
     "group": "IMG_20261029_112143.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": -90,
     "soupBowl": "present",
     "flags": [
@@ -384,7 +388,8 @@
       "main_on_rice"
     ],
     "note": "Miếng gà trên cơm; rau gần hết.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "editedAt": "2026-10-31"
   },
   "IMG_20261029_112146.jpg": {
     "veg_pos": "TR",
@@ -433,7 +438,7 @@
   "IMG_20261029_112154.jpg": {
     "veg_pos": "TR",
     "y": [
-      60,
+      75,
       70,
       70,
       0
@@ -442,7 +447,7 @@
     "group": "IMG_20261029_112154.jpg",
     "date": "2026-10-29",
     "referenceOnly": false,
-    "labelSource": "relabel-v2-visual-review",
+    "labelSource": "manual-edit",
     "rotation": 180,
     "soupBowl": "absent",
     "flags": [
@@ -450,7 +455,8 @@
       "main_on_rice"
     ],
     "note": "Miếng gà trên cơm; đũa che ngăn tròn.",
-    "comboConfidence": "main-from-menu; sides-visual"
+    "comboConfidence": "main-from-menu; sides-visual",
+    "editedAt": "2026-10-31"
   },
   "IMG_20261029_112159.jpg": {
     "veg_pos": "TR",
@@ -568,10 +574,10 @@
     "trayCorners": [
       [
         0.07,
-        0.0
+        0
       ],
       [
-        1.0,
+        1,
         0.08
       ],
       [
@@ -681,7 +687,7 @@
         0.97
       ],
       [
-        0.0,
+        0,
         0.97
       ]
     ]
@@ -771,7 +777,7 @@
     "trayCorners": [
       [
         0.11,
-        0.0
+        0
       ],
       [
         1.02,
@@ -855,7 +861,7 @@
     "trayCorners": [
       [
         -0.02,
-        0.0
+        0
       ],
       [
         1.05,
@@ -867,7 +873,7 @@
       ],
       [
         -0.02,
-        1.0
+        1
       ]
     ]
   },
@@ -936,11 +942,11 @@
     "trayCorners": [
       [
         0.03,
-        0.0
+        0
       ],
       [
         1.1,
-        0.0
+        0
       ],
       [
         1.1,
