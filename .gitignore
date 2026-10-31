@@ -13,3 +13,6 @@ dist/
 
 # ESP32 station credentials and endpoint certificate configuration
 /firmware/esp32_cam_gate/config.h
+
+# Python bytecode from scripts/
+__pycache__/

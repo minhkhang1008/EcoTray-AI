@@ -20,7 +20,11 @@ export interface VisionAnalysisResponse {
   comboName: string;
   menuDate: string | null;
   modelVersion: string;
-  predictionSource: "ridge-pixels" | "manual-calibration" | "ov2640-area";
+  predictionSource:
+    | "ridge-pixels"
+    | "anchor-label"
+    | "manual-calibration"
+    | "ov2640-area";
   stationLayout?: {
     orientation: 0 | 180;
     rotation: 0 | 90;
@@ -63,7 +67,7 @@ export interface EvaluateParams {
     allergyFlags?: string[];
   }[];
 }
-export const PTNK_18_TRAYS_CATALOG = engine.PTNK_18_TRAYS_CATALOG;
+export const PTNK_TRAYS_CATALOG = engine.PTNK_TRAYS_CATALOG;
 export const RIDGE_WEIGHTS: ModelWeights = engine.RIDGE_WEIGHTS;
 export const MODEL = engine.MODEL;
 export const visionKeys: VisionKey[] = ["rice", "main", "veg", "soup"];

@@ -1,6 +1,6 @@
 import { useFinalRound } from "./FinalRoundContext";
 import {
-  PTNK_18_TRAYS_CATALOG,
+  PTNK_TRAYS_CATALOG,
   type VisionAnalysisResponse,
 } from "./lib/ecotrayVisionEngine";
 import { number } from "./format";
@@ -41,7 +41,9 @@ export function StationMenuControls({
     new Set([
       analysis.comboName,
       ...(schoolId === "ptnk"
-        ? Object.values(PTNK_18_TRAYS_CATALOG).map((m) => m.combo)
+        ? Object.values(PTNK_TRAYS_CATALOG)
+            .map((m) => m.combo)
+            .filter((c) => !c.includes("chưa rõ"))
         : []),
     ]),
   );

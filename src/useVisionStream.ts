@@ -4,7 +4,7 @@ import { recordVisionDecision } from "../lib/final-round.mjs";
 import {
   evaluateTrayWithTrainedModel,
   isVisionFeed,
-  PTNK_18_TRAYS_CATALOG,
+  PTNK_TRAYS_CATALOG,
   type VisionAnalysisResponse,
 } from "./lib/ecotrayVisionEngine";
 export interface StreamTray {
@@ -95,7 +95,7 @@ export function useVisionStream(schoolId: string, history: Intervention[], setHi
   }
 
   function cycle(allergyFlags: string[] = []) {
-    const ids = Object.keys(PTNK_18_TRAYS_CATALOG),
+    const ids = Object.keys(PTNK_TRAYS_CATALOG),
       sampleId = ids[sequence.current++ % ids.length];
     setFallback({
       analysis: evaluateTrayWithTrainedModel({ sampleId, allergyFlags }),

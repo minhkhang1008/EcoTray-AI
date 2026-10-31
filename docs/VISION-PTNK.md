@@ -2,23 +2,26 @@
 
 ## Phạm vi dữ liệu
 
-18 ảnh nguồn trong `public/ptnk-trays/`, chụp 28–29/10/2026. `data/ptnk-trays.json` giữ nhãn phần còn lại ước lượng bằng mắt do nhóm cung cấp, góc xoay và nhóm góc chụp lặp. Không coi 18 ảnh là 18 khay độc lập. `public/ptnk-normalized/` là bản 800×600 đã xoay theo metadata; ảnh gốc được giữ nguyên.
+35 ảnh nguồn trong `public/ptnk-trays/`, chụp 28–30/10/2026. `data/ptnk-trays.json` giữ nhãn phần còn lại ước lượng bằng mắt (bản gán lại v2 ngày 31/10, xem [RELABEL-V2.md](RELABEL-V2.md)), góc xoay, nhóm góc chụp lặp và các cờ nhiễu (`flags`, `soupBowl`, `note`, `comboConfidence`). 35 ảnh thuộc 29 khay độc lập (27 nếu bỏ hai mốc). `public/ptnk-normalized/` là bản 800×600 đã xoay theo metadata; ảnh gốc được giữ nguyên.
 
-Hai mốc cố định: `IMG_20261028_115429.jpg` = sạch 0%; `IMG_20261029_112146.jpg` = đầy 100%. Nhãn gốc của ảnh đầy (100/95/90/90) được giữ riêng; mô hình chuẩn hóa tất cả thành phần về mốc đầy 100%. Ảnh đầy không được đưa vào thống kê khay trả.
+Hai mốc: `IMG_20261028_115429.jpg` = sạch 0%; `IMG_20261029_112146.jpg` = đầy 100%. Nhãn v2 của mọi ảnh khác là % so với ảnh đầy này. Nhãn gốc của ảnh đầy (100/95/90/90) được giữ riêng; trình huấn luyện dùng 100 cho cả bốn thành phần. Ảnh đầy không được đưa vào thống kê khay trả.
 
 ## Tái huấn luyện
 
 ```sh
 python3 -m venv .venv-vision
 .venv-vision/bin/pip install -r scripts/vision-requirements.txt
-.venv-vision/bin/python scripts/train_ecotray_vision.py
+.venv-vision/bin/python scripts/train_ecotray_vision.py                    # đặc trưng từ Node jpeg-js (cần npm ci)
+.venv-vision/bin/python scripts/train_ecotray_vision.py --features python  # bản port NumPy, không cần Node
 ```
 
-Trình huấn luyện yêu cầu đủ 18 ảnh, không có trọng số hoặc số liệu đánh giá dự phòng. Node `jpeg-js` trích xuất cùng bộ đặc trưng dùng trong suy luận; NumPy giải Ridge α=0,15, không phạt bias. Không có tăng cường ngẫu nhiên hoặc chia ảnh lặp sang hai tập khác nhau. Bộ trọng số, đặc trưng, kết quả dự đoán từng ảnh giữ lại và MAE được xuất vào `src/lib/ecotrayModels.json`.
+Trình huấn luyện đọc mọi ảnh trong danh mục (tối thiểu 18, phải có hai mốc), không có trọng số hoặc số liệu đánh giá dự phòng. Mặc định Node `jpeg-js` trích xuất cùng bộ đặc trưng dùng trong suy luận; `--features python` dùng `scripts/ptnk_features.py`, cho kết quả trùng tới 1e-13 trên cùng pixel, chỉ khác bộ giải mã JPEG (Pillow). Artifact ghi `featureExtractor`. NumPy giải Ridge α=0,15, không phạt bias. Không có tăng cường ngẫu nhiên hoặc chia ảnh lặp sang hai tập khác nhau. Bộ trọng số, đặc trưng, kết quả dự đoán từng ảnh giữ lại và MAE được xuất vào `src/lib/ecotrayModels.json`.
 
-Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc hiệu chuẩn trong tập huấn luyện và không chấm hai mốc. 16 ảnh được chấm; MAE hiện tại **27,28 điểm phần trăm**. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác và hai mốc biết trước; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
+Dự đoán là đầu ra Ridge thô (đơn vị %), cắt về 0–100. Bản v3 kéo giãn đầu ra giữa hai mốc `(pred − pred_0%)/(pred_100% − pred_0%)`; bước này làm sai số tăng gần gấp đôi và kém hơn cả việc đoán bằng trung bình nhãn (27,28 so với 22,8), nên đã bỏ ở v4. Hai mốc giờ là điểm huấn luyện thường. Đặc trưng ROI cố định không phân biệt nước kho với thức ăn, nên mô hình đọc ngăn món chính của khay sạch là ~70%; vì vậy khi chọn chính ảnh mốc, kết quả hiển thị theo nhãn mốc với `predictionSource: "anchor-label"`.
 
-Gallery giữ nguyên vùng đọc và mô hình Ridge đã kiểm định ở trên. Ảnh JPEG thiết bị và ảnh tải lên dùng bộ đọc diện tích pixel `ov2640-area-v1` trong `lib/station-vision.mjs`; **MAE 27,28 không áp dụng cho bộ đọc mới**.
+Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc trong tập huấn luyện và không chấm hai mốc. 33 ảnh / 27 nhóm được chấm; MAE hiện tại **14,60 điểm phần trăm** (Cơm 16,1 · Món chính 17,0 · Rau 13,1 · Canh 12,3), so với mốc đoán bằng trung bình nhãn 25,25 (`baselineMeanLabelMAE`). Món chính yếu nhất vì thịt thường bị gắp sang ngăn cơm. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác do một người gán lại; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
+
+Gallery giữ nguyên vùng đọc và mô hình Ridge đã kiểm định ở trên. Ảnh JPEG thiết bị và ảnh tải lên dùng bộ đọc diện tích pixel `ov2640-area-v1` trong `lib/station-vision.mjs`; **MAE 14,60 không áp dụng cho bộ đọc mới**.
 
 Bố cục mặc định `ESP32_STANDARD_TOP_RICE` theo toàn khung hình: Cơm `(0.04,0.05)–(0.55,0.49)`, Canh `(0.57,0.05)–(0.89,0.49)`, Món chính `(0.31,0.52)–(0.62,0.94)`, Rau trái `(0.04,0.52)–(0.29,0.94)` hoặc Rau phải `(0.63,0.52)–(0.89,0.94)`. Đây là phương án tọa độ hiệu chuẩn được yêu cầu, không phải bộ phát hiện biên kim loại tổng quát: dải nền tối bên phải ngoài x=0,90 không tham gia phân tích; không cắt nền rồi áp tọa độ lần nữa.
 
@@ -26,11 +29,11 @@ So độ phủ cơm sáng và vành bát ở hai chiều, mặc định chiều 
 
 Cơm dùng Value ≥0,62, saturation <0,24 và độ sáng; phản xạ sáng dạng vệt dài được loại bằng thành phần liên thông, bóng tối trung tính và phản xạ cực mạnh được hạn chế. Món chính phối hợp màu ấm/tối và texture; rau phối hợp màu, texture và ngưỡng chống bóng tối. Canh chỉ đọc ellipse bên trong 80% bán kính bát, bỏ vành trắng. Đây là heuristic diện tích ảnh, chưa có tập cân độc lập; không đồng nhất diện tích với lượng còn lại theo thể tích/khối lượng. Khay lệch vị trí, bát khác kích thước, rau nhạt màu hoặc ánh sáng khác có thể làm sai kết quả; cần thêm mẫu thật và cân đối chiếu.
 
-Ảnh ESP32 do người dùng cung cấp ngày 30/10 được giữ ở `data/vision-fixtures/esp32-top-rice.jpg` làm mẫu hồi quy riêng, không thêm vào gallery 18 ảnh hoặc cohort IQR. Kết quả hiện tại Cơm 70,6%, Món chính 54,2%, Rau 56,5%, Canh 27,3% chỉ được đối chiếu khoảng ước lượng thị giác của người vận hành; không phải nhãn cân hoặc bằng chứng độ chính xác.
+Ảnh ESP32 do người dùng cung cấp ngày 30/10 được giữ ở `data/vision-fixtures/esp32-top-rice.jpg` làm mẫu hồi quy riêng, không thêm vào gallery ảnh tham chiếu hoặc cohort IQR. Kết quả hiện tại Cơm 70,6%, Món chính 54,2%, Rau 56,5%, Canh 27,3% chỉ được đối chiếu khoảng ước lượng thị giác của người vận hành; không phải nhãn cân hoặc bằng chứng độ chính xác.
 
 ## Hiệu chỉnh và quyết định
 
-Sandbox xử lý ảnh tải lên ngay trong trình duyệt; ảnh và phản hồi không gửi máy chủ. Bốn thanh trượt có bước 25%. Nút Active Learning cập nhật trọng số hồi quy trong phiên bằng sai số phản hồi, bảo toàn hai mốc hiệu chuẩn. Khôi phục đưa về trọng số gốc; tải lại trang kết thúc phiên. Trọng số sau phản hồi chưa được kiểm định và không thay mô hình trạm. Với ảnh tải lên dùng bộ đọc OV2640, thanh trượt chỉ giữ hiệu chỉnh thủ công cho ảnh trong phiên; không cập nhật trọng số Ridge.
+Sandbox xử lý ảnh tải lên ngay trong trình duyệt; ảnh và phản hồi không gửi máy chủ. Bốn thanh trượt có bước 25%. Nút Active Learning cập nhật trọng số hồi quy trong phiên bằng sai số phản hồi; bước cập nhật được chiếu ra khỏi hai vector đặc trưng mốc nên dự đoán tại hai mốc không đổi. Khôi phục đưa về trọng số gốc; tải lại trang kết thúc phiên. Trọng số sau phản hồi chưa được kiểm định và không thay mô hình trạm. Với ảnh tải lên dùng bộ đọc OV2640, thanh trượt chỉ giữ hiệu chỉnh thủ công cho ảnh trong phiên; không cập nhật trọng số Ridge.
 
 Gram suy từ định lượng giả định Cơm 200g / Món chính 110g / Rau 90g / Canh 150g. `W_min=85g` là chính sách bảo vệ thử nghiệm. Khóa giảm rau bất cứ khi nào lượng rau thực ăn ước tính dưới 85g, không cần thêm điều kiện phần trăm thừa. Không mô tả ngưỡng này là chuẩn y khoa hoặc lượng chất xơ.
 
@@ -61,9 +64,9 @@ Xem [firmware và hướng dẫn thử ảnh thật](../firmware/esp32_cam_gate/
 
 Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Vision mở màn trạm; gallery và hiệu chỉnh ảnh ở mục Kiểm tra ảnh, ví dụ mô phỏng ở mục Thử kịch bản. Luồng IoT và ghi nhận quyết định có ở màn trạm, không chèn vào phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.
 
-Phím nền: 1/2/3 = NFC hợp lệ/dị ứng/chưa đăng ký; lặp 1/2 kiểm tra trùng thẻ. Space/4 luân phiên 18 ảnh tham chiếu; 5 ghi phê duyệt; R đặt lại nguồn dự phòng. Không can thiệp input/select/textarea hoặc tổ hợp Ctrl/Alt/Meta. Space trên button/link/summary giữ hành vi gốc. Nguồn tham chiếu vẫn được ghi rõ trên UI và không cộng vào dữ liệu phần cứng, bản ghi thực địa hay bộ 1.280 khay mô phỏng.
+Phím nền: 1/2/3 = NFC hợp lệ/dị ứng/chưa đăng ký; lặp 1/2 kiểm tra trùng thẻ. Space/4 luân phiên ảnh tham chiếu; 5 ghi phê duyệt; R đặt lại nguồn dự phòng. Không can thiệp input/select/textarea hoặc tổ hợp Ctrl/Alt/Meta. Space trên button/link/summary giữ hành vi gốc. Nguồn tham chiếu vẫn được ghi rõ trên UI và không cộng vào dữ liệu phần cứng, bản ghi thực địa hay bộ 1.280 khay mô phỏng.
 
-Quyết định luồng Vision lưu chung tại Dữ liệu → Lịch sử quyết định trên trình duyệt, giữ nguồn và chống nhấn lặp; chưa phải lệnh gửi tới bếp hoặc cấu hình thực đơn lưu trên máy chủ. 18 ảnh chuẩn hóa được cache ngoại tuyến cùng mã ứng dụng. Không cache API.
+Quyết định luồng Vision lưu chung tại Dữ liệu → Lịch sử quyết định trên trình duyệt, giữ nguồn và chống nhấn lặp; chưa phải lệnh gửi tới bếp hoặc cấu hình thực đơn lưu trên máy chủ. Ảnh chuẩn hóa được cache ngoại tuyến cùng mã ứng dụng. Không cache API.
 
 ## Kiểm chứng
 

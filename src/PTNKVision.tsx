@@ -5,7 +5,7 @@ import {
   analyzeStationPixels,
   MODEL,
   RIDGE_WEIGHTS,
-  PTNK_18_TRAYS_CATALOG,
+  PTNK_TRAYS_CATALOG,
   evaluateTrayWithTrainedModel,
   updateWeights,
   visionKeys,
@@ -187,7 +187,7 @@ export function RealtimeFunnel() {
 export default function PTNKVision() {
   const station = useFinalRound();
   const [uploadMenu,setUploadMenu] = useState<{comboName:string;menuDate:string}|null>(null);
-  const first = Object.keys(PTNK_18_TRAYS_CATALOG)[0];
+  const first = Object.keys(PTNK_TRAYS_CATALOG)[0];
   const [sampleId, setSampleId] = useState(first),
     [imageUrl, setImageUrl] = useState("./ptnk-normalized/" + first),
     [features, setFeatures] = useState<FeatureVectors>(
@@ -296,19 +296,23 @@ export default function PTNKVision() {
         <div>
           <h2>Kiểm tra ảnh khay PTNK</h2>
           <p>
-            18 ảnh thật · 28–29/10/2026 · nhãn phần còn lại ước lượng bằng mắt
+            {MODEL.realTraysCount} ảnh thật ({MODEL.independentTrays} khay độc lập,
+            không tính hai mốc) · 28–30/10/2026 · nhãn phần còn lại ước lượng
+            bằng mắt
           </p>
         </div>
         <span className="badge">ẢNH THỰC ĐỊA</span>
       </div>
       <p className="ptnk-evaluation">
         Mô hình Ridge cho gallery · Sai số kiểm định theo nhóm (MAE):{" "}
-        <b>{number(MODEL.validation.overallMAE)} điểm phần trăm</b> · 16 ảnh
-        được chấm, 2 mốc hiệu chuẩn không chấm. Chưa có độ chính xác phân loại
+        <b>{number(MODEL.validation.overallMAE)} điểm phần trăm</b> ·{" "}
+        {MODEL.validation.scoredImages} ảnh được chấm, 2 mốc không chấm · mốc so
+        sánh đoán bằng trung bình nhãn:{" "}
+        {number(MODEL.validation.baselineMeanLabelMAE.overall)} điểm. Chưa có độ chính xác phân loại
         được xác thực. Bộ đọc OV2640 cho ảnh mới chưa có kiểm định trên tập độc lập.
       </p>
-      <div className="ptnk-gallery" aria-label="18 mẫu ảnh khay thực địa">
-        {Object.entries(PTNK_18_TRAYS_CATALOG).map(([id, m], i) => (
+      <div className="ptnk-gallery" aria-label={MODEL.realTraysCount + " mẫu ảnh khay thực địa"}>
+        {Object.entries(PTNK_TRAYS_CATALOG).map(([id, m], i) => (
           <button
             key={id}
             aria-pressed={sampleId === id}
@@ -380,8 +384,8 @@ export default function PTNKVision() {
           {sampleId && (
             <p className="fine">
               Nhãn tham chiếu (Cơm / Món chính / Rau / Canh):{" "}
-              {PTNK_18_TRAYS_CATALOG[
-                sampleId as keyof typeof PTNK_18_TRAYS_CATALOG
+              {PTNK_TRAYS_CATALOG[
+                sampleId as keyof typeof PTNK_TRAYS_CATALOG
               ].y.join(" / ")}
               %. Hai mốc chuẩn hóa là 0% và 100%; nhãn gốc được giữ riêng.
             </p>
@@ -455,13 +459,13 @@ export default function PTNKVision() {
             <summary>Phương pháp và giới hạn kiểm định</summary>
             <p>
               Ridge α = 0,15; bỏ lần lượt từng nhóm khay liên quan để kiểm định.
-              Các góc chụp lặp nằm cùng nhóm; hai mốc cố định luôn dùng để hiệu
-              chuẩn và không tính sai số. Nhãn do nhóm cung cấp, chưa đối chiếu
+              Các góc chụp lặp nằm cùng nhóm; hai mốc 0%/100% là điểm huấn
+              luyện thường, không tính sai số và hiển thị theo nhãn mốc. Nhãn do nhóm cung cấp, chưa đối chiếu
               phép cân. MAE này không phải độ chính xác phân loại.
             </p>
             <p>
               IQR chỉ so cùng thực đơn/ngày, tối thiểu 10 khay độc lập; không
-              gán dị ứng từ một ảnh. Bộ 18 ảnh chưa đủ nhóm thực đơn để kết luận
+              gán dị ứng từ một ảnh. Bộ ảnh tham chiếu chưa đủ nhóm thực đơn để kết luận
               IQR.
             </p>
           </details>
