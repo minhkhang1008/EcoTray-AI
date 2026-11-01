@@ -31,7 +31,7 @@ export default function QuickLog() {
           source: "measured-reference",
         },
       ]);
-      setStatus("Đã lưu hệ số cân cho mục Thử kịch bản trong Vision. Bộ ảnh PTNK vẫn dùng định lượng giả định.");
+      setStatus("Đã lưu hệ số cân cho quy đổi gram mô phỏng. Bộ ảnh PTNK vẫn dùng định lượng giả định.");
       setGrams("");
     } catch (e) {
       setStatus((e as Error).message);
@@ -125,7 +125,7 @@ export default function QuickLog() {
         Ước lượng g ≈ (% diện tích / 100) × khối lượng tham chiếu. Hệ số được
         khớp bình phương tối thiểu qua gốc từ các mẫu cân; diện tích và khối
         lượng không luôn tuyến tính. Cần đo nhiều góc/độ dày trước khi dùng
-        trong vận hành. Mẫu hiệu chuẩn dùng trong Vision → Thử kịch bản, không thay định lượng giả định của mô hình PTNK và không tính là khay khảo sát.
+        trong vận hành. Mẫu hiệu chuẩn chỉ dùng cho quy đổi gram mô phỏng, không thay định lượng giả định của mô hình PTNK và không tính là khay khảo sát.
       </p></details>
       {f.samples.length > 0 && (
         <div className="table-scroll">
