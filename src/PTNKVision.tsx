@@ -1,5 +1,5 @@
 import { resolveStationMenu } from "../lib/vision-menu.mjs";
-import { IqrVerification, StationMenuControls } from "./StationMenuControls";
+import { StationMenuControls } from "./StationMenuControls";
 import { useRef, useState } from "react";
 import {
   analyzeStationPixels,
@@ -124,9 +124,6 @@ export function VisionStreamPanel() {
       <div>
         {!vision.usingFallback && tray.analysis.stationLayout && <StationMenuControls analysis={tray.analysis} disabled={vision.editing} onChange={(combo,date,angle)=>void vision.reanalyze(combo,date,angle)} />}
         <h3>{tray.analysis.comboName}</h3>
-        <p>{tray.analysis.decisionLoop.headline}</p>
-        <p>{tray.analysis.decisionLoop.recommendation}</p>
-        <IqrVerification analysis={tray.analysis} />
         <button className="primary" disabled={vision.editing || vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
         {vision.usingFallback && <button onClick={() => { vision.resume(); f.setSource("hardware"); }}>Trở về luồng thiết bị</button>}
       </div>
@@ -391,23 +388,6 @@ export default function PTNKVision() {
           <h3>{analysis.comboName}</h3>
           <p className="badge">
             {manual ? "Nhãn hiệu chỉnh thủ công" : "Ước lượng từ ảnh"}
-          </p>
-          {sampleId && (
-            <p className="fine">
-              Nhãn tham chiếu (Cơm / Món chính / Rau / Canh):{" "}
-              {PTNK_TRAYS_CATALOG[
-                sampleId as keyof typeof PTNK_TRAYS_CATALOG
-              ].y.join(" / ")}
-              %. Hai mốc chuẩn hóa là 0% và 100%; nhãn gốc được giữ riêng.
-            </p>
-          )}
-          <h3>{analysis.decisionLoop.headline}</h3>
-          <p>{analysis.decisionLoop.recommendation}</p>
-          <p className="fine">
-            IQR: {analysis.iqrEligibleCount} mẫu độc lập cùng thực đơn/ngày;{" "}
-            {analysis.iqrEligibleCount < 10
-              ? "chưa đủ 10 mẫu nền để kết luận."
-              : "đã kiểm tra ngưỡng ngoại lai."}
           </p>
           <h3>Sửa tỷ lệ phần còn lại</h3>
           <datalist id="ptnk-quarter-ticks">

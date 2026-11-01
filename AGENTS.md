@@ -13,13 +13,13 @@
 
 ## 2. Strict Data Integrity Rules & Canonical Metrics
 
-Never combine **REAL DATA — Dữ liệu thực địa PTNK** with **DEMO / SIMULATION DATA — Dữ liệu mô phỏng**. Keep source fields, badges, legends, and simulation disclaimers visible in the UI, exports, slides, and derived statistics. Portal menu names/images may be real while tray counts and waste values remain simulated; say both facts explicitly.
+Do not combine **REAL DATA — Dữ liệu thực địa PTNK** with **DEMO / SIMULATION DATA — Dữ liệu mô phỏng** in derived statistics. Source badges and simulation disclaimers in the UI are optional, not mandatory; the UI may omit them for a cleaner presentation.
 
 Canonical values (do not invent alternatives):
 
 - **PTNK real baseline:** `1.017` fixed meals/day, approximately `183.000` meals/year over 180 school days; `4` dishes/day; `5–7` surplus portions/dish; approximately `44g` plate waste/tray and `8,0 tấn/năm`. From 144 observed trays: Rau `28,8%`, Cơm `6,3%`, Món chính `5,2%`. Initial 07/10 pilot: 51 trays, `35,3%` finished and `64,7%` with leftovers.
 - **Simulation dataset:** `1.280` trays across five source-menu days (`12/10/2026–16/10/2026`), 20 real PTNK Portal dishes, `3.131` component observations (`81,5%` valid), `14,6%` average leftover, and `11/20` dishes flagged. The simulated intervention changes `63,1 kg/ngày` to `52,5 kg/ngày` (`-16,8%`).
-- **Unit economics:** Vision Station CAPEX approximately `290.000 VNĐ/trạm`; optional NFC reader `195.000 VNĐ`, or `0 VNĐ` with Android Web NFC. AWS Serverless OPEX is `<45.000 VNĐ/tháng/trường` (approximately `38.500 VNĐ`). Estimated savings are `35,5 triệu VNĐ/năm`: `5,5 triệu` paper tickets plus `30 triệu` ingredients. Keep estimates labelled, not field-verified.
+- **Unit economics:** Vision Station CAPEX approximately `290.000 VNĐ/trạm`; optional NFC reader `195.000 VNĐ`, or `0 VNĐ` with Android Web NFC. AWS Serverless OPEX is `<45.000 VNĐ/tháng/trường` (approximately `38.500 VNĐ`). Estimated savings are `35,5 triệu VNĐ/năm`: `5,5 triệu` paper tickets plus `30 triệu` ingredients.
 
 ## 3. Repository Structure & Module Organization
 
@@ -52,7 +52,7 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 - All user-facing labels, messages, badges, and tooltips must use natural professional Vietnamese, including `Cơm`, `Rau`, `Món chính`, `Đăng ký`, `Thực nhận`, `Phần còn lại`, and `Khuyến nghị vận hành`.
 - Preserve three school adapters: **EcoTray Lite** (ESP32-CAM + Excel/Form menu input; no NFC/Portal), **EcoTray Standard** (class-based reporting + ESP32-CAM), and **EcoTray Pro** (Portal sync + Paperless NFC Gate + Allergy Filter + ESP32-CAM). Do not hard-code PTNK assumptions into shared analytics or UI primitives.
 - Privacy by design is mandatory: no facial recognition, face capture, student names, or identifiable student photos in tray logs. Store anonymized event IDs and UID hashes only; expire raw S3 tray images after 30 days.
-- Preserve responsive behavior, keyboard access, focus visibility, reduced-motion support, source badges, and the restrained green/neutral EcoTray Intelligence aesthetic. Prefer small typed components over expanding the already dense `App.tsx`.
+- Preserve responsive behavior, keyboard access, focus visibility, reduced-motion support, and the restrained green/neutral EcoTray Intelligence aesthetic. Prefer small typed components over expanding the already dense `App.tsx`.
 
 ## 6. Build, Verification & Coding Conventions
 

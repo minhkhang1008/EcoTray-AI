@@ -371,32 +371,16 @@ export default function App() {
                     : "GHI NHẬN TRỰC TIẾP"}
               </span>
             </div>
-          ) : (
-            <div
-              className={`source-notice ${mode === "demo" ? "sample-source" : ""}`}
-            >
+          ) : mode === "demo" ? null : (
+            <div className="source-notice">
               <span className="badge">
-                {mode === "demo"
-                  ? "DỮ LIỆU MÔ PHỎNG"
-                  : mode === "hardware"
-                    ? "NGUỒN PHẦN CỨNG"
-                    : "DỮ LIỆU CỦA TÔI"}
+                {mode === "hardware" ? "NGUỒN PHẦN CỨNG" : "DỮ LIỆU CỦA TÔI"}
               </span>
               <p>
-                {mode === "demo" ? (
-                  <>
-                    Thực đơn & ảnh thật từ Portal PTNK. Số khay và tỷ lệ thừa là
-                    mô phỏng.
-                  </>
-                ) : mode === "hardware" ? (
-                  "Chỉ hiển thị dữ liệu từ trạm đã kết nối."
-                ) : (
-                  "Bản ghi được lưu riêng trên trình duyệt của bạn."
-                )}
+                {mode === "hardware"
+                  ? "Chỉ hiển thị dữ liệu từ trạm đã kết nối."
+                  : "Bản ghi được lưu riêng trên trình duyệt của bạn."}
               </p>
-              {mode === "demo" && (
-                <small>12–16/10/2026 · {portalMenus.length} món</small>
-              )}
             </div>
           )}
 
