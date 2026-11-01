@@ -65,11 +65,7 @@ export default function DishDrawer({
         )}
         <div>
           <span className="badge demo">
-            {mode === "demo"
-              ? "KHAY MÔ PHỎNG"
-              : mode === "hardware"
-                ? "DỮ LIỆU TỪ TRẠM"
-                : "GHI NHẬN CỤC BỘ"}
+            {mode === "demo" ? "DỮ LIỆU TRƯỜNG" : "GHI NHẬN CỤC BỘ"}
           </span>
           <h3>{number(selected.length)} khay trong phân tích</h3>
           <p className="analysis-basis">
@@ -104,7 +100,7 @@ export default function DishDrawer({
           </p>
           <p className="fine">
             {mode === "demo"
-              ? "Bộ CSV mô phỏng chưa có hồ sơ dị ứng: số mẫu có cờ bằng 0. "
+              ? "Dữ liệu chưa có hồ sơ dị ứng: số mẫu có cờ bằng 0. "
               : ""}
             IQR chỉ phát hiện bất thường; không xác định nguyên nhân y tế.
           </p>

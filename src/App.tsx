@@ -15,6 +15,7 @@ import Vision from "./VisionLab";
 import { RealtimeFunnel } from "./PTNKVision";
 import DishDrawer from "./DishDrawer";
 import QuickLog from "./QuickLog";
+import type { Account } from "./auth";
 import { useFinalRound } from "./FinalRoundContext";
 import { ConnectionControls, NfcTerminal } from "./Pipeline";
 import {
@@ -61,12 +62,20 @@ function download(name: string, data: string, type = "text/csv;charset=utf-8") {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
-export default function App() {
+export default function App({
+  account,
+  onLogout,
+}: {
+  account: Account;
+  onLogout: () => void;
+}) {
+  const isPtnk = account.dataset === "ptnk";
+  const mode = isPtnk ? "demo" : "real";
+  const storageKey = isPtnk ? "ecotray-records" : "ecotray-records-hcm";
   const final = useFinalRound();
   const [selectedDish, setSelectedDish] = useState(""),
     [logView, setLogView] = useState("manual");
   const [tab, setTab] = useState("overview"),
-    [mode, setMode] = useState("hardware"),
     [rows, setRows] = useState<Row[]>([]),
     [ready, setReady] = useState(false),
     [message, setMessage] = useState("");
@@ -87,13 +96,11 @@ export default function App() {
   const [dataView, setDataView] = useState("records"),
     [menuView, setMenuView] = useState("table");
   useEffect(() => {
-    final.setWatching(
-      tab === "vision" || tab === "log" || mode === "hardware",
-    );
-  }, [tab, mode]);
+    final.setWatching(tab === "vision" || tab === "log");
+  }, [tab]);
   useEffect(() => {
     try {
-      const a = JSON.parse(localStorage.getItem("ecotray-records") || "[]");
+      const a = JSON.parse(localStorage.getItem(storageKey) || "[]");
       if (Array.isArray(a))
         setRows(
           a.filter(
@@ -120,18 +127,16 @@ export default function App() {
   useEffect(() => {
     if (ready)
       try {
-        localStorage.setItem("ecotray-records", JSON.stringify(rows));
+        localStorage.setItem(storageKey, JSON.stringify(rows));
       } catch {
         setMessage("Bộ nhớ đầy. Xuất CSV để giữ dữ liệu.");
       }
   }, [rows, ready]);
-  useEffect(() => setPage(0), [mode, menu, from, to, search]);
-  const source: Row[] =
-    mode === "demo"
-      ? demoRows
-      : mode === "hardware"
-        ? final.hardwareRows
-        : rows;
+  useEffect(() => setPage(0), [menu, from, to, search]);
+  const source: Row[] = useMemo(
+    () => (isPtnk ? [...demoRows, ...rows] : rows),
+    [isPtnk, rows],
+  );
   const filtered = useMemo(
     () =>
       filterRows(source, {
@@ -166,7 +171,6 @@ export default function App() {
           "File chứa dữ liệu mô phỏng. Sử dụng không gian dữ liệu mô phỏng để xem bộ dữ liệu này.",
         );
       setRows((old) => [...old, ...data]);
-      setMode("real");
       reset();
       setMessage(`Đã nhập ${fmt(data.length)} bản ghi.`);
     } catch (e) {
@@ -199,7 +203,6 @@ export default function App() {
       return;
     }
     setRows((old) => [...old, row]);
-    setMode("real");
     reset();
     setMessage("Đã lưu bản ghi.");
     setEntry({ ...entry, rice: "NA", vegetables: "NA", main: "NA", soup: "NA" });
@@ -226,11 +229,15 @@ export default function App() {
           <span className="brand-dot"></span>
         </a>
         <div className="workspace-name">
-          <div className="school-avatar">P</div>
+          <div className={account.logo ? "school-avatar has-logo" : "school-avatar"}>
+            {account.logo ? (
+              <img src={account.logo} alt="Logo trường" />
+            ) : (
+              account.initial
+            )}
+          </div>
           <div>
-            <strong>
-              {final.adapter === "pro" ? final.schoolName : "Trường nhân rộng"}
-            </strong>
+            <strong>{account.schoolName}</strong>
             <span>{final.adapterInfo.name}</span>
           </div>
         </div>
@@ -263,15 +270,9 @@ export default function App() {
           >
             <Icon name="info" size={17} /> Phương pháp & trợ giúp
           </button>
-          <div className="profile">
-            <span>
-              <Icon name="leaf" size={17} />
-            </span>
-            <div>
-              <strong>Không gian cục bộ</strong>
-              <small>Dữ liệu trên thiết bị này</small>
-            </div>
-          </div>
+          <button className="logout-button" onClick={onLogout}>
+            Đăng xuất
+          </button>
         </div>
       </aside>
       <div className="main-shell">
@@ -312,25 +313,6 @@ export default function App() {
               </h1>
             </div>
             <div className="header-actions">
-              {viewingRows && (
-                <label className="source-switch">
-
-                  <select
-                    aria-label="Không gian dữ liệu"
-                    value={mode}
-                    onChange={(e) => {
-                      setMode(e.target.value);
-                      if (e.target.value === "hardware")
-                        final.setSource("hardware");
-                      reset();
-                    }}
-                  >
-                    <option value="demo">Dữ liệu mô phỏng</option>
-                    <option value="real">Dữ liệu của tôi</option>
-                    <option value="hardware">Dữ liệu phần cứng</option>
-                  </select>
-                </label>
-              )}
               {viewingRows && (
                 <button
                   className="export-action"
@@ -374,12 +356,10 @@ export default function App() {
           ) : mode === "demo" ? null : (
             <div className="source-notice">
               <span className="badge">
-                {mode === "hardware" ? "NGUỒN PHẦN CỨNG" : "DỮ LIỆU CỦA TÔI"}
+                DỮ LIỆU CỦA TÔI
               </span>
               <p>
-                {mode === "hardware"
-                  ? "Chỉ hiển thị dữ liệu từ trạm đã kết nối."
-                  : "Bản ghi được lưu riêng trên trình duyệt của bạn."}
+                Bản ghi được lưu riêng trên trình duyệt của bạn.
               </p>
             </div>
           )}
@@ -804,7 +784,7 @@ export default function App() {
                           <td>
                             <span className="badge">
                               {r.source === "simulation"
-                                ? "Mô phỏng"
+                                ? "Ghi nhận"
                                 : r.source === "hardware"
                                   ? "Phần cứng"
                                   : r.source === "ai-reviewed"
@@ -883,10 +863,8 @@ export default function App() {
                 : tab === "log"
                   ? "Lưu trên trình duyệt này"
                   : mode === "demo"
-                    ? "Dữ liệu mẫu · Số khay và tỷ lệ thừa mô phỏng"
-                    : mode === "hardware"
-                      ? "Dữ liệu từ trạm · Tách riêng"
-                      : "Không gian cá nhân · Lưu cục bộ"}
+                    ? "Dữ liệu căn tin trường"
+                    : "Không gian cá nhân · Lưu cục bộ"}
             </span>
           </footer>
         </main>

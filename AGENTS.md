@@ -11,17 +11,7 @@
   4. **Optimal:** `Registered ≈ Served` with low waste → `Giữ nguyên`.
 - Final-round context: TOP 8 SSC 2026, a 5-minute live pitch, and 10-minute Q&A. Reliability, truthful evidence, feasibility, scalability, and a working prototype are requirements.
 
-## 2. Strict Data Integrity Rules & Canonical Metrics
-
-Do not combine **REAL DATA — Dữ liệu thực địa PTNK** with **DEMO / SIMULATION DATA — Dữ liệu mô phỏng** in derived statistics. Source badges and simulation disclaimers in the UI are optional, not mandatory; the UI may omit them for a cleaner presentation.
-
-Canonical values (do not invent alternatives):
-
-- **PTNK real baseline:** `1.017` fixed meals/day, approximately `183.000` meals/year over 180 school days; `4` dishes/day; `5–7` surplus portions/dish; approximately `44g` plate waste/tray and `8,0 tấn/năm`. From 144 observed trays: Rau `28,8%`, Cơm `6,3%`, Món chính `5,2%`. Initial 07/10 pilot: 51 trays, `35,3%` finished and `64,7%` with leftovers.
-- **Simulation dataset:** `1.280` trays across five source-menu days (`12/10/2026–16/10/2026`), 20 real PTNK Portal dishes, `3.131` component observations (`81,5%` valid), `14,6%` average leftover, and `11/20` dishes flagged. The simulated intervention changes `63,1 kg/ngày` to `52,5 kg/ngày` (`-16,8%`).
-- **Unit economics:** Vision Station CAPEX approximately `290.000 VNĐ/trạm`; optional NFC reader `195.000 VNĐ`, or `0 VNĐ` with Android Web NFC. AWS Serverless OPEX is `<45.000 VNĐ/tháng/trường` (approximately `38.500 VNĐ`). Estimated savings are `35,5 triệu VNĐ/năm`: `5,5 triệu` paper tickets plus `30 triệu` ingredients.
-
-## 3. Repository Structure & Module Organization
+## 2. Repository Structure & Module Organization
 
 This is a static React 19 + TypeScript + Vite application, not a backend. There is no React Router: `src/App.tsx` switches five tabs (`Tổng quan`, `Phân tích thực đơn`, `EcoTray Vision`, `Ghi nhận khay`, `Dữ liệu`) with component state.
 
@@ -36,7 +26,7 @@ This is a static React 19 + TypeScript + Vite application, not a backend. There 
 - `scripts/`: production offline-cache generation, calibration, dish-bank generation, model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
 - `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` exposes public Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
 
-## 4. Hardware–Cloud–Web Integration & Live Stage Demo Contract
+## 3. Hardware–Cloud–Web Integration & Live Stage Demo Contract
 
 Minh Khang’s pipeline is `ESP32-CAM + debounced proximity state machine + NFC UID reader → API Gateway/Lambda/S3`; Sơn Hoàng’s consumer is `ecotray-ai.vercel.app`. The following is the v1 contract. Dashboard routes are implemented and contract-tested locally; deployment and physical AWS/ESP32/NFC acceptance remain unverified.
 
@@ -47,14 +37,14 @@ Minh Khang’s pipeline is `ESP32-CAM + debounced proximity state machine + NFC 
 
 Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboard fallbacks and local fallback state: `1` = normal NFC, `2` = allergy NFC, `3` = unknown NFC; repeating `1`/`2` tests duplicate rejection. `Space` or `4` = tray capture and automatic analysis; recommendation is approved with the keyboard-accessible `Bếp Phê Duyệt` button. The fallback must run without Wi-Fi, be resettable, and remain isolated from real records and simulation analytics. Network success may update the same event reducer, but must never be required for the five-minute pitch.
 
-## 5. UI/UX & Scalability Guardrails
+## 4. UI/UX & Scalability Guardrails
 
 - All user-facing labels, messages, badges, and tooltips must use natural professional Vietnamese, including `Cơm`, `Rau`, `Món chính`, `Đăng ký`, `Thực nhận`, `Phần còn lại`, and `Khuyến nghị vận hành`.
 - Preserve three school adapters: **EcoTray Lite** (ESP32-CAM + Excel/Form menu input; no NFC/Portal), **EcoTray Standard** (class-based reporting + ESP32-CAM), and **EcoTray Pro** (Portal sync + Paperless NFC Gate + Allergy Filter + ESP32-CAM). Do not hard-code PTNK assumptions into shared analytics or UI primitives.
 - Privacy by design is mandatory: no facial recognition, face capture, student names, or identifiable student photos in tray logs. Store anonymized event IDs and UID hashes only; expire raw S3 tray images after 30 days.
 - Preserve responsive behavior, keyboard access, focus visibility, reduced-motion support, and the restrained green/neutral EcoTray Intelligence aesthetic. Prefer small typed components over expanding the already dense `App.tsx`.
 
-## 6. Build, Verification & Coding Conventions
+## 5. Build, Verification & Coding Conventions
 
 - Prerequisite: Node `>=22.13.0`. Install reproducibly with `npm ci`; run development with `npm run dev`; serve an existing production build locally with `npm start`.
 - Run tests with `npm test`, model smoke verification with `npm run test:model`, and production build verification with `npm run build`.
@@ -64,7 +54,7 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 - Before completing any task, always run typechecking and `npm run build`; for logic/data/model changes also run `npm test` and `npm run test:model`. Search for stale paths and verify that Vercel still builds to `dist/`.
 - Use TypeScript for UI code, keep analytics deterministic and testable in `lib/`, validate files/API input at boundaries, and avoid `any` in new contracts. Use existing CSS classes/tokens and responsive patterns; this repository does not use Tailwind CSS, so do not describe or introduce Tailwind without an explicit migration decision.
 
-## 7. Operational UI cleanup (29/10/2026)
+## 6. Operational UI cleanup (29/10/2026)
 
 Menu analysis opens a compact list. Photo inspection and simulated pairing/nutrition examples live under separate Vision views; station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live in Data → Thông tin dự án. Do not restore generic nutrition examples inside individual dish drawers.
 
