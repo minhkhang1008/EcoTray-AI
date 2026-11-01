@@ -55,7 +55,6 @@ export default function QuickLog() {
       <div className="section-heading">
         <div>
           <h2>Hiệu chuẩn bằng cân mẫu</h2>
-          <p>Cân phần thức ăn còn lại sau khi trừ bì khay.</p>
         </div>
         <button onClick={exportSamples} disabled={!f.samples.length}>
           Xuất mẫu cân CSV
@@ -122,12 +121,12 @@ export default function QuickLog() {
           </article>
         ))}
       </div>
-      <p className="fine">
+      <details className="method-details"><summary>Phương pháp quy đổi</summary><p className="fine">
         Ước lượng g ≈ (% diện tích / 100) × khối lượng tham chiếu. Hệ số được
         khớp bình phương tối thiểu qua gốc từ các mẫu cân; diện tích và khối
         lượng không luôn tuyến tính. Cần đo nhiều góc/độ dày trước khi dùng
         trong vận hành. Mẫu hiệu chuẩn dùng trong Vision → Thử kịch bản, không thay định lượng giả định của mô hình PTNK và không tính là khay khảo sát.
-      </p>
+      </p></details>
       {f.samples.length > 0 && (
         <div className="table-scroll">
           <table>

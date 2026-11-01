@@ -163,7 +163,6 @@ export default function Overview({
           <div className="section-heading">
             <div>
               <h2>Phần còn lại qua từng ngày</h2>
-              <p>Đối chiếu ba thành phần để chọn đúng điều chỉnh.</p>
             </div>
           </div>
           <TrendChart data={days} />
@@ -200,7 +199,6 @@ export default function Overview({
         <div className="section-heading">
           <div>
             <h2>Thực đơn cần theo dõi</h2>
-            <p>Xếp theo tỷ lệ rau còn lại, từ cao đến thấp.</p>
           </div>
           <button className="text-button" onClick={onMenus}>
             Xem {menus.length} món

@@ -256,11 +256,6 @@ export default function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <p className="sidebar-purpose">
-            Mỗi khay lên tiếng.
-            <br />
-            Mỗi bữa ăn tốt hơn.
-          </p>
           <button
             className="help-toggle"
             aria-expanded={help}
@@ -315,17 +310,6 @@ export default function App() {
                         ? "Ghi nhận khay"
                         : "Dữ liệu & cấu hình"}
               </h1>
-              <p>
-                {tab === "overview"
-                  ? "Nhìn rõ phần còn lại. Biết bữa sau cần thay đổi gì."
-                  : tab === "menus"
-                    ? "Hiệu suất từng món, chi tiết từng thành phần."
-                    : tab === "vision"
-                      ? "Ghi nhận phần còn lại từ hình ảnh khay ăn."
-                      : tab === "log"
-                        ? "Một khay ăn, một điểm dữ liệu."
-                        : "Toàn bộ dữ liệu trong một không gian."}
-              </p>
             </div>
             <div className="header-actions">
               {viewingRows && (
@@ -386,13 +370,6 @@ export default function App() {
                       : "NFC MÔ PHỎNG"
                     : "GHI NHẬN TRỰC TIẾP"}
               </span>
-              <p>
-                {tab === "vision"
-                  ? "Mỗi kết quả ghi rõ nguồn: thiết bị, ảnh tham chiếu hoặc mô phỏng."
-                  : logView === "nfc"
-                    ? "Quét thẻ nhận suất và kiểm tra cảnh báo. Sự kiện mô phỏng được tách khỏi dữ liệu thật."
-                    : "Bản ghi mới được lưu trên thiết bị, tách riêng bộ dữ liệu mẫu."}
-              </p>
             </div>
           ) : (
             <div

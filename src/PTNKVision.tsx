@@ -16,6 +16,7 @@ import {
 } from "./lib/ecotrayVisionEngine";
 import { useFinalRound } from "./FinalRoundContext";
 import { number } from "./format";
+import { isCleanTray } from "../lib/clean-attribution.mjs";
 import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 export function VisionResult({
   analysis,
@@ -85,7 +86,20 @@ export function VisionResult({
           </tbody>
         </table>
       </div>
-      <p className="fine">{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau." : "Tiếp tục theo dõi lượng thực ăn."} W_min ≥ 85 g rau/khay và định lượng ban đầu là giả định bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Ước lượng pixel có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
+      {isCleanTray(Object.fromEntries(visionKeys.map((k) => [k, analysis.components[k].wastePct]))) && (
+        <details className="method-details">
+          <summary>Khay sạch 0% · định danh món</summary>
+          <p className="fine">
+            Không có đồ thừa để nhận món. Phân bổ vào “Khay sạch chờ phân bổ”, cuối ca lấy
+            số suất thực nhận (NFC) trừ số khay còn thừa của món (Tầng 2). Không dùng NFC:
+            chia theo tỷ trọng suất nấu (Tầng 3). Phổ màu nước sốt là tín hiệu phụ, chưa triển khai.
+          </p>
+        </details>
+      )}
+      <details className="method-details">
+        <summary>{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau" : "Ghi chú phương pháp"}</summary>
+        <p className="fine">W_min ≥ 85 g rau/khay và định lượng ban đầu là giả định bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Ước lượng pixel có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
+      </details>
     </>
   );
 }
@@ -114,7 +128,6 @@ export function VisionStreamPanel() {
         <p>{tray.analysis.decisionLoop.recommendation}</p>
         <IqrVerification analysis={tray.analysis} />
         <button className="primary" disabled={vision.editing || vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
-        <p className="fine">Lưu tại Dữ liệu → Lịch sử quyết định trên trình duyệt này. Bếp thực hiện thay đổi và đo lại; đây chưa phải lệnh gửi tới bếp.</p>
         {vision.usingFallback && <button onClick={() => { vision.resume(); f.setSource("hardware"); }}>Trở về luồng thiết bị</button>}
       </div>
     </div> : legacy ? <>
@@ -124,8 +137,7 @@ export function VisionStreamPanel() {
     <details className="method-details">
       <summary>Kết nối & nguồn ảnh</summary>
       <ConnectionControls />
-      <p className="fine">API phân tích ảnh: {vision.online ? "đã kết nối" : vision.error || "chưa kết nối"}. API NFC/worker: {f.connected ? "đã kết nối" : f.error || "chưa kết nối"}. API phản hồi không xác nhận camera đang hoạt động.</p>
-      <p className="fine">Nhận JPEG 800×600 qua API phân tích, hoặc kết quả qua worker AWS. Nếu cả hai có ảnh, hiển thị sự kiện mới hơn; ảnh dự phòng luôn ghi rõ nguồn.</p>
+      <p className="fine">Ảnh: {vision.online ? "đã kết nối" : vision.error || "chưa kết nối"} · NFC/worker: {f.connected ? "đã kết nối" : f.error || "chưa kết nối"}. Lưu quyết định tại Dữ liệu → Lịch sử quyết định.</p>
     </details>
   </section>;
 }
@@ -177,10 +189,6 @@ export function RealtimeFunnel() {
           </div>
         </article>
       </div>
-      <p className="fine">
-        Ảnh tham chiếu và sự kiện dự phòng không cộng vào thống kê phần cứng. Bộ
-        đếm NFC độc lập với số ảnh nhận.
-      </p>
     </section>
   );
 }

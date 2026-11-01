@@ -258,12 +258,6 @@ export function NfcTerminal() {
           {message}
         </p>
       )}
-      {!f.adapterInfo.nfc && (
-        <p className="fine">
-          {f.adapterInfo.name} không yêu cầu NFC. Trạm này chỉ dùng để thử
-          mô-đun Pro.
-        </p>
-      )}
     </div>
   );
 }
