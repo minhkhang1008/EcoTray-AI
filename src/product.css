@@ -1602,3 +1602,8 @@ textarea {
 .station-menu-controls { display: grid; gap: .75rem; margin-bottom: 1rem; }
 .station-menu-controls label { display: grid; gap: .375rem; font-size: .875rem; }
 .station-menu-controls select, .station-menu-controls input { width: 100%; min-width: 0; max-width: 100%; }
+.ptnk-aligned { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ptnk-aligned polygon { fill: none; stroke-width: .004; vector-effect: non-scaling-stroke; stroke-width: 2px; }
+.ptnk-aligned .ptnk-frame { stroke: #00e5ff; stroke-dasharray: 8 6; }
+.ptnk-aligned .ptnk-rice { stroke: #e0b000; } .ptnk-aligned .ptnk-main { stroke: #d23c2c; }
+.ptnk-aligned .ptnk-veg { stroke: #2e9c48; } .ptnk-aligned .ptnk-soup { stroke: #1f88c9; }

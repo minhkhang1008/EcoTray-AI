@@ -1,5 +1,6 @@
 import * as station from "../../lib/station-vision.mjs";
 import * as engine from "../../lib/ptnk-vision.mjs";
+import * as featuresLib from "../../lib/ptnk-features.mjs";
 export type VisionKey = "rice" | "main" | "veg" | "soup";
 export type FeatureVectors = Record<VisionKey, number[]>;
 export type ModelWeights = Record<VisionKey, number[]>;
@@ -72,6 +73,8 @@ export const RIDGE_WEIGHTS: ModelWeights = engine.RIDGE_WEIGHTS;
 export const MODEL = engine.MODEL;
 export const visionKeys: VisionKey[] = ["rice", "main", "veg", "soup"];
 export const getRois = engine.getRois;
+export const homography: (from: number[][], to: number[][]) => number[] = featuresLib.homography;
+export const CANONICAL_TRAY_CORNERS: number[][] = featuresLib.CANONICAL_TRAY_CORNERS;
 export const extractFeatures = engine.extractFeatures;
 export const evaluateTrayWithTrainedModel = (
   params: EvaluateParams,

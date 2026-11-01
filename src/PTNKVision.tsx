@@ -7,6 +7,8 @@ import {
   RIDGE_WEIGHTS,
   PTNK_TRAYS_CATALOG,
   evaluateTrayWithTrainedModel,
+  homography,
+  CANONICAL_TRAY_CORNERS,
   updateWeights,
   visionKeys,
   type FeatureVectors,
@@ -21,10 +23,18 @@ import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 export function VisionResult({
   analysis,
   imageUrl,
+  trayCorners,
 }: {
   analysis: VisionAnalysisResponse;
   imageUrl: string | null;
+  trayCorners?: number[][];
 }) {
+  const aligned = trayCorners?.length === 4 ? homography(CANONICAL_TRAY_CORNERS, trayCorners) : null;
+  const project = (u: number, v: number): [number, number] => {
+    if (!aligned) return [u, v];
+    const d = aligned[6] * u + aligned[7] * v + aligned[8];
+    return [(aligned[0] * u + aligned[1] * v + aligned[2]) / d, (aligned[3] * u + aligned[4] * v + aligned[5]) / d];
+  };
   return (
     <>
       <div className="ptnk-overlay" style={analysis.stationLayout?.rotation === 90 ? {aspectRatio:"3/4"} : undefined}>
@@ -36,15 +46,26 @@ export function VisionResult({
         ) : (
           <p>Ảnh không còn khả dụng.</p>
         )}
+        {imageUrl && aligned && (
+          <svg className="ptnk-aligned" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true">
+            <polygon className="ptnk-frame" points={trayCorners!.map((p) => p.join(",")).join(" ")} />
+            {visionKeys.map((k) => {
+              const [x1, y1, x2, y2] = analysis.components[k].bboxNormalized;
+              const pts = [[x1, y1], [x2, y1], [x2, y2], [x1, y2]].map(([u, v]) => project(u, v));
+              return <polygon key={k} className={"ptnk-poly ptnk-" + k} points={pts.map((p) => p.join(",")).join(" ")} />;
+            })}
+          </svg>
+        )}
         {imageUrl &&
           visionKeys.map((k) => {
             const c = analysis.components[k],
-              [x1, y1, x2, y2] = c.bboxNormalized;
+              [x1, y1, x2, y2] = c.bboxNormalized,
+              [px, py] = project(x1, y1);
             return (
               <div
                 key={k}
                 className={"ptnk-box ptnk-" + k}
-                style={{
+                style={aligned ? { left: px * 100 + "%", top: py * 100 + "%", border: 0 } : {
                   left: x1 * 100 + "%",
                   top: y1 * 100 + "%",
                   width: (x2 - x1) * 100 + "%",
@@ -211,11 +232,12 @@ export default function PTNKVision() {
     [busy, setBusy] = useState(false),
     [measurement, setMeasurement] = useState<import("./lib/ecotrayVisionEngine").StationMeasurement | undefined>(undefined);
   const request = useRef(0);
+  const referenceLabel = sampleId ? PTNK_TRAYS_CATALOG[sampleId as keyof typeof PTNK_TRAYS_CATALOG] : undefined;
   const analysis = evaluateTrayWithTrainedModel({
     ...(sampleId ? { sampleId } : {}),
     featureVectors: features,
     weights,
-    ...(manual ? { overridePcts: feedback } : {}),
+    ...(manual ? { overridePcts: feedback } : referenceLabel ? { overridePcts: referenceLabel.y as Percentages } : {}),
     pixelMeasurement: measurement,
     ...(measurement ? {
       ...(uploadMenu ?? resolveStationMenu({schoolId:station.schoolId,
@@ -381,13 +403,13 @@ export default function PTNKVision() {
 
       <div className="ptnk-workbench" aria-busy={busy}>
         <div>
-          <VisionResult analysis={analysis} imageUrl={imageUrl} />
+          <VisionResult analysis={analysis} imageUrl={imageUrl} trayCorners={(referenceLabel as { trayCorners?: number[][] } | undefined)?.trayCorners} />
         </div>
         <div>
           {measurement && <StationMenuControls analysis={analysis} disabled={busy} onChange={(comboName,menuDate)=>setUploadMenu({comboName,menuDate})} />}
           <h3>{analysis.comboName}</h3>
           <p className="badge">
-            {manual ? "Nhãn hiệu chỉnh thủ công" : "Ước lượng từ ảnh"}
+            {manual ? "Nhãn hiệu chỉnh thủ công" : referenceLabel ? "Nhãn thực địa" : "Ước lượng từ ảnh"}
           </p>
           <h3>Sửa tỷ lệ phần còn lại</h3>
           <datalist id="ptnk-quarter-ticks">
