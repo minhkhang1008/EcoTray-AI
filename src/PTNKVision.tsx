@@ -26,10 +26,12 @@ export function VisionResult({
   analysis,
   imageUrl,
   trayCorners,
+  showDetails = true,
 }: {
   analysis: VisionAnalysisResponse;
   imageUrl: string | null;
   trayCorners?: number[][];
+  showDetails?: boolean;
 }) {
   const aligned = trayCorners?.length === 4 ? homography(CANONICAL_TRAY_CORNERS, trayCorners) : null;
   const project = (u: number, v: number): [number, number] => {
@@ -82,6 +84,13 @@ export function VisionResult({
             );
           })}
       </div>
+      {showDetails && <VisionDetails analysis={analysis} />}
+    </>
+  );
+}
+export function VisionDetails({ analysis }: { analysis: VisionAnalysisResponse }) {
+  return (
+    <>
       <div className="table-scroll">
         <table className="ptnk-results">
           <caption>
@@ -144,12 +153,13 @@ export function VisionStreamPanel() {
     </div>}
     {vision.editError && <p role="alert">{vision.editError}</p>}
     {showVision ? <div className="ptnk-workbench">
-      <div><VisionResult analysis={tray.analysis} imageUrl={tray.imageUrl} /></div>
+      <div><VisionResult analysis={tray.analysis} imageUrl={tray.imageUrl} showDetails={false} /></div>
       <div>
         {!vision.usingFallback && tray.analysis.stationLayout && <StationMenuControls analysis={tray.analysis} disabled={vision.editing} onChange={(combo,date,angle)=>void vision.reanalyze(combo,date,angle)} />}
         <h3>{tray.analysis.comboName}</h3>
         <button className="primary" disabled={vision.editing || vision.approved || tray.analysis.referenceOnly} onClick={vision.approve}>{vision.approved ? "Đã ghi nhận quyết định" : "Ghi nhận quyết định"}</button>
         {vision.usingFallback && <button onClick={() => { vision.resume(); f.setSource("hardware"); }}>Trở về luồng thiết bị</button>}
+        <VisionDetails analysis={tray.analysis} />
       </div>
     </div> : legacy ? <>
       <p role="status">{legacy.status === "QUEUED" ? "Đã nhận ảnh · chờ worker phân tích" : legacy.status === "PROCESSING" ? "Worker đang phân tích" : legacy.status === "FAILED" ? legacy.errorMessage : "Đã nhận kết quả từ worker"}</p>
