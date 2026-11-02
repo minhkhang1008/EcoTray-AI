@@ -403,9 +403,7 @@ export default function App({
                   ? "Tổng quan căn tin"
                   : tab === "menu"
                     ? "Lịch thực đơn"
-                    : tab === "menus"
-                    ? "Thống kê thực đơn"
-                    : tab === "analysis"
+                    : tab === "menus" || tab === "analysis"
                     ? "Phân tích thực đơn"
                     : tab === "vision"
                       ? "EcoTray Vision"
@@ -415,7 +413,9 @@ export default function App({
               </h1>
               {tab === "overview" && <p>Theo dõi phần còn lại và hiệu quả sử dụng khay tại căn tin.</p>}
               {tab === "menu" && <p>Xem thực đơn hằng ngày của căn tin.</p>}
-              {tab === "analysis" && <p>Đánh giá mức thức ăn còn lại, so sánh giữa các món và xu hướng theo thời gian.</p>}
+              {(tab === "menus" || tab === "analysis") && (
+                <p>Đánh giá mức thức ăn còn lại, so sánh giữa các món và xu hướng theo thời gian.</p>
+              )}
             </div>
             <div className="header-actions">
               {(tab === "overview" || tab === "vision") && (
