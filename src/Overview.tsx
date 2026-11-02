@@ -43,6 +43,7 @@ export default function Overview({
       : undefined;
   return (
     <div className="overview-content">
+      <div className="overview-top">
       <section
         className={`decision-brief ${!rows.length ? "is-empty" : ""}`}
         aria-labelledby="decision-title"
@@ -102,11 +103,10 @@ export default function Overview({
             </span>
           </div>
         </div>
+        {photo && <figure className="decision-photo"><img src={"." + photo} alt={`Khay món ${first!.menu} từ Portal PTNK`} width={800} height={600} fetchPriority="high" /><figcaption><Icon name="leaf" size={20} /><span><strong>{percent(first!.vegetables.mean)}</strong><small>rau còn lại</small></span></figcaption></figure>}
+      </section>
         {first ? (
           <div className="priority-preview">
-            {photo && (
-              <img src={"." + photo} alt={`Món ${first.menu} từ Portal PTNK`} />
-            )}
             <div className="priority-list">
               <h3>Ưu tiên trong kỳ</h3>
               {priority.slice(0, 3).map((m) => (
@@ -122,7 +122,7 @@ export default function Overview({
             </div>
           </div>
         ) : null}
-      </section>
+      </div>
 
       {rows.length > 0 && <>
       <section
@@ -130,16 +130,19 @@ export default function Overview({
         aria-label="Số liệu trong kỳ đang xem"
       >
         <div>
+          <Icon name="log" size={23} />
           <span>Khay ghi nhận</span>
           <strong>{number(rows.length)}</strong>
           <small>{days.length} ngày có dữ liệu</small>
         </div>
         <div>
+          <Icon name="overview" size={23} />
           <span>Phần còn lại trung bình</span>
           <strong>{percent(overall(rows))}</strong>
           <small>Trên các thành phần hợp lệ</small>
         </div>
         <div>
+          <Icon name="data" size={23} />
           <span>Quan sát hợp lệ</span>
           <strong>
             {rows.length
@@ -149,6 +152,7 @@ export default function Overview({
           <small>{number(observations)} quan sát thành phần</small>
         </div>
         <div>
+          <Icon name="menus" size={23} />
           <span>Thực đơn đã ghi nhận</span>
           <strong>
             {menus.length}

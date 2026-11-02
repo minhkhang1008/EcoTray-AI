@@ -311,3 +311,9 @@ Giữ skip link hiện khi focus để tới nội dung chính. Dùng phần t�
 Giữ nguyên màu, typography và năm tab. Danh sách thực đơn là chế độ mặc định; ở mobile mỗi món có tên và một hàng bốn giá trị (Khay/Cơm/Rau/Món chính), không kéo ngang để tìm tỷ lệ. Thẻ ảnh là chế độ phụ. Khi chưa có khay, Tổng quan chỉ hiển thị hướng dẫn cùng hành động ghi nhận/nhập CSV; không dựng biểu đồ và chỉ số rỗng.
 
 Vision tách trạm, kiểm tra ảnh và kịch bản mô phỏng. Thuật ngữ mô hình và phương pháp ở phần kiểm định; nhãn nguồn, giới hạn ước lượng và trạng thái lưu ở gần kết quả liên quan. Cấu hình trường giữ lựa chọn gói; lộ trình, minh chứng và dự toán chuyển sang Thông tin dự án. Chi tiết món không chèn số liệu toàn căn tin hoặc ví dụ định lượng không thuộc món.
+
+## Hướng hình tham chiếu ngày 02/11/2026
+
+Ảnh người dùng cung cấp là hướng thị giác: sidebar #0f3d2e, active #2e713d, nền sáng sage, thẻ bo 16–22px và họa tiết lá. ENERGY 2 / RHYTHM 2 / MOTION 1. Gradient và bóng nhẹ chỉ phục vụ nền botanical và phân lớp bề mặt theo ảnh đã được duyệt. Lá là SVG trang trí, không phải ảnh bằng chứng; ảnh khay trong khuyến nghị dùng nguồn Portal hiện có và giữ nhãn mô phỏng. Không thêm thư viện/font từ mạng.
+
+Tổng quan tách khuyến nghị và danh sách ưu tiên; bốn thẻ chỉ số giữ nguyên cách tính, không thêm tăng trưởng giả. Theo thành phần tiếp tục biểu diễn tỷ lệ còn lại riêng của từng thành phần bằng thanh, vì chúng không phải các phần của cùng một tổng để vẽ donut như ảnh. Màn hình nhỏ xếp các khối theo chiều dọc, giữ năm mục điều hướng và vùng bảng có thể cuộn. CSS hướng hình được cô lập trong src/botanical.css.

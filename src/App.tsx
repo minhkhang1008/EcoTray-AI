@@ -83,8 +83,7 @@ export default function App({
     [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
     [search, setSearch] = useState(""),
-    [page, setPage] = useState(0),
-    [help, setHelp] = useState(false);
+    [page, setPage] = useState(0);
   const [entry, setEntry] = useState({
     date: today(),
     menu: "",
@@ -263,13 +262,6 @@ export default function App({
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <button
-            className="help-toggle"
-            aria-expanded={help}
-            onClick={() => setHelp(!help)}
-          >
-            <Icon name="info" size={17} /> Phương pháp & trợ giúp
-          </button>
           <button className="logout-button" onClick={onLogout}>
             Đăng xuất
           </button>
@@ -286,20 +278,13 @@ export default function App({
               <i className={final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'online' : ''} />
               Trạm IoT Căn tin · {final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'NFC có tín hiệu' : 'Chờ NFC'} · {final.vision.online && final.vision.hardware && Date.now()-Date.parse(final.vision.hardware.analysis.timestamp)<60000 ? 'Camera có tín hiệu' : 'Chờ ESP32-CAM'}
             </span>
-            <button
-              className="mobile-help"
-              aria-label="Phương pháp và trợ giúp"
-              aria-expanded={help}
-              onClick={() => setHelp(!help)}
-            >
-              <Icon name="info" size={18} />
-            </button>
-            <span className="avatar">VL</span>
+            <span className="avatar" aria-label={account.schoolName}>{account.initial}</span>
           </div>
         </div>
         <main id="content" tabIndex={-1}>
           <header className="page-header">
             <div>
+              <span className="workspace-eyebrow">ECOTRAY</span>
               <h1>
                 {tab === "overview"
                   ? "Tổng quan vận hành"
@@ -311,6 +296,7 @@ export default function App({
                         ? "Ghi nhận khay"
                         : "Dữ liệu & cấu hình"}
               </h1>
+              {tab === "overview" && <p>Theo dõi phần còn lại và hiệu quả sử dụng khay tại căn tin.</p>}
             </div>
             <div className="header-actions">
               {viewingRows && (
@@ -381,32 +367,6 @@ export default function App({
             </div>
           )}
 
-          {help && (
-            <section className="help-panel">
-              <div className="section-heading">
-                <h2>Phương pháp & dữ liệu</h2>
-                <button onClick={() => setHelp(false)}>Đóng</button>
-              </div>
-              <p>
-                Chỉ số phần còn lại được ước lượng theo các mức 0 / 25 / 50 / 75
-                / 100%. NA được loại khỏi mẫu số từng thành phần. Chỉ số chung
-                là trung bình các quan sát thành phần hợp lệ, không phải khối
-                lượng.
-              </p>
-              <p>
-                Đề xuất ưu tiên khi có ít nhất 10 quan sát rau và tỷ lệ còn lại
-                từ 20%. Ngưỡng này là quy tắc thử nghiệm. Bếp phê duyệt thay đổi
-                và theo dõi mức đủ ăn.
-              </p>
-              <p>
-                Bộ dữ liệu mô phỏng dùng tên món, ngày và ảnh thật từ Portal PTNK
-                (12–16/10/2026); 1.280 khay và mức phần thừa được mô phỏng bằng
-                chương trình; xu hướng không phản ánh kết quả thực địa. Dữ liệu
-                thật được lưu riêng trên trình duyệt. CSV nhập sẽ thêm dòng;
-                chưa tự loại trùng hoặc đồng bộ Google Sheets.
-              </p>
-            </section>
-          )}
           {(tab === "overview" ||
             tab === "menus" ||
             (tab === "data" && dataView === "records")) && (

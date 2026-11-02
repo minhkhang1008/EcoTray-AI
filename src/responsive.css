@@ -1,0 +1,33 @@
+/* Final narrow-screen rules follow the botanical theme's desktop breakpoints. */
+.product-workspace {
+  width:100%; max-width:none; margin:0; min-height:100dvh;
+  border-radius:0; box-shadow:none;
+}
+.product-workspace .sidebar { top:0; height:100dvh; border-radius:0; }
+.product-workspace .main-shell,.product-workspace .topbar { border-radius:0; }
+@media (max-width:1000px) {
+  .product-workspace .sidebar { height:auto; }
+}
+:root { scrollbar-color:#6c8978 transparent; scrollbar-width:thin; }
+.product-workspace * { scrollbar-width:thin; scrollbar-color:#6c8978 transparent; }
+.product-workspace .sidebar { scrollbar-color:#91b29a transparent; }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#6c8978b3; border:2px solid transparent; background-clip:padding-box; border-radius:999px; }
+::-webkit-scrollbar-thumb:hover { background-color:#4b725b; }
+::-webkit-scrollbar-corner { background:transparent; }
+.product-workspace .sidebar::-webkit-scrollbar-thumb { background-color:#a0c1a9b3; }
+.product-workspace .sidebar::-webkit-scrollbar-thumb:hover { background-color:#bdd8c3; }
+@media (forced-colors:active) {
+  :root,.product-workspace * { scrollbar-color:auto; scrollbar-width:auto; }
+}
+@media (max-width:700px) {
+  .product-workspace .filter-tools { max-width:100%; }
+  .product-workspace .filter-toolbar { display:block; }
+  .product-workspace .filter-scope { flex-direction:row; }
+}
+@media (max-width:380px) {
+  .product-workspace .overview-metrics { grid-template-columns:1fr; }
+  .product-workspace .overview-metrics>div { padding-left:62px; }
+  .product-workspace .overview-metrics>div>svg { position:absolute; }
+}

@@ -6,6 +6,8 @@ import { currentAccount, logout, type Account } from './auth';
 import './styles.css';
 import './final-round.css';
 import './product.css';
+import './botanical.css';
+import './responsive.css';
 import {FinalRoundProvider} from './FinalRoundContext';
 
 function Root() {

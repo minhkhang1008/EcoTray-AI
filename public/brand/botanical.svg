@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="500" viewBox="0 0 640 500" fill="none">
+<defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c3dd89"/><stop offset=".55" stop-color="#6b9b48"/><stop offset="1" stop-color="#2f6843"/></linearGradient></defs>
+<path d="M344 510C319 370 350 248 398 80" stroke="#698d54" stroke-width="7"/>
+<path d="M354 367C222 395 139 322 116 210C245 208 333 252 354 367Z" fill="url(#leaf)"/>
+<path d="M352 368C279 296 218 254 119 213M245 282L236 231M287 320L195 315" stroke="#d6e5b0" stroke-width="2"/>
+<path d="M358 302C355 182 438 133 563 143C517 252 459 314 358 302Z" fill="url(#leaf)"/>
+<path d="M358 303C433 244 495 196 561 146M443 237L440 175M481 208L518 217" stroke="#d6e5b0" stroke-width="2"/>
+<path d="M383 179C304 149 290 75 335 8C397 58 419 105 383 179Z" fill="url(#leaf)"/>
+<path d="M383 178C371 112 352 56 335 10M368 115L326 88" stroke="#d6e5b0" stroke-width="2"/>
+<path d="M331 444C378 345 475 339 571 385C481 468 404 487 331 444Z" fill="url(#leaf)"/>
+<path d="M333 444L566 387M431 417L460 372" stroke="#d6e5b0" stroke-width="2"/>
+</svg>

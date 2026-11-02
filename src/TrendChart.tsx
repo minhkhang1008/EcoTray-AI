@@ -16,10 +16,10 @@ export default function TrendChart({ data }: { data: DailyPoint[] }) {
   const [active, setActive] = useState<number | null>(null);
   const w = 800,
     h = 230,
-    left = 38,
-    right = 14,
+    left = 60,
+    right = 32,
     top = 16,
-    bottom = 28;
+    bottom = 32;
   const max = Math.max(
     40,
     ...data.flatMap((d) => series.map((s) => d[s.key].mean ?? 0)),
@@ -51,6 +51,7 @@ export default function TrendChart({ data }: { data: DailyPoint[] }) {
           </span>
         ))}
       </div>
+      <div className="trend-plot" role="region" aria-label="Biểu đồ theo ngày, có thể cuộn ngang" tabIndex={0}>
       <svg
         className="trend-chart"
         viewBox={`0 0 ${w} ${h}`}
@@ -140,6 +141,7 @@ export default function TrendChart({ data }: { data: DailyPoint[] }) {
           </rect>
         ))}
       </svg>
+      </div>
       <div className="chart-caption">
         {selected
           ? `${dateLabel(selected.date)} · ${series.map((s) => `${s.label} ${percent(selected[s.key].mean)}`).join(" · ")}`
