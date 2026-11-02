@@ -14,11 +14,11 @@ export const problemStats = [
   { value: "1.017+", label: "suất ăn / ngày", note: "Căn tin PTNK CSĐH" },
   { value: "≈183.000", label: "suất ăn / năm", note: "1.017 suất × 180 ngày ăn" },
   { value: "≈8,0 tấn", label: "thức ăn thừa / năm", note: "≈44 g/khay × 183.000 suất · ước tính" },
-  { value: "5–7", label: "suất/món thặng dư sản xuất", note: "≈2–3% · theo phỏng vấn quản lý căn tin" },
+  { value: "5-7", label: "suất/món thặng dư sản xuất", note: "≈2-3% · theo phỏng vấn quản lý căn tin" },
 ];
 
 export const problemInsight =
-  "Không thể chỉ tập trung giảm số suất nấu ra: bếp chỉ dư 5–7 suất/món, còn thức ăn thừa tập trung ở khay trả — nơi dữ liệu đang đứt gãy giữa Đăng ký, Thực nhận và Tiêu thụ.";
+  "Không thể chỉ tập trung giảm số suất nấu ra: bếp chỉ dư 5-7 suất/món, còn thức ăn thừa tập trung ở khay trả — nơi dữ liệu đang đứt gãy giữa Đăng ký, Thực nhận và Tiêu thụ.";
 
 /** Tỷ lệ phần còn lại trung bình theo thành phần (khay trả). */
 export const plateWaste = [

@@ -267,7 +267,7 @@ const report = {
     model: "Ridge in dual form, z-scored features per fold, unpenalised bias",
     alphaSelection: "inner grouped 6-fold CV on training groups only",
     validation: "leave-one-related-view-group-out; both anchor photos train, neither is scored",
-    augmentation: `${AUG} seeded OV2640-like copies per photo (colour cast ±15%, exposure 0.75–1.15, 5×5 blur, σ12 noise); training rows only`,
+    augmentation: `${AUG} seeded OV2640-like copies per photo (colour cast ±15%, exposure 0.75-1.15, 5×5 blur, σ12 noise); training rows only`,
     emptyDiff: "diff vs the 0% anchor photo; phone photos are hand-held, so registration is poor and this variant is only a weak proxy for a fixed station camera",
   },
   adoptionRule: ADOPTION_RULE,

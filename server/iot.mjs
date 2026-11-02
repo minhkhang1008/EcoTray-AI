@@ -256,7 +256,7 @@ export function createIotService({
       if (!validId(key))
         fail(
           "INVALID_IDEMPOTENCY_KEY",
-          "Cần Idempotency-Key (1–100 ký tự chữ, số, _ hoặc -).",
+          "Cần Idempotency-Key (1-100 ký tự chữ, số, _ hoặc -).",
         );
       const station = raw
         ? request.headers.get("x-station-id")

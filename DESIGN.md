@@ -205,14 +205,14 @@ Bảng màu trắng và xanh lá giảm nhiễu, với hổ phách dành cho tí
 - **Decision title** (`decision-title`): việc bếp cần xem xét; giảm xuống (22px) ở vùng hẹp.
 - **Section title** (`section-title`): tiêu đề khung phân tích, giảm xuống (14px) trên điện thoại.
 - **Metric** (`metric`): số tổng hợp, dùng `font-variant-numeric: tabular-nums`; giảm xuống (28px) ở màn hình hẹp. Đơn vị đi kèm nhỏ hơn (14px).
-- **Body** (`body`): gốc tài liệu. Đoạn khuyến nghị dùng `decision-body`, giới hạn (63ch) để dễ quét mắt; nội dung phụ phổ biến (12–13px).
+- **Body** (`body`): gốc tài liệu. Đoạn khuyến nghị dùng `decision-body`, giới hạn (63ch) để dễ quét mắt; nội dung phụ phổ biến (12-13px).
 - **Label** (`label`): nút và nhãn trường; **caption** (`caption`) cho mô tả phụ; **badge** (`badge`) cho thẻ nguồn. Nhãn điều hướng nhóm là ngoại lệ viết hoa nhỏ (10px, tracking 0.08em).
 
 ## Layout
 
 Khung desktop là thanh bên trắng cố định theo chiều cuộn và vùng nội dung co giãn. Thanh bên (224px); thanh trên cao (58px); nội dung căn giữa, rộng tối đa (1512px), padding thường (30px 36px 0). Không có khối giới thiệu lớn ở Tổng quan hiện tại. Khuyến nghị đứng trước dải bốn chỉ số, sau đó hai khung biểu đồ và bảng món.
 
-Khoảng cách chủ đạo giữa các khối là (24px), nội dung khung thường (24px); các nhóm nhỏ dùng (8–16px). Các giá trị frontmatter là khoảng cách được dùng thực tế, chưa phải một thang toán học buộc mọi khoảng cách phải khớp.
+Khoảng cách chủ đạo giữa các khối là (24px), nội dung khung thường (24px); các nhóm nhỏ dùng (8-16px). Các giá trị frontmatter là khoảng cách được dùng thực tế, chưa phải một thang toán học buộc mọi khoảng cách phải khớp.
 
 Các mốc của lớp giao diện sản phẩm trong `src/product.css`:
 
@@ -281,7 +281,7 @@ Biểu đồ có nhãn ba thành phần và chú giải. Hover bổ sung thông 
 
 ### Icons and imagery
 
-Dùng bộ SVG tự vẽ trong `src/Icon.tsx`: viewBox (24×24), stroke (1.65), đầu và góc nét tròn, `currentColor`, không fill, cỡ mặc định (20px). Hành động gọn dùng cỡ (15–17px). Icon trang trí được ẩn khỏi trình đọc màn hình; nút chỉ có icon vẫn cần tên truy cập. Ảnh món là bằng chứng nguồn thực đơn, không phải bằng chứng độ chính xác Vision.
+Dùng bộ SVG tự vẽ trong `src/Icon.tsx`: viewBox (24×24), stroke (1.65), đầu và góc nét tròn, `currentColor`, không fill, cỡ mặc định (20px). Hành động gọn dùng cỡ (15-17px). Icon trang trí được ẩn khỏi trình đọc màn hình; nút chỉ có icon vẫn cần tên truy cập. Ảnh món là bằng chứng nguồn thực đơn, không phải bằng chứng độ chính xác Vision.
 
 ### Accessibility and motion
 
@@ -314,6 +314,6 @@ Vision tách trạm, kiểm tra ảnh và kịch bản mô phỏng. Thuật ng�
 
 ## Hướng hình tham chiếu ngày 02/11/2026
 
-Ảnh người dùng cung cấp là hướng thị giác: sidebar #0f3d2e, active #2e713d, nền sáng sage, thẻ bo 16–22px và họa tiết lá. ENERGY 2 / RHYTHM 2 / MOTION 1. Gradient và bóng nhẹ chỉ phục vụ nền botanical và phân lớp bề mặt theo ảnh đã được duyệt. Lá là SVG trang trí, không phải ảnh bằng chứng; ảnh khay trong khuyến nghị dùng nguồn Portal hiện có và giữ nhãn mô phỏng. Không thêm thư viện/font từ mạng.
+Ảnh người dùng cung cấp là hướng thị giác: sidebar #0f3d2e, active #2e713d, nền sáng sage, thẻ bo 16-22px và họa tiết lá. ENERGY 2 / RHYTHM 2 / MOTION 1. Gradient và bóng nhẹ chỉ phục vụ nền botanical và phân lớp bề mặt theo ảnh đã được duyệt. Lá là SVG trang trí, không phải ảnh bằng chứng; ảnh khay trong khuyến nghị dùng nguồn Portal hiện có và giữ nhãn mô phỏng. Không thêm thư viện/font từ mạng.
 
 Tổng quan tách khuyến nghị và danh sách ưu tiên; bốn thẻ chỉ số giữ nguyên cách tính, không thêm tăng trưởng giả. Theo thành phần tiếp tục biểu diễn tỷ lệ còn lại riêng của từng thành phần bằng thanh, vì chúng không phải các phần của cùng một tổng để vẽ donut như ảnh. Màn hình nhỏ xếp các khối theo chiều dọc, giữ năm mục điều hướng và vùng bảng có thể cuộn. CSS hướng hình được cô lập trong src/botanical.css.

@@ -132,7 +132,7 @@ def validate(name, m, originals, normalized):
         errors.append('chưa gán nhãn')
     y = m.get('y')
     if not (isinstance(y, list) and len(y) == 4 and all(isinstance(v, (int, float)) and 0 <= v <= 100 for v in y)):
-        errors.append('y phải gồm 4 số 0–100')
+        errors.append('y phải gồm 4 số 0-100')
     if m.get('veg_pos') not in ('TL', 'TR'):
         errors.append('veg_pos phải là TL hoặc TR')
     if m.get('rotation') not in ROTATIONS:

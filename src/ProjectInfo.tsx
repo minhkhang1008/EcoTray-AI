@@ -60,8 +60,8 @@ export default function ProjectInfo({
   const economics = [
     { value: number(roi.capex) + "đ", label: "Đầu tư phần cứng / trạm Vision", note: "ESP32-CAM, cảm biến, nguồn và khung", tag: "DỰ TOÁN" },
     { value: number(cost.total) + "đ", label: "Chi phí đám mây / tháng", note: "1.017 học sinh × 20 ngày học", tag: "DỰ TOÁN" },
-    { value: "≈" + number(roi.annualOpex) + "đ", label: "Chi phí đám mây / năm học", note: "Nhân 9 tháng học (slide làm tròn ≈350.000đ)", tag: "DỰ TOÁN" },
-    { value: number(savingsLow / 1e6) + "–" + number(Math.round(savingsHigh / 1e6)) + " triệu đồng", label: "Nguyên liệu tiết kiệm / năm", note: "Phụ thuộc lượng nguyên liệu bếp mua giảm; cận trên, đơn giá giả định, chưa phải số đo", tag: "KỊCH BẢN" },
+    { value: "≈" + number(roi.annualOpex) + "đ", label: "Chi phí đám mây / năm học", note: "Nhân 9 tháng học", tag: "DỰ TOÁN" },
+    { value: number(savingsLow / 1e6) + " - " + number(Math.round(savingsHigh / 1e6)) + " triệu đồng", label: "Nguyên liệu tiết kiệm / năm", note: "Phụ thuộc lượng nguyên liệu bếp mua giảm; cận trên, đơn giá giả định", tag: "KỊCH BẢN" },
   ];
   return (
     <div className="project-page">

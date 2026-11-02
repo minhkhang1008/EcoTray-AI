@@ -2,7 +2,7 @@
 
 ## Tóm tắt
 
-- Đã xem lại **toàn bộ 35 ảnh** trong `public/ptnk-trays/` (repo cũ chỉ gán nhãn 18 ảnh; 17 ảnh ngày 29–30/10 chưa có nhãn).
+- Đã xem lại **toàn bộ 35 ảnh** trong `public/ptnk-trays/` (repo cũ chỉ gán nhãn 18 ảnh; 17 ảnh ngày 29-30/10 chưa có nhãn).
 - Góc xoay và vị trí ngăn rau (`rotation`, `veg_pos`) của 18 ảnh cũ **đều đúng**, không cần sửa. 17 ảnh mới đã được gán đủ hai trường này và kiểm tra bằng cách vẽ khung ROI lên ảnh đã chuẩn hóa.
 - Sửa 13/16 ảnh cũ có chênh ≥10 điểm, chủ yếu do **thang đo không nhất quán**: ví dụ cơm ở 114612 bị ghi 75% trong khi lượng cơm chỉ khoảng một nửa ảnh mốc 100%; cơm ở 112201 (gần đầy) lại bị ghi 55%.
 - Thêm các trường mô tả tình huống gây nhiễu: `soupBowl`, `flags`, `note`, `comboConfidence`, `previousY`.
@@ -110,4 +110,4 @@ Cách đọc bảng:
 3. **Thức ăn bị chuyển ngăn** (15/35 ảnh có `main_on_rice` hoặc `main_in_other_slot`). Có hai hướng: (a) chuyển sang nhãn theo ngăn, tức đo "ngăn này còn bao nhiêu thức ăn" bất kể món gì, rồi suy ra món ở tầng logic; hoặc (b) khi ghi dữ liệu, loại các ảnh có cờ này khỏi tập đánh giá mà vẫn giữ trong tập train.
 4. **Ảnh mốc 100% không đại diện**: khác ngày, khác món và có phần cơm ở ngăn phụ. Nên chụp một khay đầy chuẩn cho mỗi ngày hoặc mỗi thực đơn, và nếu được thì cân luôn.
 5. **Quy trình chụp**: chụp thẳng từ trên xuống, cả khay nằm trong khung, không để khay khác lọt vào, nhấc đũa/muỗng ra trước khi chụp. Ảnh chụp liên tiếp của cùng một khay chỉ tính là một mẫu.
-6. **Nhãn có cân**: chỉ cần 10–15 khay được cân từng ngăn (trước và sau bữa ăn) là đã có được thước đo thật để kiểm chứng toàn bộ nhãn thị giác ở trên.
+6. **Nhãn có cân**: chỉ cần 10-15 khay được cân từng ngăn (trước và sau bữa ăn) là đã có được thước đo thật để kiểm chứng toàn bộ nhãn thị giác ở trên.

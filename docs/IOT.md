@@ -63,7 +63,7 @@ Idempotency-Key: tray-20261022-001
 
 Trả 202 `{ "captureId", "status": "QUEUED", "statusUrl" }`. Dashboard không tự sinh phần trăm từ ảnh vừa nhận. Worker AWS của nhóm phải lấy ảnh/xử lý rồi gửi callback. GET `statusUrl` trả snapshot với `latestCapture` được chọn theo `captureId`.
 
-Tương thích payload từ Lambda đã phân tích: JSON `{ "schoolId": "ptnk", "stationId": "cam-1", "capturedAt": "...", "dishId": "vit", "imageUrl": "https://<approved-S3-origin>/tray.jpg", "riceLeftoverPct": 8, "vegLeftoverPct": 62, "mainLeftoverPct": 5, "isOutlier": false, "latencyMs": 680 }`. `imageBase64` JPEG có thể dùng thay `imageUrl`. Phần trăm bắt buộc đủ cả ba và trong 0–100; không tin số phần trăm gửi từ client công cộng. 202 là biên nhận tiếp nhận; snapshot đã là `COMPLETED` nếu Lambda cung cấp kết quả hợp lệ.
+Tương thích payload từ Lambda đã phân tích: JSON `{ "schoolId": "ptnk", "stationId": "cam-1", "capturedAt": "...", "dishId": "vit", "imageUrl": "https://<approved-S3-origin>/tray.jpg", "riceLeftoverPct": 8, "vegLeftoverPct": 62, "mainLeftoverPct": 5, "isOutlier": false, "latencyMs": 680 }`. `imageBase64` JPEG có thể dùng thay `imageUrl`. Phần trăm bắt buộc đủ cả ba và trong 0-100; không tin số phần trăm gửi từ client công cộng. 202 là biên nhận tiếp nhận; snapshot đã là `COMPLETED` nếu Lambda cung cấp kết quả hợp lệ.
 
 URL ảnh không được lưu kèm khuôn mặt; cấu hình lifecycle S3 xóa ảnh thô sau 30 ngày. Bridge Redis giữ JPEG TTL 30 ngày. API ảnh bridge là GET `/api/iot/image?schoolId=ptnk&captureId=...`, mở công khai. Ảnh hết TTL trả 404, metadata vẫn đọc được trong snapshot gần nhất. URL S3 ký sẵn hết hạn phải do pipeline AWS cấp lại.
 
@@ -112,4 +112,4 @@ Có [firmware mẫu ESP32-CAM và hướng dẫn nạp](../firmware/esp32_cam_ga
 
 ### Thành phần canh tùy chọn
 
-Kết quả JSON và `capture-result` có thể gửi thêm `soupLeftoverPct` (số hữu hạn 0–100). Khi có trường này, `status.latestCapture.result.soup` và các capture tương ứng giữ giá trị đó để hiển thị; thiếu trường nghĩa là chưa đo, không phải 0%. Ba trường Cơm/Rau/Món chính vẫn theo hợp đồng cũ. Không suy ra gram canh từ phần trăm hoặc trộn vào baseline ba thành phần.
+Kết quả JSON và `capture-result` có thể gửi thêm `soupLeftoverPct` (số hữu hạn 0-100). Khi có trường này, `status.latestCapture.result.soup` và các capture tương ứng giữ giá trị đó để hiển thị; thiếu trường nghĩa là chưa đo, không phải 0%. Ba trường Cơm/Rau/Món chính vẫn theo hợp đồng cũ. Không suy ra gram canh từ phần trăm hoặc trộn vào baseline ba thành phần.

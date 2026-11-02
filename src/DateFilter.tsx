@@ -39,10 +39,10 @@ export default function DateFilter({ today, latestDay, from, to, onChange }: {
         <option value="all">Toàn bộ thời gian</option>
       </select>
     </label>
-    {!editing && selected === "week" && <span className="date-filter-summary">{label(from)} – {label(to)}</span>}
+    {!editing && selected === "week" && <span className="date-filter-summary">{label(from)} - {label(to)}</span>}
     {!editing && selected === "custom" && <button type="button" onClick={() => {
       setStart(from || today); setEnd(to || today); setEditing(true);
-    }}>{from ? label(from) : "Đầu kỳ"} – {to ? label(to) : "Cuối kỳ"}</button>}
+    }}>{from ? label(from) : "Đầu kỳ"} - {to ? label(to) : "Cuối kỳ"}</button>}
     {editing && <form className="date-filter-range" onSubmit={e => {
       e.preventDefault();
       if (!start || !end || start > end) return;

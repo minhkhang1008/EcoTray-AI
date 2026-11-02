@@ -71,7 +71,7 @@ export interface EvaluateParams {
 export const PTNK_TRAYS_CATALOG = engine.PTNK_TRAYS_CATALOG;
 export const RIDGE_WEIGHTS: ModelWeights = engine.RIDGE_WEIGHTS;
 export const MODEL = engine.MODEL;
-/** "28–30/10/2026" from the dates in the gallery catalog, so adding photos never leaves a stale range. */
+/** "28-30/10/2026" from the dates in the gallery catalog, so adding photos never leaves a stale range. */
 export function galleryDateRange(): string {
   const dates = Object.values(engine.PTNK_TRAYS_CATALOG as Record<string, { date: string }>)
     .map((m) => m.date)
@@ -79,7 +79,7 @@ export function galleryDateRange(): string {
   const day = (d: string) => d.slice(8, 10) + "/" + d.slice(5, 7);
   const [a, b] = [dates[0], dates[dates.length - 1]];
   if (a === b) return day(a) + "/" + a.slice(0, 4);
-  return (a.slice(5, 7) === b.slice(5, 7) ? a.slice(8, 10) + "–" + day(b) : day(a) + "–" + day(b)) + "/" + b.slice(0, 4);
+  return (a.slice(5, 7) === b.slice(5, 7) ? a.slice(8, 10) + "-" + day(b) : day(a) + "-" + day(b)) + "/" + b.slice(0, 4);
 }
 export const visionKeys: VisionKey[] = ["rice", "main", "veg", "soup"];
 export const getRois = engine.getRois;
@@ -137,7 +137,7 @@ export interface StationMeasurement {
   orientationUncertain: boolean;
   /** `ov2640-area-v1`, or `ov2640-area-v1+empty-ref` when a clean-tray frame was supplied. */
   method?: "ov2640-area-v1" | "ov2640-area-v1+empty-ref";
-  /** Only with an empty-tray reference: share (0–100) of each region removed as static tray. */
+  /** Only with an empty-tray reference: share (0-100) of each region removed as static tray. */
   staticSuppressedPct?: Record<VisionKey, number>;
 }
 

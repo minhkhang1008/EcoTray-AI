@@ -2,7 +2,7 @@ import { pairingScenarios } from "../lib/decision-scenarios";
 import { number } from "./format";
 
 /**
- * Kịch bản tuân thủ quy tắc dinh dưỡng: đổi cặp rau–canh, giữ nguyên lượng múc.
+ * Kịch bản tuân thủ quy tắc dinh dưỡng: đổi cặp rau-canh, giữ nguyên lượng múc.
  * Không cắt khẩu phần rau (nutritionAudit khóa khi lượng ăn < W_min); lợi ích là rau thực ăn tăng, không quy ra tiền.
  */
 export default function InterventionScenario() {
@@ -15,7 +15,7 @@ export default function InterventionScenario() {
     <section className="before-after">
       <div className="section-heading">
         <div>
-          <h3>Đổi cặp rau–canh, giữ nguyên lượng rau</h3>
+          <h3>Đổi cặp rau-canh, giữ nguyên lượng rau</h3>
           <p>
             Mô phỏng từ hai ngày thực đơn có cùng món chính ({before.main}). Lượng múc không đổi; chỉ số lợi ích là rau thực ăn mỗi khay tăng lên.
           </p>
@@ -36,7 +36,7 @@ export default function InterventionScenario() {
         </div>
       ))}
       <p className="fine">
-        {before.vegetable} + {before.soup} → {after.vegetable} + {after.soup}. Chưa quy ra gam rau thực ăn hay tiền: bếp vẫn nấu lượng cũ nên đây là lợi ích dinh dưỡng, không phải tiết kiệm nguyên liệu. Không áp dụng cắt khẩu phần rau khi lượng ăn đã gần W_min (85 g) và hướng dẫn 3958/QĐ-BYT (100–150 g rau/bữa chính).
+        {before.vegetable} + {before.soup} → {after.vegetable} + {after.soup}. Chưa quy ra gam rau thực ăn hay tiền: bếp vẫn nấu lượng cũ nên đây là lợi ích dinh dưỡng, không phải tiết kiệm nguyên liệu. Không áp dụng cắt khẩu phần rau khi lượng ăn đã gần W_min (85 g) và hướng dẫn 3958/QĐ-BYT (100-150 g rau/bữa chính).
       </p>
     </section>
   );

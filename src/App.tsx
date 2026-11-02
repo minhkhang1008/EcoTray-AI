@@ -887,7 +887,7 @@ export default function App({
                 <div className="pagination">
                   <span>
                     {filtered.length
-                      ? `${page * 20 + 1}–${Math.min((page + 1) * 20, filtered.length)} / ${fmt(filtered.length)}`
+                      ? `${page * 20 + 1}-${Math.min((page + 1) * 20, filtered.length)} / ${fmt(filtered.length)}`
                       : "0 bản ghi"}
                   </span>
                   <div>

@@ -5,7 +5,7 @@ Run: python3 -m pip install -r scripts/vision-requirements.txt
 Labels are supplied visual estimates, not weighed ground truth. Related views
 share a group; leave-one-group-out validation never splits related views.
 The two anchor photos (0% / 100%) are ordinary training points and are not
-scored. Predictions are the raw Ridge output in percent, clipped to 0–100:
+scored. Predictions are the raw Ridge output in percent, clipped to 0-100:
 v3 rescaled outputs between the two anchors, which roughly doubled the error.
 """
 import argparse

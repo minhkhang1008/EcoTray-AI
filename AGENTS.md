@@ -26,7 +26,7 @@ This is a static React 19 + TypeScript + Vite application, not a backend. There 
 - `scripts/`: production offline-cache generation, PTNK feature extraction/training, `ingest_ptnk_photos.py` (new gallery photos: draft → label → merge, see `docs/VISION-PTNK.md`), `experiment-embeddings.mjs` (frozen-embedding Ridge experiment; writes `data/vision-experiments/`, never the shipped model), `evaluate-station.mjs` (weighed ESP32 evaluation; see `docs/STATION-WEIGHED-DATA.md`), model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
 - `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` exposes public Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
 
-## 3. Hardware–Cloud–Web Integration & Live Stage Demo Contract
+## 3. Hardware-Cloud-Web Integration & Live Stage Demo Contract
 
 Minh Khang’s pipeline is `ESP32-CAM + debounced proximity state machine + NFC UID reader → API Gateway/Lambda/S3`; Sơn Hoàng’s consumer is `ecotray-ai.vercel.app`. The following is the v1 contract. Dashboard routes are implemented and contract-tested locally; deployment and physical AWS/ESP32/NFC acceptance remain unverified.
 
