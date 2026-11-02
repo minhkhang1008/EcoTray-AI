@@ -67,15 +67,12 @@ EcoTray khép kín vòng phản hồi **Registered (Đăng ký) → Served (Th�
 
 - **Quy mô tập dữ liệu Demo:** **1.280 khay ghi nhận** trong 5 ngày thực đơn nguồn, từ 12 tháng 10, 2026 → 16 tháng 10, 2026, gồm **3.131 quan sát thành phần** — 81,5% quan sát hợp lệ — tỷ lệ phần còn lại trung bình **14,6%**, phát hiện **11/20 món cần xem xét**, ưu tiên thành phần rau.
 - **Top 5 món có tỷ lệ thừa cao nhất trên Dashboard — 64 khay/món:**
-    1. *Heo lát chay kho thơm:* Cơm **12,5%** | Rau **46,5%** | Món chính **9,5%**. Đề xuất: khảo sát khẩu vị/cách chế biến và giảm 12% khẩu phần rau.
+    1. *Heo lát chay kho thơm:* Cơm **12,5%** | Rau **46,5%** | Món chính **9,5%**. Đề xuất: khảo sát khẩu vị/cách chế biến và đổi cặp rau–canh, giữ lượng rau; chỉ giảm khẩu phần khi lượng ăn sau giảm vẫn ≥ W_min.
     2. *Nấm rơm kho tiêu:* Cơm **8,7%** | Rau **43,5%** | Món chính **6,3%**.
     3. *Đậu hũ kho củ cải muối chay:* Cơm **10,2%** | Rau **43,0%** | Món chính **7,3%**.
     4. *Chả lụa chay kho tiêu:* Cơm **8,3%** | Rau **38,9%** | Món chính **5,3%**.
     5. *Vịt kho gừng:* Cơm **6,7%** | Rau **36,5%** | Món chính **6,6%**.
-- **Kịch bản Mô phỏng Trước & Sau Can thiệp:**
-    - **Trước điều chỉnh:** Cơm 16,8 kg + Rau 31,4 kg + Món chính 14,9 kg = **Tổng 63,1 kg/ngày**.
-    - **Can thiệp từ đề xuất EcoTray:** Giảm 12% khẩu phần rau ở nhóm món đánh dấu đỏ, giữ nguyên tổng số suất.
-    - **Sau điều chỉnh:** Cơm 16,1 kg + Rau 21,9 kg + Món chính 14,5 kg = **Tổng 52,5 kg/ngày** → **Giảm 16,8% lượng thức ăn thừa**, tức giảm 10,6 kg/ngày.
+- **Kịch bản Trước & Sau Can thiệp (đã điều chỉnh 02/11/2026):** kịch bản cũ "giảm 12% khẩu phần rau → −16,8%" (63,1 → 52,5 kg/ngày, từ dữ liệu mô phỏng 1.280 khay) đã bị gỡ vì vi phạm W_min = 85 g (lượng rau thực ăn ≈76 g) và mức 100–150 g rau/bữa chính theo 3958/QĐ-BYT. Thay bằng "đổi cặp rau–canh, giữ lượng rau" (mô phỏng, chỉ số là rau thực ăn). Mốc nền thực địa: ≈44 g/khay × 1.017 khay ≈ 44,7 kg/ngày ≈ 8,0 tấn/năm (ước tính, chưa cân, chưa tính canh).
 
 ## 3. Logic Ra Quyết định — School-Canteen Decision Loop
 
@@ -136,7 +133,7 @@ Database & Vercel Dashboard
     - Amazon S3, tự động xóa ảnh thô sau 30 ngày và chỉ giữ dữ liệu số: **~$0,02/tháng**, khoảng 500 VNĐ.
     - Xử lý AI Vision & Database: **~$1,40/tháng**, khoảng 35.000–38.000 VNĐ.
     - **Tổng OPEX đám mây: <45.000 VNĐ/tháng/trường**, tương đương giá 1 suất cơm trưa mỗi tháng.
-- **Hiệu quả hoàn vốn — ROI:** Tại PTNK, bỏ 183.000 phiếu ăn giấy/năm giúp tiết kiệm ngay **~5,5 triệu VNĐ/năm** tiền in ấn; giảm 15% lượng thức ăn thừa — ~1,2 tấn thực phẩm/năm trên tổng 8 tấn — giúp nhà bếp tiết kiệm **~30 triệu VNĐ/năm** chi phí nguyên liệu. **Thời gian hoàn vốn <1 tháng**.
+- **Tác động kinh tế (kịch bản có điều kiện, không phải cam kết):** từ mốc nền 8,0 tấn/năm, ba kịch bản giảm thừa 5% / 10% / 16,8% (cận trên). Nguyên liệu tiết kiệm chỉ phát sinh khi bếp mua ít đi: 0đ / ≤10 triệu / ≤34 triệu đồng mỗi năm (đơn giá 25.000đ/kg giả định áp cho khối lượng chín, cần thay bằng giá nhập thật). Phiếu giấy tối đa ~5,5 triệu VNĐ/năm khi bỏ hoàn toàn (30đ/phiếu chưa có nguồn; có giai đoạn chạy song song). Mục tiêu Năm 1: giảm 10% khối lượng thừa đã cân. Không công bố thời gian hoàn vốn: chưa tính giờ công, bảo trì, vỏ chống ẩm và số trạm theo lưu lượng. Tính tập trung ở `economicScenario` (`lib/final-round.mjs`). Chi tiết: `docs/ECONOMICS-REVIEW.md`.
 
 ### 4.4. Khối 4: Nền tảng Web Dashboard
 

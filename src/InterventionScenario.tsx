@@ -1,48 +1,43 @@
-import { componentKeys, componentLabels } from "../lib/final-round.mjs";
+import { pairingScenarios } from "../lib/decision-scenarios";
 import { number } from "./format";
 
+/**
+ * Kịch bản tuân thủ quy tắc dinh dưỡng: đổi cặp rau–canh, giữ nguyên lượng múc.
+ * Không cắt khẩu phần rau (nutritionAudit khóa khi lượng ăn < W_min); lợi ích là rau thực ăn tăng, không quy ra tiền.
+ */
 export default function InterventionScenario() {
+  const [before, after] = pairingScenarios;
+  const rows = [
+    ["Trước", before.vegetable, before.soup, before.vegetableWaste],
+    ["Sau", after.vegetable, after.soup, after.vegetableWaste],
+  ] as const;
   return (
-      <section className="before-after">
-        <div className="section-heading">
-          <div>
-            <h3>Trước & sau can thiệp</h3>
-            <p>
-              Kịch bản mô phỏng toàn căn tin
-            </p>
-          </div>
-          <span className="badge demo">−16,8%</span>
+    <section className="before-after">
+      <div className="section-heading">
+        <div>
+          <h3>Đổi cặp rau–canh, giữ nguyên lượng rau</h3>
+          <p>
+            Mô phỏng từ hai ngày thực đơn có cùng món chính ({before.main}). Lượng múc không đổi; chỉ số lợi ích là rau thực ăn mỗi khay tăng lên.
+          </p>
         </div>
-        {[
-          ["Trước", 63.1, 16.8, 31.4, 14.9],
-          ["Sau", 52.5, 16.1, 21.9, 14.5],
-        ].map(([label, total, rice, veg, main]) => (
-          <div className="comparison-row" key={label}>
-            <span>{label}</span>
-            <div
-              className="stacked-bar"
-              style={{ width: `${(Number(total) / 63.1) * 100}%` }}
-              aria-label={`${label}: Cơm ${rice} kg, Rau ${veg} kg, Món chính ${main} kg`}
-            >
-              {[rice, veg, main].map((v, i) => (
-                <span
-                  key={i}
-                  className={"food-bg-" + i}
-                  style={{ width: `${(Number(v) / Number(total)) * 100}%` }}
-                />
-              ))}
-            </div>
-            <b>{number(Number(total))} kg</b>
+        <span className="badge demo">MÔ PHỎNG</span>
+      </div>
+      {rows.map(([label, veg, soup, waste]) => (
+        <div className="comparison-row" key={label}>
+          <span>{label}</span>
+          <div
+            className="stacked-bar"
+            style={{ width: `${Math.max(waste, 2) / before.vegetableWaste * 100}%` }}
+            aria-label={`${label}: ${veg} và ${soup}, rau còn lại ${waste}%`}
+          >
+            <span className="food-bg-1" style={{ width: "100%" }} />
           </div>
-        ))}
-        <div className="chart-key">
-          {componentKeys.map((k, i) => (
-            <span key={k}>
-              <i className={"food-bg-" + i} />
-              {componentLabels[k]}
-            </span>
-          ))}
+          <b>{number(waste)}% rau còn lại</b>
         </div>
-      </section>
+      ))}
+      <p className="fine">
+        {before.vegetable} + {before.soup} → {after.vegetable} + {after.soup}. Chưa quy ra gam rau thực ăn hay tiền: bếp vẫn nấu lượng cũ nên đây là lợi ích dinh dưỡng, không phải tiết kiệm nguyên liệu. Không áp dụng cắt khẩu phần rau khi lượng ăn đã gần W_min (85 g) và hướng dẫn 3958/QĐ-BYT (100–150 g rau/bữa chính).
+      </p>
+    </section>
   );
 }

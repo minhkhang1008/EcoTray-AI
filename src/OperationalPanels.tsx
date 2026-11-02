@@ -1,40 +1,42 @@
 import { useState } from "react";
 import { useFinalRound } from "./FinalRoundContext";
-import { adapters, cloudEstimate, roiEstimate } from "../lib/final-round.mjs";
+import { adapters, cloudEstimate, economicScenario, roiEstimate } from "../lib/final-round.mjs";
 import { number, dateLabel, csvCell, downloadCsv } from "./format";
 import type { Adapter, Intervention } from "../lib/contracts";
 
 export function OperationalOverview() {
+  const sc = economicScenario("base");
+  const tiles = [
+    [
+      "≈" + number(Math.floor(sc.kgPerMonth)) + " kg",
+      "Thức ăn thừa giảm / tháng",
+      `Kịch bản Cơ sở: giảm ${number(sc.reductionPct)}% của ≈44 g/khay (ước tính) × 1.017 khay × 20 ngày`,
+    ],
+    [
+      "≤ " + number(sc.ingredientsPerMonthMax) + "đ",
+      "Nguyên liệu tiết kiệm tối đa / tháng",
+      "Chỉ tính phần bếp mua ít đi (một nửa phần giảm) × 25.000đ/kg giả định · cận trên",
+    ],
+    [
+      "≤ 20.340",
+      "Phiếu giấy có thể thay / tháng",
+      "1.017 suất × 20 ngày học · tối đa, có giai đoạn chạy song song",
+    ],
+    [
+      "Chưa đo",
+      "Rau thực ăn / khay",
+      "Chỉ số lợi ích chính; cần cân khẩu phần múc và phần thừa",
+    ],
+  ];
   return (
     <>
       <section className="sustainability-strip">
         <div className="strip-intro">
           <h2>Bền vững & kinh tế</h2>
-          <span className="badge demo">KỊCH BẢN ƯỚC TÍNH</span>
+          <span className="badge demo">KỊCH BẢN CƠ SỞ</span>
         </div>
         <div className="esg-grid">
-          {[
-            [
-              "318 kg",
-              "Thực phẩm ngăn lãng phí / tháng",
-              "10,6 kg × 30 ngày · giảm 16,8%",
-            ],
-            [
-              "7.950.000đ",
-              "Nguyên liệu tiết kiệm / tháng",
-              "318 kg × 25.000đ/kg giả định",
-            ],
-            [
-              "20.340",
-              "Phiếu giấy thay thế / tháng",
-              "1.017 suất × 20 ngày học",
-            ],
-            [
-              "~795 kg CO₂e",
-              "Phát thải quy đổi / tháng",
-              "Giả định 2,5 kg CO₂e/kg thực phẩm",
-            ],
-          ].map(([v, l, n]) => (
+          {tiles.map(([v, l, n]) => (
             <article key={l}>
               <strong>{v}</strong>
               <span>{l}</span>
@@ -42,6 +44,9 @@ export function OperationalOverview() {
             </article>
           ))}
         </div>
+        <p className="fine">
+          Tiền chỉ tính khi bếp thực sự mua ít nguyên liệu hơn; phần cải thiện nhờ đổi món được báo cáo bằng gam rau thực ăn, không quy ra tiền. Chưa quy đổi CO₂e vì hệ số chưa được kiểm chứng.
+        </p>
       </section>
     </>
   );
@@ -183,15 +188,15 @@ export function CloudCalculator() {
         </div>
       </div>
       <div className="roi-section">
-        <h3>Chi phí đầu tư & hoàn vốn dự kiến</h3>
+        <h3>Chi phí đầu tư năm đầu</h3>
         {f.adapterInfo.nfc && <label className="toggle-label"><input type="checkbox" checked={reader} onChange={e => setReader(e.target.checked)} />Thêm đầu đọc NFC rời · 195.000đ (Android Web NFC sẵn có: 0đ)</label>}
         <dl className="nutrition-values">
           <div><dt>CAPEX · một trạm</dt><dd>{number(roi.capex)} <small>đ</small></dd></div>
           <div><dt>OPEX · 9 tháng học</dt><dd>{number(roi.annualOpex)} <small>đ</small></dd></div>
-          <div><dt>Tiết kiệm dự kiến / năm</dt><dd>{number(roi.paper + roi.ingredients)} <small>đ</small></dd></div>
-          <div><dt>Hoàn vốn dự kiến</dt><dd>{roi.paybackMonths === null ? "Chưa xác định" : number(roi.paybackMonths)} <small>tháng học</small></dd></div>
+          <div><dt>Tổng chi phí năm đầu (phần cứng + đám mây)</dt><dd>{number(roi.firstYearCost)} <small>đ</small></dd></div>
+          <div><dt>Tiết kiệm tối đa / năm · kịch bản Cơ sở</dt><dd>≤ {number(roi.paperBase + roi.ingredients)} <small>đ</small></dd></div>
         </dl>
-        <p className="fine">Một trạm Vision: ESP32-CAM 135.000đ + cảm biến/LED 45.000đ + nguồn/khung 110.000đ. Dự toán nguyên liệu {number(roi.ingredients)}đ/năm; phiếu giấy {number(roi.paper)}đ/năm {f.adapterInfo.nfc ? "(180 ngày × 30đ/phiếu)" : "(gói không dùng NFC: chưa tính thay phiếu)"}. Hoàn vốn = CAPEX / [(tiết kiệm năm − OPEX 9 tháng) / 9]. Chưa tính nhân công, bảo trì, triển khai và số trạm cần theo lưu lượng; chưa phải lợi nhuận thực đo.</p>
+        <p className="fine">Một trạm Vision: ESP32-CAM 135.000đ + cảm biến/LED 45.000đ + nguồn/khung 110.000đ. Nguyên liệu tối đa {number(roi.ingredients)}đ/năm (cận trên, đơn giá 25.000đ/kg giả định áp cho khối lượng chín); phiếu giấy tối đa {number(roi.paperBase)}đ/năm {f.adapterInfo.nfc ? "(bỏ phiếu từ học kỳ 2, 30đ/phiếu chưa có nguồn)" : "(gói không dùng NFC: chưa tính thay phiếu)"}. Chưa tính giờ công duyệt đề xuất và vận hành, bảo trì, vỏ hộp chống ẩm, lắp đặt, Wi-Fi và số trạm cần theo lưu lượng khay trả, nên chưa đưa ra thời gian hoàn vốn. Ngân sách Năm 1 của nhóm là 1.500.000đ.</p>
 
       </div>
       <details>
@@ -201,13 +206,14 @@ export function CloudCalculator() {
           38.500đ/tháng. Nhân tuyến tính với số ảnh. API Gateway và Lambda tạm
           tính 0đ khi còn hạn mức miễn phí; cần kiểm tra tài khoản, khu vực,
           thời hạn ưu đãi và lưu lượng trước triển khai. Chưa bao gồm truyền dữ
-          liệu, thuế, phí Redis hoặc S3 requests phát sinh.
+          liệu, thuế, phí Redis hoặc S3 requests phát sinh; AWS worker thật
+          chưa được xác minh.
         </p>
         <p className="fine">
-          Ước tính nguyên liệu tiết kiệm: 30 triệu đồng / 180 ngày × 20 ngày =
-          khoảng 3,33 triệu đồng cho tháng học 20 ngày; không phải kết quả đã
-          đo. NFC: thêm 195.000đ cho đầu đọc rời hoặc 0đ nếu tận dụng Android
-          tương thích sẵn có.
+          Nguyên liệu tiết kiệm chỉ phát sinh khi bếp mua ít đi; kịch bản Cơ sở
+          tối đa khoảng 10 triệu đồng/năm, chưa phải kết quả đã đo. NFC: thêm
+          195.000đ cho đầu đọc rời hoặc 0đ nếu tận dụng Android tương thích
+          sẵn có (Web NFC chưa được kiểm chứng với thẻ học sinh PTNK).
         </p>
       </details>
     </section>

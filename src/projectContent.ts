@@ -14,7 +14,7 @@ export const problemStats = [
   { value: "1.017+", label: "suất ăn / ngày", note: "Căn tin PTNK CSĐH" },
   { value: "≈183.000", label: "suất ăn / năm", note: "1.017 suất × 180 ngày ăn" },
   { value: "≈8,0 tấn", label: "thức ăn thừa / năm", note: "≈44 g/khay × 183.000 suất · ước tính" },
-  { value: "5–7", label: "suất/món thặng dư sản xuất", note: "≤2,5% · theo phỏng vấn quản lý căn tin" },
+  { value: "5–7", label: "suất/món thặng dư sản xuất", note: "≈2–3% · theo phỏng vấn quản lý căn tin" },
 ];
 
 export const problemInsight =
@@ -40,8 +40,8 @@ export const loopSteps = [
     title: "Thực nhận",
     caption: "Cổng NFC không giấy tờ",
     points: [
-      "Quét UID thẻ học sinh có sẵn trong ≈0,4 giây",
-      "Ghi nhận biến Thực nhận, thay 183.000 phiếu giấy/năm",
+      "Quét UID thẻ học sinh có sẵn (mục tiêu ≈0,5 giây, chưa đo)",
+      "Ghi nhận biến Thực nhận, thay tối đa 183.000 phiếu giấy/năm (có giai đoạn chạy song song)",
       "Kích hoạt cờ cảnh báo dị ứng cá nhân (đậu phộng, hải sản, lactose)",
     ],
   },
@@ -50,7 +50,7 @@ export const loopSteps = [
     title: "Tiêu thụ & bỏ thừa",
     caption: "Camera AI tại khay trả",
     points: [
-      "Cảm biến siêu âm tự động chụp khay trong ≈0,5 giây",
+      "Cảm biến tiệm cận tự động chụp khay (mục tiêu ≈0,5 giây, chưa đo)",
       "Gửi lên AWS Serverless, bóc tách 4 thành phần của khay",
       "Cắt ngoại lai bằng IQR trimming",
     ],
@@ -61,8 +61,8 @@ export const loopSteps = [
     caption: "Ràng buộc ngưỡng dinh dưỡng",
     points: [
       "W_min = 85 g rau/suất là ngưỡng bảo vệ",
-      "Đủ chuẩn mà vẫn dư: hiệu chỉnh giảm định lượng múc",
-      "Ăn dưới ngưỡng: không giảm, đề xuất đổi món khó ăn",
+      "Đủ chuẩn mà vẫn dư: chỉ giảm định lượng múc khi sau giảm vẫn ≥ ngưỡng (đang chờ người phụ trách dinh dưỡng duyệt)",
+      "Ăn dưới ngưỡng: khóa giảm, đề xuất đổi cặp món hoặc cách chế biến, giữ lượng rau",
     ],
   },
 ];
@@ -76,7 +76,7 @@ export const decisionOutcomes = [
   {
     title: "Khẩu phần / món",
     rule: "Đăng ký ≈ Thực nhận, một thành phần thừa cao",
-    action: "Giữ số suất; chỉnh thành phần đó (ví dụ −12% Rau) hoặc công thức.",
+    action: "Giữ số suất; đổi cặp món/công thức cho thành phần đó, chỉ giảm khẩu phần khi đã qua kiểm tra dinh dưỡng.",
   },
   {
     title: "Ngoại lai dị ứng / sức khỏe",
@@ -115,11 +115,11 @@ export const readiness = {
   have: ["Mã nguồn AI / Web / Firmware", "AWS Credits & ESP32-CAM", "Hạ tầng NFC & Portal PTNK"],
   missing: ["Vỏ hộp công nghiệp chống ẩm số lượng lớn", "Giấy giới thiệu liên trường từ Sở GD&ĐT"],
   fallback:
-    "Tận dụng 100% điện thoại Android sẵn có của bếp chạy Web NFC (0đ phần cứng NFC) và triển khai gói EcoTray Lite (290.000đ/trạm).",
+    "Thử dùng điện thoại Android sẵn có của bếp chạy Web NFC (0đ phần cứng NFC nếu đọc được thẻ PTNK; chưa kiểm chứng, nếu không thì mua đầu đọc PN532 195.000đ/điểm) và triển khai gói EcoTray Lite (290.000đ/trạm; chưa gồm vỏ hộp chống ẩm và giờ công).",
 };
 
 export const scaleConditions = [
-  { title: "Số liệu", body: "Giảm tối thiểu 15% food waste sau 3 tháng tại PTNK." },
+  { title: "Số liệu", body: "Giảm tối thiểu 10% khối lượng thức ăn thừa đã cân sau một học kỳ tại PTNK, và lượng rau thực ăn không giảm." },
   { title: "Điều kiện áp dụng", body: "Khảo sát quy trình căn tin để chọn gói Lite, Standard hoặc Pro." },
   { title: "Nguồn lực", body: "Ít nhất 1 giáo viên/quản lý bếp phụ trách duyệt đề xuất." },
   { title: "Quy trình chuyển giao", body: "Bộ tài liệu hướng dẫn vận hành và đội ngũ học sinh kế nhiệm." },

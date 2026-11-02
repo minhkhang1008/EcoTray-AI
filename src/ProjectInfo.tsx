@@ -1,4 +1,4 @@
-import { cloudEstimate, roiEstimate } from "../lib/final-round.mjs";
+import { cloudEstimate, economicScenario, roiEstimate } from "../lib/final-round.mjs";
 import { roadmap } from "../lib/decision-scenarios";
 import { EvidencePanel } from "./DecisionSupport";
 import InterventionScenario from "./InterventionScenario";
@@ -55,11 +55,13 @@ export default function ProjectInfo({
   const { path } = useRoute();
   const cost = cloudEstimate(1017, 20);
   const roi = roiEstimate(1017, true, false);
+  const savingsLow = economicScenario("conservative").ingredientsMax + economicScenario("conservative").paperMax;
+  const savingsHigh = economicScenario("optimistic").ingredientsMax;
   const economics = [
     { value: number(roi.capex) + "đ", label: "Đầu tư phần cứng / trạm Vision", note: "ESP32-CAM, cảm biến, nguồn và khung", tag: "DỰ TOÁN" },
     { value: number(cost.total) + "đ", label: "Chi phí đám mây / tháng", note: "1.017 học sinh × 20 ngày học", tag: "DỰ TOÁN" },
     { value: "≈" + number(roi.annualOpex) + "đ", label: "Chi phí đám mây / năm học", note: "Nhân 9 tháng học (slide làm tròn ≈350.000đ)", tag: "DỰ TOÁN" },
-    { value: "≈" + number(roi.ingredients) + "đ", label: "Giá trị tiết kiệm / năm", note: "Nguyên liệu theo kịch bản, chưa phải số đo", tag: "KỊCH BẢN" },
+    { value: number(savingsLow / 1e6) + "–" + number(Math.round(savingsHigh / 1e6)) + " triệu đồng", label: "Nguyên liệu tiết kiệm / năm", note: "Phụ thuộc lượng nguyên liệu bếp mua giảm; cận trên, đơn giá giả định, chưa phải số đo", tag: "KỊCH BẢN" },
   ];
   return (
     <div className="project-page">
@@ -252,6 +254,7 @@ export default function ProjectInfo({
                   <div><dt>Nguồn lực</dt><dd>{r.resources}<br /><b>{r.budget}</b></dd></div>
                   <div><dt>Chỉ số (KPI)</dt><dd><ul>{r.kpis.map((k) => <li key={k}>{k}</li>)}</ul></dd></div>
                   <div><dt>Kết quả kỳ vọng</dt><dd><ul>{r.outcomes.map((k) => <li key={k}>{k}</li>)}</ul></dd></div>
+                  <div><dt>Điều kiện chuyển năm</dt><dd>{r.gate}</dd></div>
                 </dl>
               </article>
             ))}
