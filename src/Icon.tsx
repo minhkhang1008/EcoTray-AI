@@ -51,6 +51,12 @@ const paths = {
   ),
   arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
   chevron: <path d="m9 5 7 7-7 7" />,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  bulb: (
+    <>
+      <path d="M9 17h6M10 21h4M8.5 14a6 6 0 1 1 7 0c-.7.6-1 1.3-1 2v1h-5v-1c0-.7-.3-1.4-1-2z" />
+    </>
+  ),
   plus: <path d="M12 5v14M5 12h14" />,
   filter: (
     <>

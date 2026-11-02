@@ -27,7 +27,7 @@ import { ZoomableImage } from "./ImageZoom";
 import DishDrawer from "./DishDrawer";
 import QuickLog from "./QuickLog";
 import type { Account } from "./auth";
-import { DeviceStatus, SchoolIllustration, TopbarTools, type WorkspaceAlert } from "./WorkspaceHeader";
+import { DeviceStatus, TopbarTools, type WorkspaceAlert } from "./WorkspaceHeader";
 import { useFinalRound } from "./FinalRoundContext";
 import { ConnectionControls, NfcTerminal } from "./Pipeline";
 import { AdapterSettings, InterventionHistory } from "./OperationalPanels";
@@ -180,6 +180,10 @@ export default function App({
   const source: Row[] = useMemo(
     () => (isPtnk ? [...demoRows, ...rows] : rows),
     [isPtnk, rows],
+  );
+  const history = useMemo(
+    () => filterRows(filterMenuSlots(source, isPtnk ? boardingDays : [], menuSlots), { menu }),
+    [source, menu, menuSlots, isPtnk],
   );
   const filtered = useMemo(
     () =>
@@ -334,7 +338,6 @@ export default function App({
           })}
         </nav>
         <div className="sidebar-bottom">
-          <SchoolIllustration />
           <Link
             to="/project"
             className="logout-button"
@@ -412,7 +415,7 @@ export default function App({
               </h1>
               {tab === "overview" && <p>Theo dõi phần còn lại và hiệu quả sử dụng khay tại căn tin.</p>}
               {tab === "menu" && <p>Xem thực đơn hằng ngày của căn tin.</p>}
-              {tab === "analysis" && <p>So sánh món, xem xu hướng và việc cần xem xét.</p>}
+              {tab === "analysis" && <p>Đánh giá mức thức ăn còn lại, so sánh giữa các món và xu hướng theo thời gian.</p>}
             </div>
             <div className="header-actions">
               {(tab === "overview" || tab === "vision") && (
@@ -567,6 +570,7 @@ export default function App({
           {tab === "analysis" && (
             <MenuAnalysis
               rows={filtered}
+              history={history}
               mode={mode}
               thresholds={thresholds}
               onDish={setSelectedDish}

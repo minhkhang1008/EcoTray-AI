@@ -17,11 +17,11 @@ Logic nằm ở `lib/menu-analysis.mjs`, giao diện ở `src/MenuAnalysis.tsx`.
 
 ## Thành phần màn hình
 
-1. **KPI:** món còn lại cao nhất theo thành phần đang chọn, % rau trung bình, số món cần xem xét, số khay hợp lệ.
-2. **Xếp hạng:** thanh ngang, 8 món cao nhất, đổi được Cơm, Rau, Món chính, Tổng thể. Bấm thanh để mở chi tiết món.
-3. **Cơ cấu theo món:** thanh chồng Cơm, Rau, Món chính. Ba tỷ lệ có mẫu số khác nhau, nên độ dài chỉ để so sánh tương đối, không phải một tổng 100%.
-4. **Xu hướng:** đường theo ngày; một ngày dữ liệu hiện bảng thay cho đường.
-5. **Nhận định và gợi ý:** sinh bằng quy tắc, không dùng mô hình sinh văn bản.
+1. **Chỉ số:** một số chính là thành phần có mức còn lại trung bình cao nhất trong phạm vi đang xem, kèm chênh lệch với cùng số ngày có dữ liệu ngay trước đó (ẩn khi không có kỳ trước); hai số phụ là số món cần xem xét và số khay hợp lệ.
+2. **Xếp hạng:** thanh ngang, 8 món cao nhất, đổi được Cơm, Rau, Món chính, Tổng thể. Trục làm tròn lên bội số của 10. Khi xem Rau, độ đậm của thanh theo mức ưu tiên. Bấm thanh để mở chi tiết món.
+3. **Xu hướng:** đường theo ngày. Khi phạm vi chỉ có một ngày, đường gồm mọi ngày có dữ liệu và ghi rõ điều đó; chỉ khi toàn bộ dữ liệu có một ngày mới hiện bảng.
+4. **Nhận định và gợi ý:** sinh bằng quy tắc, không dùng mô hình sinh văn bản.
+5. **So sánh thành phần theo món:** biểu đồ chấm, thu gọn mặc định. Ba tỷ lệ có mẫu số khác nhau nên không cộng dồn thành một thanh.
 
 ## Quy tắc nhận định
 

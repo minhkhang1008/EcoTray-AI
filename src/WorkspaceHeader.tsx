@@ -4,34 +4,6 @@ import { SearchPalette, type SearchDishItem } from "./SearchPalette";
 
 export type WorkspaceAlert = { id: string; text: string; onOpen?: () => void };
 
-export function SchoolIllustration() {
-  return (
-    <svg
-      className="school-illustration"
-      viewBox="0 0 220 110"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M2 104h216" />
-      <path d="M2 92h11M35 92h9" />
-      <path d="M24 60 13 88h22zM24 88v16" />
-      <path d="M46 60v44M156 60v44" />
-      <path d="M36 60 100 12l64 48z" />
-      <path d="M52 54 100 19l48 35z" />
-      <path d="M56 66h22v13H56zM89 66h22v13H89zM122 66h22v13h-22z" />
-      <path d="M67 66v13M100 66v13M133 66v13" />
-      <path d="M56 86h22v12H56zM122 86h22v12h-22z" />
-      <path d="M90 104V84h20v20M100 84v20" />
-      <path d="M190 14c18 8 25 28 19 46-4 12-34 12-38 0-6-18 1-38 19-46z" />
-      <path d="M190 104V34M190 66l-11-11M190 54l10-10M190 44l-7-7" />
-    </svg>
-  );
-}
-
 export function DeviceStatus({
   nfc,
   camera,
