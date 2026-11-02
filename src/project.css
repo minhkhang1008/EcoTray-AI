@@ -10,33 +10,15 @@ a.nav-item {
   font-weight: 500;
   cursor: pointer;
 }
-.product-workspace .sidebar-project-link {
-  display: block;
-  padding: 9px 12px 3px;
-  color: #bcd2c0;
-  font-size: 13px;
-  text-decoration: none;
-  border-radius: 8px;
-}
-.product-workspace .sidebar-project-link:hover,
-.product-workspace .sidebar-project-link:focus-visible {
-  color: #fff;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.product-workspace .sidebar-project-link:focus-visible {
-  outline: 3px solid #e1c776;
-  outline-offset: 2px;
-}
+
+
+
 @media (max-width: 1000px) {
   .product-workspace .sidebar-bottom {
     align-items: center;
     flex-wrap: wrap;
   }
-  .product-workspace .sidebar-project-link {
-    padding: 8px 0;
-    white-space: nowrap;
-  }
+
 }
 
 /* ---------- Trang dự án ---------- */
