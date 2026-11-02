@@ -49,7 +49,7 @@ export default function ProjectInfo({
   account,
   onLogout,
 }: {
-  account: Account;
+  account: Account | null;
   onLogout: () => void;
 }) {
   const { path } = useRoute();
@@ -80,14 +80,16 @@ export default function ProjectInfo({
             </a>
           ))}
         </nav>
-        <div className="pj-actions">
-          <Link to={workspacePath()} className="pj-back">
-            <span aria-hidden="true">←</span> Không gian làm việc
-          </Link>
-          <button className="pj-logout" onClick={onLogout}>
-            Đăng xuất
-          </button>
-        </div>
+        {account && (
+          <div className="pj-actions">
+            <Link to={workspacePath()} className="pj-back">
+              <span aria-hidden="true">←</span> Không gian làm việc
+            </Link>
+            <button className="pj-logout" onClick={onLogout}>
+              Đăng xuất
+            </button>
+          </div>
+        )}
       </header>
 
       <main id="content" tabIndex={-1}>
@@ -287,7 +289,7 @@ export default function ProjectInfo({
         <span>
           EcoTray <b>·</b> {projectMeta.tagline}
         </span>
-        <Link to={workspacePath()}>← Quay lại không gian làm việc</Link>
+        {account && <Link to={workspacePath()}>← Quay lại không gian làm việc</Link>}
       </footer>
     </div>
   );

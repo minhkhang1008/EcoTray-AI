@@ -20,11 +20,12 @@ function Root() {
   const route = useRoute();
   useEffect(() => {
     if (route.page !== 'project') rememberWorkspace(route.path);
-    document.title = account
-      ? `${pageTitles[route.page]} · EcoTray`
-      : 'Đăng nhập · EcoTray';
+    document.title =
+      account || route.page === 'project'
+        ? `${pageTitles[route.page]} · EcoTray`
+        : 'Đăng nhập · EcoTray';
   }, [route, account]);
-  if (!account) return <Login onLogin={setAccount} />;
+  if (!account && route.page !== 'project') return <Login onLogin={setAccount} />;
   const signOut = () => {
     logout();
     setAccount(null);
@@ -35,7 +36,7 @@ function Root() {
       {route.page === 'project' ? (
         <ProjectInfo account={account} onLogout={signOut} />
       ) : (
-        <App key={account.email} account={account} onLogout={signOut} />
+        <App key={account!.email} account={account!} onLogout={signOut} />
       )}
     </FinalRoundProvider>
   );
