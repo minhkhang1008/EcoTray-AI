@@ -2,19 +2,32 @@ import { ComboFields } from "./DecisionSupport";
 import { useEffect, useMemo, useState } from "react";
 import { parseCSV, exportCSV, keys, labels } from "../lib/core.mjs";
 import {
+  defaultPriorityThresholds,
   demoRows,
   filterRows,
+  menuPriority,
   menuStats,
+  needsReview,
   portalMenus,
+  priorityThresholdError,
 } from "../lib/analytics.mjs";
+import PriorityThresholds, { type Thresholds } from "./PriorityThresholds";
 import Overview from "./Overview";
+import DateFilter from "./DateFilter";
+import MenuSlotFilter from "./MenuSlotFilter";
+import { filterMenuSlots } from "../lib/menu-slots.mjs";
 import MenuTable from "./MenuTable";
 import Icon, { type IconName } from "./Icon";
 import Vision from "./VisionLab";
 import { RealtimeFunnel } from "./PTNKVision";
+import { boardingDays } from "../lib/boarding-menu.mjs";
+import MenuCalendar from "./MenuCalendar";
+import MenuAnalysis from "./MenuAnalysis";
+import { ZoomableImage } from "./ImageZoom";
 import DishDrawer from "./DishDrawer";
 import QuickLog from "./QuickLog";
 import type { Account } from "./auth";
+import { DeviceStatus, SchoolIllustration, TopbarTools, type WorkspaceAlert } from "./WorkspaceHeader";
 import { useFinalRound } from "./FinalRoundContext";
 import { ConnectionControls, NfcTerminal } from "./Pipeline";
 import { AdapterSettings, InterventionHistory } from "./OperationalPanels";
@@ -33,18 +46,31 @@ const today = () =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(
     new Date(),
   );
+// Bỏ qua ngày tương lai để bản ghi nhập nhầm không chiếm màn hình mở đầu.
+const latestDate = (rows: Row[]) => {
+  const now = today();
+  return rows.reduce(
+    (latest, r) => (r.date <= now && r.date > latest ? r.date : latest),
+    "",
+  );
+};
 const navigation = [
   ["overview", "Tổng quan"],
-  ["menus", "Phân tích thực đơn"],
+  ["menu", "Thực đơn"],
   ["vision", "EcoTray Vision"],
   ["log", "Ghi nhận khay"],
   ["data", "Dữ liệu & cấu hình"],
+] as const;
+const menuTabs = [
+  ["menu", "Lịch thực đơn", "calendar", "calendar"],
+  ["menus", "Thống kê", "data", "stats"],
+  ["analysis", "Phân tích", "chart", "analysis"],
 ] as const;
 // Stage remains separate from the operational workspace.
 
 const mobileNavigation = {
   overview: "Tổng quan",
-  menus: "Thực đơn",
+  menu: "Thực đơn",
   vision: "Vision",
   log: "Ghi nhận",
   data: "Dữ liệu",
@@ -70,16 +96,37 @@ export default function App({
   const final = useFinalRound();
   const route = useRoute();
   // Trang đang mở lấy từ URL (/vision, /log/nfc, /data/settings…); App không được dựng cho /project.
-  const tab = route.page;
+  const tab: string = route.page === "menu"
+    ? menuTabs.find(([, , , sub]) => sub === route.sub)![0]
+    : route.page;
   const logView = route.page === "log" ? route.sub! : "manual";
   const dataView = route.page === "data" ? route.sub! : "records";
+  const setTab = (id: string) => {
+    const menuTab = menuTabs.find(([tabId]) => tabId === id);
+    navigate(menuTab ? `/menu/${menuTab[3]}` : `/${id}`);
+  };
+  const setLogView = (view: string) => navigate(`/log/${view}`);
+  const setDataView = (view: string) => navigate(`/data/${view}`);
+  const openingDay = () => latestDate(isPtnk ? demoRows : []) || today();
   const [selectedDish, setSelectedDish] = useState("");
   const [rows, setRows] = useState<Row[]>([]),
     [ready, setReady] = useState(false),
     [message, setMessage] = useState("");
+  const isMenuTab = menuTabs.some(([id]) => id === tab);
+  const thresholdKey = isPtnk ? "ecotray-priority-thresholds" : "ecotray-priority-thresholds-hcm";
+  const [thresholds, setThresholds] = useState<Thresholds>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(thresholdKey) || "null");
+      if (saved && !priorityThresholdError(saved)) return saved;
+    } catch {
+      /* dùng ngưỡng mặc định nếu không đọc được */
+    }
+    return defaultPriorityThresholds;
+  });
+  const [menuSlots, setMenuSlots] = useState([1, 2, 3, 4]);
   const [menu, setMenu] = useState(""),
-    [from, setFrom] = useState(""),
-    [to, setTo] = useState(""),
+    [from, setFrom] = useState(openingDay),
+    [to, setTo] = useState(openingDay),
     [search, setSearch] = useState(""),
     [page, setPage] = useState(0);
   const [entry, setEntry] = useState({
@@ -129,36 +176,43 @@ export default function App({
         setMessage("Bộ nhớ đầy. Xuất CSV để giữ dữ liệu.");
       }
   }, [rows, ready]);
-  useEffect(() => setPage(0), [menu, from, to, search]);
+  useEffect(() => setPage(0), [menu, menuSlots, from, to, search]);
   const source: Row[] = useMemo(
     () => (isPtnk ? [...demoRows, ...rows] : rows),
     [isPtnk, rows],
   );
   const filtered = useMemo(
     () =>
-      filterRows(source, {
+      filterRows(filterMenuSlots(source, isPtnk ? boardingDays : [], menuSlots), {
         menu,
         from,
         to,
-        search: tab === "data" ? search : "",
+        search: tab === "data" || tab === "menus" ? search : "",
       }),
-    [source, menu, from, to, search, tab],
+    [source, menu, menuSlots, isPtnk, from, to, search, tab],
   );
   const menus = useMemo(() => menuStats(filtered), [filtered]);
+  const allMenus = useMemo(() => menuStats(source), [source]);
+  const allDishes = useMemo(() => menuStats(source), [source]);
+  const latestDay = useMemo(() => latestDate(source), [source]);
+  const isToday = from === today() && to === from,
+    isLatest = Boolean(latestDay) && from === latestDay && to === from,
+    isAllTime = !from && !to,
+    isCustom = !isToday && !isLatest && !isAllTime,
+    filtering = Boolean(menu) || menuSlots.length !== 4 || isCustom;
+  function showDay(date: string) {
+    setFrom(date);
+    setTo(date);
+  }
   function reset() {
     setMenu("");
-    setFrom("");
-    setTo("");
+    setMenuSlots([1, 2, 3, 4]);
+    showDay(latestDay || today());
     setSearch("");
   }
-  function period(days: number) {
-    const end = [...new Set(source.map((r) => r.date))].sort().at(-1);
-    if (!end) return;
-    const d = new Date(end + "T00:00:00Z");
-    d.setUTCDate(d.getUTCDate() - days + 1);
-    setFrom(d.toISOString().slice(0, 10));
-    setTo(end);
-  }
+  useEffect(() => {
+    if (ready) showDay(latestDay || today());
+  }, [ready]);
   async function importFile(file: File) {
     try {
       if (file.size > 2000000) throw Error("Tệp CSV tối đa 2 MB.");
@@ -169,6 +223,7 @@ export default function App({
         );
       setRows((old) => [...old, ...data]);
       reset();
+      showDay("");
       setMessage(`Đã nhập ${fmt(data.length)} bản ghi.`);
     } catch (e) {
       setMessage((e as Error).message);
@@ -201,13 +256,28 @@ export default function App({
     }
     setRows((old) => [...old, row]);
     reset();
+    showDay(row.date === today() ? row.date : "");
     setMessage("Đã lưu bản ghi.");
     setEntry({ ...entry, rice: "NA", vegetables: "NA", main: "NA", soup: "NA" });
   }
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [route.path]);
-  const viewingRows = tab === "overview" || tab === "menus" || (tab === "data" && dataView === "records");
+  const viewingRows = tab === "overview" || tab === "menus" || tab === "analysis" || (tab === "data" && dataView === "records");
+  const nfcActive = Boolean(final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000),
+    cameraActive = Boolean(final.vision.online && final.vision.hardware && Date.now() - Date.parse(final.vision.hardware.analysis.timestamp) < 60000);
+  const priorityCount = menus.filter((m) => needsReview(m, thresholds)).length;
+  const alerts: WorkspaceAlert[] = [
+    ...(priorityCount
+      ? [{ id: "priority", text: `${priorityCount} món cần xem lại phần rau`, onOpen: () => setTab("menus") }]
+      : []),
+    ...(final.storageError ? [{ id: "storage", text: final.storageError }] : []),
+  ];
+  function submitSearch() {
+    showDay("");
+    if (tab !== "data") setTab("menus");
+    if (tab === "data") setDataView("records");
+  }
   const table = filtered
     .slice()
     .reverse()
@@ -240,33 +310,40 @@ export default function App({
         </div>
         <p className="nav-label">QUẢN LÝ CĂN TIN</p>
         <nav aria-label="Điều hướng">
-          {navigation.map(([id, title]) => (
-            <Link
-              key={id}
-              to={"/" + id}
-              className={tab === id ? "nav-item active" : "nav-item"}
-              aria-current={tab === id ? "page" : undefined}
-              aria-label={title}
-              onNavigate={() => setMessage("")}
-            >
-              <span className="nav-symbol">
-                <Icon name={id as IconName} size={20} />
-              </span>
-              <span className="nav-title">{title}</span>
-              <span className="nav-short">{mobileNavigation[id]}</span>
-            </Link>
-          ))}
+          {navigation.map(([id, title]) => {
+            const isActive = id === "menu" ? isMenuTab : tab === id;
+            return (
+              <Link
+                key={id}
+                to={id === "menu" && isMenuTab ? route.path : "/" + id}
+                className={isActive ? "nav-item active" : "nav-item"}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={title}
+                onNavigate={() => {
+                  setMessage("");
+                  if (id !== "menu" && id !== "data") setSearch("");
+                }}
+              >
+                <span className="nav-symbol">
+                  <Icon name={id as IconName} size={20} />
+                </span>
+                <span className="nav-title">{title}</span>
+                <span className="nav-short">{mobileNavigation[id]}</span>
+              </Link>
+            );
+          })}
         </nav>
         <div className="sidebar-bottom">
+          <SchoolIllustration />
           <Link
             to="/project"
-            className="sidebar-project-link"
-            aria-label="Thông tin dự án"
+            className="logout-button"
+            onNavigate={() => setMessage("")}
           >
-            Thông tin dự án
+            <Icon name="help" size={20} /> Phương pháp & trợ giúp
           </Link>
           <button className="logout-button" onClick={onLogout}>
-            Đăng xuất
+            <Icon name="logout" size={20} /> Đăng xuất
           </button>
         </div>
       </aside>
@@ -274,24 +351,58 @@ export default function App({
         <div className="topbar">
           <div className="breadcrumb">
             Không gian làm việc <span>/</span>{" "}
-            <b>{navigation.find((n) => n[0] === tab)?.[1]}</b>
+            <b>{isMenuTab ? "Thực đơn" : navigation.find((n) => n[0] === tab)?.[1]}</b>
+            {isMenuTab && (
+              <> <span>/</span> <b>{menuTabs.find(([id]) => id === tab)?.[1]}</b></>
+            )}
           </div>
           <div className="topbar-right">
-            <span className="iot-header-status" role="status">
-              <i className={final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'online' : ''} />
-              Trạm IoT Căn tin · {final.connected && final.remote?.online && Date.now() - Date.parse(final.remote.lastUpdatedAt ?? '') < 60000 ? 'NFC có tín hiệu' : 'Chờ NFC'} · {final.vision.online && final.vision.hardware && Date.now()-Date.parse(final.vision.hardware.analysis.timestamp)<60000 ? 'Camera có tín hiệu' : 'Chờ ESP32-CAM'}
-            </span>
+            <TopbarTools
+              search={search}
+              onSearch={setSearch}
+              onSubmit={submitSearch}
+              alerts={alerts}
+              currentTab={tab}
+              onSelectTab={(newTab) => {
+                setTab(newTab);
+                setMessage("");
+              }}
+              onSelectLogView={(view) => {
+                setTab("log");
+                setLogView(view);
+                setMessage("");
+              }}
+              onSelectDataView={(view) => {
+                setTab("data");
+                setDataView(view);
+                setMessage("");
+              }}
+              onSelectDish={(dishName) => {
+                setSelectedDish(dishName);
+              }}
+              onExportCSV={() =>
+                download(
+                  `EcoTray-${mode}-${today()}.csv`,
+                  exportCSV(filtered),
+                )
+              }
+              onLogout={onLogout}
+              allDishes={allDishes}
+            />
             <span className="avatar" aria-label={account.schoolName}>{account.initial}</span>
           </div>
         </div>
         <main id="content" tabIndex={-1}>
           <header className="page-header">
             <div>
-              <span className="workspace-eyebrow">ECOTRAY</span>
               <h1>
                 {tab === "overview"
-                  ? "Tổng quan vận hành"
-                  : tab === "menus"
+                  ? "Tổng quan căn tin"
+                  : tab === "menu"
+                    ? "Lịch thực đơn"
+                    : tab === "menus"
+                    ? "Thống kê thực đơn"
+                    : tab === "analysis"
                     ? "Phân tích thực đơn"
                     : tab === "vision"
                       ? "EcoTray Vision"
@@ -300,8 +411,13 @@ export default function App({
                         : "Dữ liệu & cấu hình"}
               </h1>
               {tab === "overview" && <p>Theo dõi phần còn lại và hiệu quả sử dụng khay tại căn tin.</p>}
+              {tab === "menu" && <p>Xem thực đơn hằng ngày của căn tin.</p>}
+              {tab === "analysis" && <p>So sánh món, xem xu hướng và việc cần xem xét.</p>}
             </div>
             <div className="header-actions">
+              {(tab === "overview" || tab === "vision") && (
+                <DeviceStatus nfc={nfcActive} camera={cameraActive} />
+              )}
               {viewingRows && (
                 <button
                   className="export-action"
@@ -327,7 +443,22 @@ export default function App({
               )}
             </div>
           </header>
-          {tab === "data" && dataView !== "records" ? null : tab === "vision" || tab === "log" ? (
+          {isMenuTab && (
+            <div className="subtabs menu-subtabs" role="group" aria-label="Thực đơn">
+              {menuTabs.map(([id, label, icon]) => (
+                <button
+                  key={id}
+                  aria-pressed={tab === id}
+                  className={tab === id ? "selected" : ""}
+                  onClick={() => setTab(id)}
+                >
+                  <Icon name={icon as IconName} size={17} /> {label}
+                </button>
+              ))}
+            </div>
+          )}
+          {tab === "menu" && <MenuCalendar days={isPtnk ? boardingDays : []} today={today()} />}
+          {tab === "data" && dataView !== "records" ? null : tab === "menu" ? null : tab === "vision" || tab === "log" ? (
             <div className="source-notice">
               <span className="badge">
                 {tab === "vision"
@@ -369,18 +500,16 @@ export default function App({
 
           {(tab === "overview" ||
             tab === "menus" ||
+            tab === "analysis" ||
             (tab === "data" && dataView === "records")) && (
             <section className="filter-toolbar" aria-label="Phạm vi phân tích">
               <div className="filter-scope">
-                <strong>{menu || "Toàn bộ thực đơn"}</strong>
-                <span>
-                  {from || to
-                    ? `${from ? from.split("-").reverse().join("/") : "Đầu kỳ"} – ${to ? to.split("-").reverse().join("/") : "Cuối kỳ"}`
-                    : "Toàn bộ thời gian"}
-                </span>
+                <MenuSlotFilter selected={menuSlots} onChange={setMenuSlots} />
+                <DateFilter today={today()} latestDay={latestDay} from={from} to={to}
+                  onChange={(start, end) => { setFrom(start); setTo(end); }} />
               </div>
               <div className="filter-tools">
-                {(menu || from || to) && (
+                {filtering && (
                   <button className="text-button" onClick={reset}>
                     Xóa bộ lọc
                   </button>
@@ -388,7 +517,7 @@ export default function App({
                 <details className="filter-details">
                   <summary>
                     <Icon name="filter" size={17} /> Lọc dữ liệu
-                    {(menu || from || to) && (
+                    {filtering && (
                       <span className="filter-count">Đang lọc</span>
                     )}
                   </summary>
@@ -405,28 +534,13 @@ export default function App({
                         ))}
                       </select>
                     </label>
-                    <label>
-                      Từ ngày
-                      <input
-                        type="date"
-                        value={from}
-                        onChange={(e) => setFrom(e.target.value)}
-                      />
-                    </label>
-                    <label>
-                      Đến ngày
-                      <input
-                        type="date"
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                      />
-                    </label>
                     <div className="filter-presets">
-                      <button onClick={() => period(7)}>7 ngày</button>
-                      <button onClick={() => period(30)}>30 ngày</button>
                       <button
-                        className={!from && !to && !menu ? "chosen" : ""}
-                        onClick={reset}
+                        className={isAllTime && !menu ? "chosen" : ""}
+                        onClick={() => {
+                          setMenu("");
+                          showDay("");
+                        }}
                       >
                         Toàn kỳ
                       </button>
@@ -440,18 +554,29 @@ export default function App({
             <Overview
               rows={filtered}
               mode={mode}
+              thresholds={thresholds}
+              isToday={isToday}
+              onShowAll={source.length ? () => showDay("") : undefined}
               onDish={setSelectedDish}
               onImport={() => navigate("/data/records")}
-              onMenus={() => navigate("/menus")}
+              onMenus={() => navigate("/menu/stats")}
               onRecord={() => navigate("/log/manual")}
             />
           )}
           {tab === "overview" && (final.remote?.latestNfc || final.vision.active || final.state.capture) && <RealtimeFunnel />}
+          {tab === "analysis" && (
+            <MenuAnalysis
+              rows={filtered}
+              mode={mode}
+              thresholds={thresholds}
+              onDish={setSelectedDish}
+            />
+          )}
           {tab === "menus" && (
             <section className="menu-catalog">
               <div className="section-heading">
                 <div>
-                  <h2>Danh mục thực đơn</h2>
+                  <h2>Lượng thức ăn bỏ thừa</h2>
                   <p>
                     {menus.length} món · {fmt(filtered.length)} khay ghi nhận
                   </p>
@@ -486,6 +611,7 @@ export default function App({
                 <MenuTable
                   menus={menus}
                   showSource={mode === "demo"}
+                  thresholds={thresholds}
                   onSelect={setSelectedDish}
                 />
               ) : (
@@ -496,7 +622,7 @@ export default function App({
                         portalMenus
                           .find((p) => p.name === m.menu)
                           ?.images.at(-1) && (
-                          <img
+                          <ZoomableImage
                             className="menu-photo"
                             src={
                               "." +
@@ -505,13 +631,14 @@ export default function App({
                                 .images.at(-1)!.path
                             }
                             alt={m.menu}
+                            label={m.menu}
                             loading="lazy"
                           />
                         )}
                       <span className="badge">
-                        {m.vegetables.n < 10
+                        {menuPriority(m, thresholds).level === "insufficient"
                           ? "Chưa đủ mẫu"
-                          : m.vegetables.mean >= 20
+                          : needsReview(m, thresholds)
                             ? "Cần xem xét"
                             : "Đang theo dõi"}
                       </span>
@@ -651,6 +778,7 @@ export default function App({
                 ["records", "Bản ghi khay"],
                 ["interventions", "Lịch sử quyết định"],
                 ["settings", "Cấu hình trường"],
+                ["thresholds", "Cấu hình ngưỡng"],
               ].map(([id, label]) => (
                 <button
                   key={id}
@@ -788,6 +916,23 @@ export default function App({
           {tab === "data" && dataView === "settings" && (
             <div className="settings-stack">
               <AdapterSettings />
+            </div>
+          )}
+          {tab === "data" && dataView === "thresholds" && (
+            <div className="settings-stack">
+              <PriorityThresholds
+                value={thresholds}
+                menus={allMenus}
+                onSave={(next) => {
+                  setThresholds(next);
+                  try {
+                    localStorage.setItem(thresholdKey, JSON.stringify(next));
+                    setMessage("Đã lưu ngưỡng ưu tiên.");
+                  } catch {
+                    setMessage("Ngưỡng chỉ áp dụng trong phiên này vì không lưu được trên trình duyệt.");
+                  }
+                }}
+              />
             </div>
           )}
           {selectedDish && (

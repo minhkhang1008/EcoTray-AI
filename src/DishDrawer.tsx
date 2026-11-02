@@ -10,6 +10,20 @@ import {
 import type { TrayRow } from "../lib/contracts";
 import { number, percent } from "./format";
 import TrendChart from "./TrendChart";
+
+function ImagePreview({ src, name, onClose }: { src: string; name: string; onClose: () => void }) {
+  const preview = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    preview.current?.showModal();
+    return () => preview.current?.close();
+  }, []);
+  return <dialog ref={preview} className="dish-image-preview" aria-label={`Ảnh phóng to ${name}`}
+    onCancel={e => { e.preventDefault(); e.stopPropagation(); onClose(); }}
+    onClose={e => e.stopPropagation()}>
+    <div className="dish-image-preview-header"><strong>{name}</strong><button autoFocus onClick={onClose} aria-label="Đóng ảnh phóng to">Đóng ×</button></div>
+    <img src={src} alt={`Ảnh món ${name} từ Portal PTNK`} />
+  </dialog>;
+}
 export default function DishDrawer({
   name,
   rows,
@@ -23,6 +37,7 @@ export default function DishDrawer({
 }) {
   const dialog = useRef<HTMLDialogElement>(null),
     [trim, setTrim] = useState(true),
+    [imageOpen, setImageOpen] = useState(false),
     subset = useMemo(() => rows.filter((r) => r.menu === name), [rows, name]),
     filtered = useMemo(() => trimOutliers(subset), [subset]);
   const selected = trim ? filtered.rows : subset,
@@ -54,7 +69,10 @@ export default function DishDrawer({
       <div className="dish-detail-hero">
         {image ? (
           <figure>
-            <img src={"." + image} alt={name} />
+            <button className="dish-image-zoom" onClick={() => setImageOpen(true)} aria-label={`Phóng to ảnh ${name}`}>
+              <img src={"." + image} alt={name} />
+              <span>Phóng to ảnh</span>
+            </button>
             <figcaption>
               Ảnh thật từ Portal PTNK ·{" "}
               {portal!.date.split("-").reverse().join("/")}
@@ -90,20 +108,7 @@ export default function DishDrawer({
             />
             Lọc dị ứng & ngoại lai IQR
           </label>
-          <p className="fine">
-            {filtered.flagged} mẫu có cờ cơ địa · {filtered.statistical} mẫu
-            vượt ngưỡng IQR ·{" "}
-            {filtered.total
-              ? number((filtered.removed / filtered.total) * 100)
-              : "0"}
-            % được tách khi bật lọc.
-          </p>
-          <p className="fine">
-            {mode === "demo"
-              ? "Dữ liệu chưa có hồ sơ dị ứng: số mẫu có cờ bằng 0. "
-              : ""}
-            IQR chỉ phát hiện bất thường; không xác định nguyên nhân y tế.
-          </p>
+
         </div>
       </div>
       <MealComboLine main={name} rows={subset} />
@@ -113,16 +118,12 @@ export default function DishDrawer({
       })()}</p>}
       <section className="dish-trend">
         <h3>Phần còn lại theo ngày phục vụ</h3>
-        {days.length === 1 && (
-          <p className="fine">
-            Món này chỉ có một ngày nguồn. Cần đo lại ở lần phục vụ sau để so
-            sánh thực tế.
-          </p>
-        )}
+
         <TrendChart data={days} />
 
       </section>
 
+      {image && imageOpen && <ImagePreview src={"." + image} name={name} onClose={() => setImageOpen(false)} />}
     </dialog>
   );
 }

@@ -19,6 +19,7 @@ import {
 } from "./lib/ecotrayVisionEngine";
 import { useFinalRound } from "./FinalRoundContext";
 import { number } from "./format";
+import { ZoomableImage, ZoomCornerButton } from "./ImageZoom";
 import { isCleanTray } from "../lib/clean-attribution.mjs";
 import { ConnectionControls, TrayPreview, DecisionCard } from "./Pipeline";
 export function VisionResult({
@@ -40,8 +41,9 @@ export function VisionResult({
     <>
       <div className="ptnk-overlay" style={analysis.stationLayout?.rotation === 90 ? {aspectRatio:"3/4"} : undefined}>
         {imageUrl ? (
-          <img
+          <ZoomableImage
             src={imageUrl}
+            label="khay đang phân tích"
             alt="Khay thức ăn với các vùng phân tích theo chiều khay"
           />
         ) : (
@@ -344,31 +346,36 @@ export default function PTNKVision() {
       </p>
       <div className="ptnk-gallery" aria-label={MODEL.realTraysCount + " mẫu ảnh khay thực địa"}>
         {Object.entries(PTNK_TRAYS_CATALOG).map(([id, m], i) => (
-          <button
-            key={id}
-            aria-pressed={sampleId === id}
-            onClick={() => choose(id)}
-            title={m.combo + " · " + id}
-          >
-            <img
+          <div className="ptnk-gallery-tile" key={id}>
+            <button
+              aria-pressed={sampleId === id}
+              onClick={() => choose(id)}
+              title={m.combo + " · " + id}
+            >
+              <img
+                src={"./ptnk-normalized/" + id}
+                alt={"Mẫu " + (i + 1) + " · " + m.combo}
+                loading="lazy"
+              />
+              <strong>
+                {String(i + 1).padStart(2, "0")} · {m.date.slice(8)}/
+                {m.date.slice(5, 7)}
+              </strong>
+              <small>
+                {id === MODEL.anchors.empty
+                  ? "Mốc sạch 0%"
+                  : id === MODEL.anchors.full
+                    ? "Mốc đầy 100%"
+                    : m.group !== id
+                      ? "Góc chụp lặp"
+                      : "Khay tham chiếu"}
+              </small>
+            </button>
+            <ZoomCornerButton
               src={"./ptnk-normalized/" + id}
-              alt={"Mẫu " + (i + 1) + " · " + m.combo}
-              loading="lazy"
+              label={"mẫu " + (i + 1) + " · " + m.combo}
             />
-            <strong>
-              {String(i + 1).padStart(2, "0")} · {m.date.slice(8)}/
-              {m.date.slice(5, 7)}
-            </strong>
-            <small>
-              {id === MODEL.anchors.empty
-                ? "Mốc sạch 0%"
-                : id === MODEL.anchors.full
-                  ? "Mốc đầy 100%"
-                  : m.group !== id
-                    ? "Góc chụp lặp"
-                    : "Khay tham chiếu"}
-            </small>
-          </button>
+          </div>
         ))}
       </div>
       <div className="section-heading">

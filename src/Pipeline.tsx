@@ -4,6 +4,7 @@ import { useFinalRound } from "./FinalRoundContext";
 import type { Capture } from "../lib/contracts";
 import { componentKeys, componentLabels } from "../lib/final-round.mjs";
 import { number, percent } from "./format";
+import { ZoomableImage } from "./ImageZoom";
 import { responseJson } from "./iotClient";
 
 type Reader = {
@@ -307,8 +308,9 @@ export function TrayPreview({
         aria-busy={scanning}
       >
         {image && !failed ? (
-          <img
+          <ZoomableImage
             src={image}
+            label="toàn khay"
             onError={() => setFailed(true)}
             alt="Ảnh toàn khay; không có khuôn mặt"
             referrerPolicy="no-referrer"

@@ -1,9 +1,12 @@
-import { daily, menuStats, overall, portalMenus } from "../lib/analytics.mjs";
+import { daily, menuStats, needsReview, overall, portalMenus } from "../lib/analytics.mjs";
+import type { Thresholds } from "./PriorityThresholds";
 import { summarize } from "../lib/core.mjs";
 import type { ComponentKey, TrayRow } from "../lib/contracts";
 import { number, percent } from "./format";
 import Icon from "./Icon";
 import TrendChart from "./TrendChart";
+import ComponentDonut from "./ComponentDonut";
+import { ZoomableImage } from "./ImageZoom";
 import MenuTable from "./MenuTable";
 
 const components: { key: ComponentKey; label: string }[] = [
@@ -14,6 +17,9 @@ const components: { key: ComponentKey; label: string }[] = [
 export default function Overview({
   rows,
   mode,
+  thresholds,
+  isToday,
+  onShowAll,
   onDish,
   onMenus,
   onRecord,
@@ -21,6 +27,10 @@ export default function Overview({
 }: {
   rows: TrayRow[];
   mode: string;
+  thresholds: Thresholds;
+  isToday: boolean;
+  /** Có khi nguồn còn dữ liệu ngoài phạm vi thời gian đang xem. */
+  onShowAll?: () => void;
   onDish: (name: string) => void;
   onMenus: () => void;
   onRecord: () => void;
@@ -29,9 +39,7 @@ export default function Overview({
   const menus = menuStats(rows),
     stats = summarize(rows),
     days = daily(rows);
-  const priority = menus.filter(
-    (m) => m.vegetables.n >= 10 && m.vegetables.mean >= 20,
-  );
+  const priority = menus.filter((m) => needsReview(m, thresholds));
   const observations = components.reduce(
     (total, { key }) => total + stats[key].n,
     0,
@@ -55,14 +63,22 @@ export default function Overview({
               ? "Cần bếp xem xét"
               : rows.length
                 ? "Tiếp tục theo dõi"
-                : "Chưa có dữ liệu phân tích"}
+                : onShowAll
+                  ? isToday
+                    ? "Chưa có dữ liệu hôm nay"
+                    : "Chưa có dữ liệu trong phạm vi này"
+                  : "Chưa có dữ liệu phân tích"}
           </div>
           <h2 id="decision-title">
             {first
               ? `${priority.length} món cần xem lại phần rau`
               : rows.length
                 ? "Chưa có món ưu tiên về rau."
-                : "Bắt đầu từ một khay ăn."}
+                : onShowAll
+                  ? isToday
+                    ? "Hôm nay chưa có khay nào được ghi nhận."
+                    : "Không có khay trong phạm vi đang xem."
+                  : "Bắt đầu từ một khay ăn."}
           </h2>
           <p>
             {first ? (
@@ -73,6 +89,8 @@ export default function Overview({
               </>
             ) : rows.length ? (
               "Chưa có món đủ điều kiện ưu tiên về rau. Xem cả Cơm, Rau và Món chính; bổ sung quan sát trước khi quyết định."
+            ) : onShowAll ? (
+              "Ghi nhận khay mới, hoặc xem toàn bộ thời gian để phân tích dữ liệu đã có."
             ) : (
               "Ghi nhận khay hoặc nhập CSV để xem phần còn lại theo món và nhận khuyến nghị cho bếp."
             )}
@@ -92,10 +110,17 @@ export default function Overview({
                 ? "Xem món ưu tiên"
                 : rows.length
                   ? "Xem thực đơn"
-                  : "Ghi nhận khay đầu tiên"}
+                  : onShowAll
+                    ? "Ghi nhận khay"
+                    : "Ghi nhận khay đầu tiên"}
               <Icon name="arrow" size={17} />
             </button>
-            {!rows.length && <button onClick={onImport}>Nhập CSV</button>}
+            {!rows.length &&
+              (onShowAll ? (
+                <button onClick={onShowAll}>Xem toàn bộ thời gian</button>
+              ) : (
+                <button onClick={onImport}>Nhập CSV</button>
+              ))}
             <span>
               {first
                 ? "Bếp duyệt trước khi điều chỉnh"
@@ -103,7 +128,7 @@ export default function Overview({
             </span>
           </div>
         </div>
-        {photo && <figure className="decision-photo"><img src={"." + photo} alt={`Khay món ${first!.menu} từ Portal PTNK`} width={800} height={600} fetchPriority="high" /><figcaption><Icon name="leaf" size={20} /><span><strong>{percent(first!.vegetables.mean)}</strong><small>rau còn lại</small></span></figcaption></figure>}
+        {photo && <figure className="decision-photo"><ZoomableImage src={"." + photo} label={first!.menu} alt={`Khay món ${first!.menu} từ Portal PTNK`} width={800} height={600} fetchPriority="high" /><figcaption><Icon name="leaf" size={20} /><span><strong>{percent(first!.vegetables.mean)}</strong><small>rau còn lại</small></span></figcaption></figure>}
       </section>
         {first ? (
           <div className="priority-preview">
@@ -116,9 +141,6 @@ export default function Overview({
                   <Icon name="arrow" size={15} />
                 </button>
               ))}
-              <small>
-                Tỷ lệ trước lọc ngoại lai · Tối thiểu 10 quan sát/món
-              </small>
             </div>
           </div>
         ) : null}
@@ -130,14 +152,14 @@ export default function Overview({
         aria-label="Số liệu trong kỳ đang xem"
       >
         <div>
-          <Icon name="log" size={23} />
+          <Icon name="tray" size={23} />
           <span>Khay ghi nhận</span>
           <strong>{number(rows.length)}</strong>
           <small>{days.length} ngày có dữ liệu</small>
         </div>
         <div>
           <Icon name="overview" size={23} />
-          <span>Phần còn lại trung bình</span>
+          <span>Thức ăn còn lại</span>
           <strong>{percent(overall(rows))}</strong>
           <small>Trên các thành phần hợp lệ</small>
         </div>
@@ -153,12 +175,12 @@ export default function Overview({
         </div>
         <div>
           <Icon name="menus" size={23} />
-          <span>Thực đơn đã ghi nhận</span>
+          <span>Món cần xem xét</span>
           <strong>
-            {menus.length}
+            {priority.length}
             <small> món</small>
           </strong>
-          <small>{priority.length} món ưu tiên xem xét rau</small>
+          <small>Trong {menus.length} món đã ghi nhận</small>
         </div>
       </section>
 
@@ -166,7 +188,7 @@ export default function Overview({
         <section className="panel trend-panel">
           <div className="section-heading">
             <div>
-              <h2>Phần còn lại qua từng ngày</h2>
+              <h2>{days.length === 1 ? "Phần còn lại trong ngày" : "Phần còn lại qua từng ngày"}</h2>
             </div>
           </div>
           <TrendChart data={days} />
@@ -174,28 +196,32 @@ export default function Overview({
         <section className="panel composition">
           <div className="section-heading">
             <h2>Theo thành phần</h2>
-            <span className="subtle">Bình quân</span>
           </div>
-          {components.map(({ key, label }, i) => (
-            <div className="component-bar" key={key}>
-              <div>
-                <span>
-                  <i className={`food-dot food-${i}`} />
-                  {label}
-                </span>
-                <strong>{percent(stats[key].mean)}</strong>
-              </div>
-              <div className="track">
-                <span
-                  className={`fill food-bg-${i}`}
-                  style={{ width: `${stats[key].mean ?? 0}%` }}
-                />
-              </div>
-              <small>{number(stats[key].n)} quan sát hợp lệ</small>
+          <div className="composition-body">
+            <ComponentDonut
+              items={components.map(({ key, label }) => ({ key, label, mean: stats[key].mean }))}
+              observations={observations}
+            />
+            <div className="composition-bars">
+              {components.map(({ key, label }, i) => (
+                <div className="component-bar" key={key}>
+                  <div>
+                    <span>
+                      <i className={`food-dot food-${i}`} />
+                      {label}
+                    </span>
+                    <strong>{percent(stats[key].mean)}</strong>
+                  </div>
+                  <div className="track">
+                    <span
+                      className={`fill food-bg-${i}`}
+                      style={{ width: `${stats[key].mean ?? 0}%` }}
+                    />
+                  </div>
+                  <small>{number(stats[key].n)} quan sát hợp lệ</small>
+                </div>
+              ))}
             </div>
-          ))}
-          <div className="component-footer">
-            Tỷ lệ phần còn lại trên khay, chưa quy đổi khối lượng.
           </div>
         </section>
       </div>
@@ -210,6 +236,7 @@ export default function Overview({
           </button>
         </div>
         <MenuTable
+          thresholds={thresholds}
           menus={menus.slice(0, 5)}
           showSource={mode === "demo"}
           onSelect={onDish}

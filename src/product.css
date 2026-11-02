@@ -1097,7 +1097,7 @@ textarea {
   }
   .product-workspace nav {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     overflow: visible;
     gap: 4px;
     margin-top: 16px;
@@ -1592,9 +1592,9 @@ textarea {
   .product-workspace .table-scroll .menu-table { min-width: 0; width: 100%; }
   .menu-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .menu-table tbody { display: block; }
-  .menu-table tbody tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 12px; border-bottom: 1px solid var(--line); }
+  .menu-table tbody tr { display: grid; grid-template-columns: repeat(auto-fit, minmax(56px, 1fr)); padding: 12px; border-bottom: 1px solid var(--line); }
   .product-workspace .menu-table td { display: flex; flex-direction: column; gap: 4px; padding: 6px 4px; border: 0; }
-  .menu-table td:first-child { grid-column: 1 / -1; }
+  .menu-table td.dish-name { grid-column: 1 / -1; }
   .product-workspace .menu-table .dish-row-button { width: 100%; white-space: normal; text-align: left; }
   .menu-cell-label { display: block; color: var(--muted); font-size: 11px; }
 }

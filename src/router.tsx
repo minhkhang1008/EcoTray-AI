@@ -7,21 +7,22 @@ import {
 
 /**
  * Bộ định tuyến History API tối giản (không phụ thuộc thư viện).
- * Mỗi trang có đường dẫn riêng: /overview, /menus, /vision, /log/manual, /data/records, /project…
+ * Mỗi trang có đường dẫn riêng: /overview, /menu/stats, /vision, /log/manual, /data/records, /project…
  * Máy chủ phải trả index.html cho các đường dẫn này (xem vercel.json, scripts/serve.mjs).
  */
-export const PAGES = ["overview", "menus", "vision", "log", "data", "project"] as const;
+export const PAGES = ["overview", "menu", "vision", "log", "data", "project"] as const;
 export type Page = (typeof PAGES)[number];
 
 /** Trang con (tab phụ) của từng trang; phần tử đầu tiên là mặc định. */
 export const SUBPAGES = {
+  menu: ["calendar", "stats", "analysis"],
   log: ["manual", "nfc", "calibration"],
-  data: ["records", "interventions", "settings"],
+  data: ["records", "interventions", "settings", "thresholds"],
 } as const satisfies Partial<Record<Page, readonly string[]>>;
 
 export const pageTitles: Record<Page, string> = {
   overview: "Tổng quan",
-  menus: "Phân tích thực đơn",
+  menu: "Thực đơn",
   vision: "EcoTray Vision",
   log: "Ghi nhận khay",
   data: "Dữ liệu & cấu hình",
@@ -42,6 +43,9 @@ export function parsePath(pathname: string): Route {
   // Liên kết cũ: Dữ liệu → Thông tin dự án.
   if (first === "data" && second === "project")
     return { page: "project", sub: null, path: "/project" };
+  // Liên kết cũ: /menus là bảng số liệu, nay thuộc Thực đơn → Thống kê.
+  if (first === "menus")
+    return { page: "menu", sub: "stats", path: "/menu/stats" };
   const page: Page = isPage(first) ? first : "overview";
   const subs = (SUBPAGES as Partial<Record<Page, readonly string[]>>)[page];
   const sub = subs ? (subs.includes(second) ? second : subs[0]) : null;
