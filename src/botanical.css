@@ -501,7 +501,8 @@ body { background:#f7f8f5; }
 .analysis-lead-value p { margin:0; color:var(--ink); font-size:16px; font-weight:600; }
 .analysis-lead-value strong { display:block; color:#0d4a2b; font-size:clamp(42px,4.4vw,56px); font-weight:700; line-height:1.1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
 .analysis-lead-side { padding-left:18px; border-left:1px solid #bdd4bb; font-size:13px; line-height:1.4; }
-.analysis-delta { display:block; color:#0d4a2b; font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; }
+.analysis-delta { display:block; color:#0d4a2b; font-size:15px; font-weight:650; font-variant-numeric:tabular-nums; }
+.analysis-lead-side small.analysis-delta-base { margin-bottom:4px; color:#1f3a2b; font-size:13px; }
 .analysis-lead-side small { display:block; color:#44594c; font-size:12px; }
 .analysis-figures { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0; }
 .analysis-figures>div { display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; align-content:center; padding:18px 20px; }

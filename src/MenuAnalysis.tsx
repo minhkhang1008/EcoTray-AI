@@ -73,7 +73,9 @@ export default function MenuAnalysis({
     ranking.flatMap(({ menu }) => parts.map(({ key }) => menu[key].mean ?? 0)),
   );
   const attention = summary.attention;
-  const change = attention ? previousPeriodChange(history, rows, attention.key) : null;
+  const comparison = attention ? previousPeriodChange(history, rows, attention.key) : null;
+  const dayLabel = (date: string) => date.split("-").reverse().join("/");
+  const rounded = comparison ? Math.round(comparison.change * 10) / 10 : 0;
   if (!rows.length)
     return (
       <div className="empty">
@@ -90,13 +92,21 @@ export default function MenuAnalysis({
             <strong>{percent(attention?.mean)}</strong>
           </div>
           <div className="analysis-lead-side">
-            {change !== null && (
+            {comparison && (
               <>
                 <span className="analysis-delta">
-                  {change > 0 ? "▲ +" : change < 0 ? "▼ −" : ""}
-                  {number(Math.abs(change))} điểm %
+                  {rounded > 0
+                    ? `▲ Tăng ${number(rounded)} điểm %`
+                    : rounded < 0
+                      ? `▼ Giảm ${number(-rounded)} điểm %`
+                      : "Không đổi"}
                 </span>
-                <small>so với kỳ trước</small>
+                <small className="analysis-delta-base">
+                  So với {percent(comparison.previous)}{" "}
+                  {comparison.from === comparison.to
+                    ? `của ngày ${dayLabel(comparison.from)}`
+                    : `của ${dayLabel(comparison.from)} – ${dayLabel(comparison.to)}`}
+                </small>
               </>
             )}
             <small>
