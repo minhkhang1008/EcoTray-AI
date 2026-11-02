@@ -8,7 +8,7 @@ export default function InterventionScenario() {
           <div>
             <h3>Trước & sau can thiệp</h3>
             <p>
-              Kịch bản mô phỏng toàn căn tin · chưa có kết quả sau can thiệp thực địa
+              Kịch bản mô phỏng toàn căn tin
             </p>
           </div>
           <span className="badge demo">−16,8%</span>
@@ -43,11 +43,6 @@ export default function InterventionScenario() {
             </span>
           ))}
         </div>
-        <p className="fine">
-          Khảo sát cặp món và định lượng, bảo vệ ngưỡng rau đã cấu hình; giữ nguyên tổng số suất. 63,1 →
-          52,5 kg/ngày là mô phỏng theo README, chưa có dữ liệu sau can thiệp
-          thực địa.
-        </p>
       </section>
   );
 }

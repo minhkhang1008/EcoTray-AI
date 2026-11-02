@@ -42,11 +42,6 @@ export function OperationalOverview() {
             </article>
           ))}
         </div>
-        <p className="fine">
-          Đây là các kịch bản, chưa phải tác động thực địa. Dự toán năm theo
-          README: 30 triệu nguyên liệu + 5,5 triệu phiếu giấy = 35,5 triệu
-          đồng/năm; không ngoại suy kịch bản tháng thành kết quả năm.
-        </p>
       </section>
     </>
   );
