@@ -120,7 +120,7 @@ export function VisionResult({
       )}
       <details className="method-details">
         <summary>{analysis.nutritionalFloorLocked ? "Chưa cho phép giảm rau" : "Ghi chú phương pháp"}</summary>
-        <p className="fine">W_min ≥ 85 g rau/khay và định lượng ban đầu là giả định bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng hoặc số đo cân. Ước lượng pixel có thể còn nhiễu từ inox, nước kho và dụng cụ.</p>
+        <p className="fine">W_min ≥ 85 g rau/khay</p>
       </details>
     </>
   );

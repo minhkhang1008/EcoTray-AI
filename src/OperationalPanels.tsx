@@ -100,10 +100,6 @@ export function AdapterSettings() {
         </span>
         <span className="badge ready">Kiểm định ngoại lai IQR</span>
       </div>
-      <p className="fine">
-        Đây là cấu hình trình diễn khả năng nhân rộng. Bật mô-đun không tự xác
-        nhận rằng Portal hoặc phần cứng đã được triển khai.
-      </p>
     </section>
   );
 }

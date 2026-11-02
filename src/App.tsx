@@ -1,4 +1,4 @@
-import { EvidenceRoadmap, ComboFields } from "./DecisionSupport";
+import { ComboFields } from "./DecisionSupport";
 import { useEffect, useMemo, useState } from "react";
 import { parseCSV, exportCSV, keys, labels } from "../lib/core.mjs";
 import {
@@ -10,7 +10,6 @@ import {
 import Overview from "./Overview";
 import MenuTable from "./MenuTable";
 import Icon, { type IconName } from "./Icon";
-import InterventionScenario from "./InterventionScenario";
 import Vision from "./VisionLab";
 import { RealtimeFunnel } from "./PTNKVision";
 import DishDrawer from "./DishDrawer";
@@ -18,12 +17,8 @@ import QuickLog from "./QuickLog";
 import type { Account } from "./auth";
 import { useFinalRound } from "./FinalRoundContext";
 import { ConnectionControls, NfcTerminal } from "./Pipeline";
-import {
-  OperationalOverview,
-  AdapterSettings,
-  CloudCalculator,
-  InterventionHistory,
-} from "./OperationalPanels";
+import { AdapterSettings, InterventionHistory } from "./OperationalPanels";
+import { Link, navigate, useRoute } from "./router";
 
 type Row = import("../lib/contracts").TrayRow;
 const fmt = (n: number) => new Intl.NumberFormat("vi-VN").format(n);
@@ -73,10 +68,13 @@ export default function App({
   const mode = isPtnk ? "demo" : "real";
   const storageKey = isPtnk ? "ecotray-records" : "ecotray-records-hcm";
   const final = useFinalRound();
-  const [selectedDish, setSelectedDish] = useState(""),
-    [logView, setLogView] = useState("manual");
-  const [tab, setTab] = useState("overview"),
-    [rows, setRows] = useState<Row[]>([]),
+  const route = useRoute();
+  // Trang đang mở lấy từ URL (/vision, /log/nfc, /data/settings…); App không được dựng cho /project.
+  const tab = route.page;
+  const logView = route.page === "log" ? route.sub! : "manual";
+  const dataView = route.page === "data" ? route.sub! : "records";
+  const [selectedDish, setSelectedDish] = useState("");
+  const [rows, setRows] = useState<Row[]>([]),
     [ready, setReady] = useState(false),
     [message, setMessage] = useState("");
   const [menu, setMenu] = useState(""),
@@ -92,10 +90,10 @@ export default function App({
     main: "NA",
     soup: "NA", riceDish: "", vegetableDish: "", soupDish: "",
   });
-  const [dataView, setDataView] = useState("records"),
-    [menuView, setMenuView] = useState("table");
+  const [menuView, setMenuView] = useState("table");
   useEffect(() => {
     final.setWatching(tab === "vision" || tab === "log");
+    return () => final.setWatching(false);
   }, [tab]);
   useEffect(() => {
     try {
@@ -208,7 +206,7 @@ export default function App({
   }
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, [tab, dataView]);
+  }, [route.path]);
   const viewingRows = tab === "overview" || tab === "menus" || (tab === "data" && dataView === "records");
   const table = filtered
     .slice()
@@ -216,17 +214,17 @@ export default function App({
     .slice(page * 20, page * 20 + 20);
   return (
     <div className="workspace product-workspace">
-      <a className="skip-link" href="#content">
+      <a className="skip-link" href={route.path + "#content"}>
         Đến nội dung chính
       </a>
       <aside className="sidebar">
-        <a href="#content" className="brand">
+        <Link to="/overview" className="brand" aria-label="EcoTray, về Tổng quan" onNavigate={() => setMessage("")}>
           <span className="brandmark">
             <Icon name="leaf" size={23} />
           </span>
           EcoTray
           <span className="brand-dot"></span>
-        </a>
+        </Link>
         <div className="workspace-name">
           <div className={account.logo ? "school-avatar has-logo" : "school-avatar"}>
             {account.logo ? (
@@ -243,25 +241,30 @@ export default function App({
         <p className="nav-label">QUẢN LÝ CĂN TIN</p>
         <nav aria-label="Điều hướng">
           {navigation.map(([id, title]) => (
-            <button
+            <Link
               key={id}
+              to={"/" + id}
               className={tab === id ? "nav-item active" : "nav-item"}
               aria-current={tab === id ? "page" : undefined}
               aria-label={title}
-              onClick={() => {
-                setTab(id);
-                setMessage("");
-              }}
+              onNavigate={() => setMessage("")}
             >
               <span className="nav-symbol">
                 <Icon name={id as IconName} size={20} />
               </span>
               <span className="nav-title">{title}</span>
               <span className="nav-short">{mobileNavigation[id]}</span>
-            </button>
+            </Link>
           ))}
         </nav>
         <div className="sidebar-bottom">
+          <Link
+            to="/project"
+            className="sidebar-project-link"
+            aria-label="Thông tin dự án"
+          >
+            Thông tin dự án
+          </Link>
           <button className="logout-button" onClick={onLogout}>
             Đăng xuất
           </button>
@@ -317,10 +320,7 @@ export default function App({
               {tab === "overview" && (
                 <button
                   className="record-action"
-                  onClick={() => {
-                    setTab("log");
-                    setLogView("manual");
-                  }}
+                  onClick={() => navigate("/log/manual")}
                 >
                   <Icon name="plus" size={17} /> Ghi nhận khay
                 </button>
@@ -441,12 +441,9 @@ export default function App({
               rows={filtered}
               mode={mode}
               onDish={setSelectedDish}
-              onImport={() => { setTab("data"); setDataView("records"); }}
-              onMenus={() => setTab("menus")}
-              onRecord={() => {
-                setTab("log");
-                setLogView("manual");
-              }}
+              onImport={() => navigate("/data/records")}
+              onMenus={() => navigate("/menus")}
+              onRecord={() => navigate("/log/manual")}
             />
           )}
           {tab === "overview" && (final.remote?.latestNfc || final.vision.active || final.state.capture) && <RealtimeFunnel />}
@@ -559,7 +556,7 @@ export default function App({
                     key={id}
                     aria-pressed={logView === id}
                     className={logView === id ? "selected" : ""}
-                    onClick={() => setLogView(id)}
+                    onClick={() => navigate(`/log/${id}`)}
                   >
                     {label}
                   </button>
@@ -654,13 +651,12 @@ export default function App({
                 ["records", "Bản ghi khay"],
                 ["interventions", "Lịch sử quyết định"],
                 ["settings", "Cấu hình trường"],
-                ["project", "Thông tin dự án"],
               ].map(([id, label]) => (
                 <button
                   key={id}
                   aria-pressed={dataView === id}
                   className={dataView === id ? "selected" : ""}
-                  onClick={() => setDataView(id)}
+                  onClick={() => navigate(`/data/${id}`)}
                 >
                   {label}
                 </button>
@@ -794,14 +790,6 @@ export default function App({
               <AdapterSettings />
             </div>
           )}
-          {tab === "data" && dataView === "project" && (
-            <div className="settings-stack">
-              <EvidenceRoadmap />
-              <InterventionScenario />
-              <OperationalOverview />
-              <CloudCalculator />
-            </div>
-          )}
           {selectedDish && (
             <DishDrawer
               name={selectedDish}
@@ -817,7 +805,7 @@ export default function App({
             </span>
             <span>
               {tab === "data" && dataView !== "records"
-                ? dataView === "project" ? "Thông tin dự án · nguồn được ghi riêng" : "Lưu trên trình duyệt này"
+                ? "Lưu trên trình duyệt này"
                 : tab === "vision"
                 ? "Ảnh & kết quả được ghi rõ nguồn"
                 : tab === "log"

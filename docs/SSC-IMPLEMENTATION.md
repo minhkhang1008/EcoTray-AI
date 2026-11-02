@@ -78,7 +78,7 @@ Reviewer độc lập Impeccable: `ship` cho bốn sửa đổi được chấm 
 
 ## Hiện trạng sau tinh giản giao diện (30/10/2026)
 
-Các mô tả UI theo ngày phía trên là lịch sử. Hiện tại Thực đơn mở danh sách trước; mỗi hàng mobile hiển thị số khay và ba tỷ lệ, không buộc kéo ngang. Không đặt luồng camera, bảng phối món hoặc ví dụ định lượng lên trước danh mục. Drawer chỉ giữ số liệu món; một ngày dùng bảng gọn. Kịch bản toàn căn tin chuyển sang Dữ liệu → Thông tin dự án cùng minh chứng, lộ trình và dự toán.
+Các mô tả UI theo ngày phía trên là lịch sử. Hiện tại Thực đơn mở danh sách trước; mỗi hàng mobile hiển thị số khay và ba tỷ lệ, không buộc kéo ngang. Không đặt luồng camera, bảng phối món hoặc ví dụ định lượng lên trước danh mục. Drawer chỉ giữ số liệu món; một ngày dùng bảng gọn. Kịch bản toàn căn tin chuyển sang trang độc lập `/project` (Thông tin dự án) cùng minh chứng, lộ trình và dự toán.
 
 Vision có hai mục: Trạm căn tin và Kiểm tra ảnh (mục Thử kịch bản đã gỡ ngày 01/11/2026). Màn trạm dùng chung phép chọn sự kiện mới nhất cho cả hiển thị và phím 5; phân tích trực tiếp và callback worker không dựng hai màn cạnh tranh. Phím 1/2/3, Space/4, 5 và R vẫn chạy nền. Quyết định lưu chung trên trình duyệt với nguồn phần cứng, mô phỏng NFC hoặc ảnh tham chiếu; ghi lặp cùng sự kiện không tạo thêm hàng. Mỗi sự kiện tham chiếu mới có revision riêng, kể cả sau tải lại trang. R chỉ đặt lại dữ liệu dự phòng, giữ quyết định phần cứng.
 

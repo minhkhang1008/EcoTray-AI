@@ -28,6 +28,7 @@ import type {
 } from "../lib/contracts";
 import { parseIotStatus, responseJson } from "./iotClient";
 import { useOfflineStage } from "./useOfflineStage";
+import { isProjectPath } from "./router";
 
 function useStored<T>(
   key: string,
@@ -256,6 +257,8 @@ function useFinalState() {
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
+      // Trang Thông tin dự án là trang đọc dài: giữ nguyên Space/số/R cho trình duyệt.
+      if (isProjectPath()) return;
       if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || target.closest('input,select,textarea,[contenteditable=true]') || document.querySelector('dialog[open]')) return;
       if (['1','2','3'].includes(event.key)) {
         event.preventDefault(); setSource('simulation');

@@ -30,13 +30,15 @@ const server = http.createServer(async (req, res) => {
   }
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    const file = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
+    let file = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
     if (!file.startsWith(root + path.sep) && file !== path.join(root, 'index.html')) {
       res.writeHead(403).end('Forbidden');
       return;
     }
-    const info = await stat(file);
-    if (!info.isFile()) throw new Error('Not a file');
+    let info = await stat(file).catch(() => null);
+    // Đường dẫn trang (/vision, /project…) không có phần mở rộng → trả index.html để ứng dụng tự định tuyến.
+    if (!info?.isFile() && !path.extname(pathname)) { file = path.join(root, 'index.html'); info = await stat(file); }
+    if (!info?.isFile()) throw new Error('Not a file');
     res.writeHead(200, {
       'Content-Type': types[path.extname(file)] || 'application/octet-stream',
       'Content-Length': info.size,

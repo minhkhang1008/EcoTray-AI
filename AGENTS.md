@@ -13,7 +13,7 @@
 
 ## 2. Repository Structure & Module Organization
 
-This is a static React 19 + TypeScript + Vite application, not a backend. There is no React Router: `src/App.tsx` switches five tabs (`Tổng quan`, `Phân tích thực đơn`, `EcoTray Vision`, `Ghi nhận khay`, `Dữ liệu`) with component state.
+This is a static React 19 + TypeScript + Vite application, not a backend. There is no React Router library: `src/router.tsx` is a small History API router. Each page has its own path — `/overview`, `/menus`, `/vision`, `/log/{manual,nfc,calibration}`, `/data/{records,interventions,settings}` and the standalone `/project` (`Thông tin dự án`, `src/ProjectInfo.tsx`, content in `src/projectContent.ts`, reached from the small link above `Đăng xuất`). `/` redirects to `/overview`; `src/App.tsx` renders the workspace from the URL and `src/main.tsx` chooses between workspace and project page. `index.html` sets `<base href="/">` so existing `./…` asset URLs work at any depth; hosts must return `index.html` for extensionless paths (`vercel.json` rewrite, `scripts/serve.mjs`, `start.py`). Stage keyboard shortcuts are intentionally disabled on `/project`.
 
 - `src/main.tsx`: React entry. `src/App.tsx`: tabs, filters, CSV I/O, manual records, data separation, and local persistence under `ecotray-records`.
 - `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
@@ -57,6 +57,6 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 
 ## 6. Operational UI cleanup (29/10/2026)
 
-Menu analysis opens a compact list. Photo inspection lives under Vision → Kiểm tra ảnh (the Thử kịch bản view was removed on 2026-11-01); the simulated nutrition panel is rendered from `src/Pipeline.tsx`, and scale samples are entered in Ghi nhận khay (`src/QuickLog.tsx`). Station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live in Data → Thông tin dự án. Do not restore generic nutrition examples inside individual dish drawers.
+Menu analysis opens a compact list. Photo inspection lives under Vision → Kiểm tra ảnh (the Thử kịch bản view was removed on 2026-11-01); the simulated nutrition panel is rendered from `src/Pipeline.tsx`, and scale samples are entered in Ghi nhận khay (`src/QuickLog.tsx`). Station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live on the standalone `/project` page (Thông tin dự án), updated from the SSC 2026 final slides (ver2); the 3-year plan data is `roadmap` in `lib/decision-scenarios.ts`. Slide claims without a repository source (for example MAE 6.8% / “93% chính xác”) are not shown; read measured error from the model artifact. Do not restore generic nutrition examples inside individual dish drawers.
 
 Vision and legacy worker decisions share `ecotray-interventions-v1`, retain `hardware|simulation|reference-fallback`, and are local records, not commands sent to the kitchen. The station chooses the latest device capture, with explicit reference fallback. Scale samples affect the simulated gram conversion only; PTNK model portions remain clearly labelled assumptions.
