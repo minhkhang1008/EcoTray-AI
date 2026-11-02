@@ -41,6 +41,13 @@ def label(catalog, key, i):
     return 100.0 if key == FULL else float(catalog[key]['y'][i])
 
 
+def normalize_image(source, rotation, dest):
+    """EXIF-upright, rotate by the catalog `rotation`, resize to 800x600 (shared with ingest_ptnk_photos.py)."""
+    image = ImageOps.exif_transpose(Image.open(source)).convert('RGB')
+    image = image.rotate(rotation, expand=True).resize((800, 600), Image.Resampling.LANCZOS)
+    image.save(dest, quality=90)
+
+
 def normalize_images(catalog):
     normalized = ROOT / 'public/ptnk-normalized'
     normalized.mkdir(exist_ok=True)
@@ -48,9 +55,7 @@ def normalize_images(catalog):
         source = ROOT / 'public/ptnk-trays' / filename
         if not source.exists():
             raise FileNotFoundError(f'Thiếu ảnh nguồn: {source}')
-        image = ImageOps.exif_transpose(Image.open(source)).convert('RGB')
-        image = image.rotate(meta['rotation'], expand=True).resize((800, 600), Image.Resampling.LANCZOS)
-        image.save(normalized / filename, quality=90)
+        normalize_image(source, meta['rotation'], normalized / filename)
     return normalized
 
 
@@ -78,6 +83,9 @@ def main():
 
     catalog = json.loads((ROOT / 'data/ptnk-trays.json').read_text())
     ids = list(catalog)
+    pending = [k for k, m in catalog.items() if m.get('needsLabel')]
+    if pending:
+        raise SystemExit(f'{len(pending)} ảnh chưa được gán nhãn (needsLabel), ví dụ {pending[0]}. Gán nhãn rồi chạy ingest_ptnk_photos.py --merge.')
     if len(ids) < MIN_IMAGES or EMPTY not in catalog or FULL not in catalog:
         raise SystemExit(f'Cần ít nhất {MIN_IMAGES} ảnh và cả hai ảnh mốc {EMPTY}, {FULL}.')
     normalized = normalize_images(catalog)

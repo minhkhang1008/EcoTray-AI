@@ -17,13 +17,13 @@ This is a static React 19 + TypeScript + Vite application, not a backend. There 
 
 - `src/main.tsx`: React entry. `src/App.tsx`: tabs, filters, CSV I/O, manual records, data separation, and local persistence under `ecotray-records`.
 - `src/FinalRoundContext.tsx`: shared stage/hardware state, adapter, calibration and intervention storage. `src/Pipeline.tsx`, `src/OperationalPanels.tsx`, `src/DishDrawer.tsx`, `src/QuickLog.tsx` and `src/VisionLab.tsx`: final-round views.
-- `src/PTNKVision.tsx`: mounted PTNK reference gallery (35 labelled photos, `data/ptnk-trays.json`), calibration sandbox, stream and approval. `src/useVisionStream.ts` polls `/api/ai/analyze-tray`; hidden fallback listeners live in `FinalRoundContext`. `src/TrendChart.tsx`: trend chart (table for one day). Legacy unmounted UI screens were removed; MobileNet remains in model scripts/tests.
+- `src/PTNKVision.tsx`: mounted PTNK reference gallery (labelled photos, `data/ptnk-trays.json`; count read from the model artifact), calibration sandbox, stream and approval. `src/useVisionStream.ts` polls `/api/ai/analyze-tray`; hidden fallback listeners live in `FinalRoundContext`. `src/TrendChart.tsx`: trend chart (table for one day). Legacy unmounted UI screens and the unused dish-classifier (food bank) were removed; MobileNet remains only for `npm run test:model` and the embedding experiment.
 - `src/styles.css` and `src/final-round.css`: responsive, accessible “EcoTray Intelligence” visual system.
 - `src/lib/ecotrayVisionEngine.ts` exposes typed contracts over `lib/ptnk-vision.mjs` and shared pixel features. `scripts/train_ecotray_vision.py` generates `src/lib/ecotrayModels.json` from source images and metadata; see `docs/VISION-PTNK.md`. `api/ai/analyze-tray.mjs` is the deployed Vercel Function; `src/app/api/ai/analyze-tray/route.ts` is a Web Request/Response compatibility entry, not a Next.js migration.
-- `lib/`: pure analytics, CSV/decision rules, tray measurement, dish classification, and vision logic; `lib/*.test.mjs` are Node tests.
+- `lib/`: pure analytics, CSV/decision rules, and vision logic (`station-vision.mjs` OV2640 area reader with an opt-in `reference` empty-tray frame via `empty-reference.mjs`; `station-evaluation.mjs` weighed-data scoring and citation gate; `embedding-experiment.mjs` experiment helpers); `lib/*.test.mjs` are Node tests.
 - `data/`: canonical demo CSV/summary and Portal/evaluation metadata. Active paths use `data/`, never the obsolete `demo-data/` path.
-- `public/`: food images, `food-bank.json`, MobileNet files, tray images, and calibration data copied into the build.
-- `scripts/`: production offline-cache generation, calibration, dish-bank generation, model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
+- `public/`: food images, MobileNet files and tray images copied into the build.
+- `scripts/`: production offline-cache generation, PTNK feature extraction/training, `ingest_ptnk_photos.py` (new gallery photos: draft → label → merge, see `docs/VISION-PTNK.md`), `experiment-embeddings.mjs` (frozen-embedding Ridge experiment; writes `data/vision-experiments/`, never the shipped model), `evaluate-station.mjs` (weighed ESP32 evaluation; see `docs/STATION-WEIGHED-DATA.md`), model smoke test, and local static server. `start.py` is an alternative `dist/` server only.
 - `vite.config.ts`: relative asset base and `dist/` output. `api/iot/[action].mjs` exposes public Vercel Node Functions via `server/`; production uses shared Redis with atomic idempotency. Local RAM fallback is development-only. See `docs/IOT.md`; raw image processing still requires the external AWS worker.
 
 ## 3. Hardware–Cloud–Web Integration & Live Stage Demo Contract
@@ -42,6 +42,7 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 - All user-facing labels, messages, badges, and tooltips must use natural professional Vietnamese, including `Cơm`, `Rau`, `Món chính`, `Đăng ký`, `Thực nhận`, `Phần còn lại`, and `Khuyến nghị vận hành`.
 - Preserve three school adapters: **EcoTray Lite** (ESP32-CAM + Excel/Form menu input; no NFC/Portal), **EcoTray Standard** (class-based reporting + ESP32-CAM), and **EcoTray Pro** (Portal sync + Paperless NFC Gate + Allergy Filter + ESP32-CAM). Do not hard-code PTNK assumptions into shared analytics or UI primitives.
 - Privacy by design is mandatory: no facial recognition, face capture, student names, or identifiable student photos in tray logs. Store anonymized event IDs and UID hashes only; expire raw S3 tray images after 30 days.
+- Never attribute the gallery Ridge MAE (`src/lib/ecotrayModels.json`) to the live reader `ov2640-area-v1`; the latter has no measured error until `scripts/evaluate-station.mjs` passes its gate. Read the figure from the artifact, never hard-code it.
 - Preserve responsive behavior, keyboard access, focus visibility, reduced-motion support, and the restrained green/neutral EcoTray Intelligence aesthetic. Prefer small typed components over expanding the already dense `App.tsx`.
 
 ## 5. Build, Verification & Coding Conventions
@@ -56,6 +57,6 @@ Any hardware view or `Live Demo Chung Kết` mode must keep deterministic keyboa
 
 ## 6. Operational UI cleanup (29/10/2026)
 
-Menu analysis opens a compact list. Photo inspection and simulated pairing/nutrition examples live under separate Vision views; station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live in Data → Thông tin dự án. Do not restore generic nutrition examples inside individual dish drawers.
+Menu analysis opens a compact list. Photo inspection lives under Vision → Kiểm tra ảnh (the Thử kịch bản view was removed on 2026-11-01); the simulated nutrition panel is rendered from `src/Pipeline.tsx`, and scale samples are entered in Ghi nhận khay (`src/QuickLog.tsx`). Station data is not embedded in menu reports. Project evidence, roadmap, cost and before/after scenarios live in Data → Thông tin dự án. Do not restore generic nutrition examples inside individual dish drawers.
 
 Vision and legacy worker decisions share `ecotray-interventions-v1`, retain `hardware|simulation|reference-fallback`, and are local records, not commands sent to the kitchen. The station chooses the latest device capture, with explicit reference fallback. Scale samples affect the simulated gram conversion only; PTNK model portions remain clearly labelled assumptions.

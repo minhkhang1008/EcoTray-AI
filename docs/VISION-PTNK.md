@@ -2,7 +2,7 @@
 
 ## Phạm vi dữ liệu
 
-35 ảnh nguồn trong `public/ptnk-trays/`, chụp 28–30/10/2026. `data/ptnk-trays.json` giữ nhãn phần còn lại ước lượng bằng mắt (bản gán lại v2 ngày 31/10, xem [RELABEL-V2.md](RELABEL-V2.md)), góc xoay, nhóm góc chụp lặp và các cờ nhiễu (`flags`, `soupBowl`, `note`, `comboConfidence`). 35 ảnh thuộc 29 khay độc lập (27 nếu bỏ hai mốc). `public/ptnk-normalized/` là bản 800×600 đã xoay theo metadata; ảnh gốc được giữ nguyên.
+54 ảnh nguồn trong `public/ptnk-trays/`: 35 ảnh chụp 28–30/10/2026 và 19 ảnh chụp 02/11/2026 (thực đơn Thịt chiên thanh cua trứng / Sườn chay chiên / Gà chiên mắm tỏi, gán nhãn bằng mắt qua `scripts/ingest_ptnk_photos.py`; 4 ảnh chỉ có thực đơn cả ngày vì chưa xác định món chính, `comboConfidence: "main-unknown; day-menu-only"`). `data/ptnk-trays.json` giữ nhãn phần còn lại ước lượng bằng mắt (bản gán lại v2 ngày 31/10, xem [RELABEL-V2.md](RELABEL-V2.md)), góc xoay, nhóm góc chụp lặp và các cờ nhiễu (`flags`, `soupBowl`, `note`, `comboConfidence`). 54 ảnh thuộc 48 nhóm (46 khay độc lập nếu bỏ hai mốc); mỗi ảnh ngày 02/11 hiện là một nhóm riêng, chưa gộp các lần chụp lại cùng khay (nếu có thì kiểm định đang lạc quan). `public/ptnk-normalized/` là bản 800×600 đã xoay theo metadata; ảnh gốc được giữ nguyên.
 
 Hai mốc: `IMG_20261028_115429.jpg` = sạch 0%; `IMG_20261029_112146.jpg` = đầy 100%. Nhãn v2 của mọi ảnh khác là % so với ảnh đầy này. Nhãn gốc của ảnh đầy (100/95/90/90) được giữ riêng; trình huấn luyện dùng 100 cho cả bốn thành phần. Ảnh đầy không được đưa vào thống kê khay trả.
 
@@ -17,7 +17,35 @@ python3 -m http.server 8000
 
 - Sửa % còn lại từng thành phần (thanh trượt bước 5% hoặc gõ số chính xác), vị trí ngăn rau, bát canh, cờ nhiễu, thực đơn và ghi chú. Ảnh đã sửa được gắn `labelSource: "manual-edit"` và `editedAt`.
 - **Đánh dấu 4 góc khay** (trên trái → trên phải → dưới phải → dưới trái, mép ngoài khay; kéo để chỉnh). Góc được lưu ở `trayCorners` (tọa độ chuẩn hóa trên ảnh 800×600 trong `public/ptnk-normalized/`). Khi có `trayCorners`, cả bộ trích đặc trưng Node lẫn Python nắn phối cảnh ảnh về khung khay chuẩn `CANONICAL_TRAY_CORNERS` trước khi cắt vùng đọc. Bật “Xem ảnh đã nắn” để kiểm tra khung đọc nằm đúng ngăn.
-- Bản nháp tự lưu trong trình duyệt. Bấm “Tải ptnk-trays.json” (hoặc “Lưu vào file…” trên Chrome/Edge), chép đè `data/ptnk-trays.json`, rồi chạy lại trình huấn luyện. Không đổi tên file ảnh hoặc `group`.
+- Ô “Nhóm khay”: các lần chụp lại cùng một khay phải cùng nhóm (chọn ảnh kia), nếu không kiểm định sẽ coi chúng là hai khay độc lập và MAE trông tốt hơn thực tế. Đặt theo khay thật, không theo giờ chụp: ảnh cách nhau vài giây thường là khay khác nhau.
+- Bản nháp tự lưu trong trình duyệt (theo từng file). Bấm “Tải file JSON đã sửa” (hoặc “Lưu vào file…” trên Chrome/Edge), chép đè đúng file đang mở, rồi chạy lại trình huấn luyện. Không đổi tên file ảnh.
+
+## Thêm ảnh mới
+
+Áp dụng cho ảnh điện thoại chụp khay tại trường. Ảnh từ ESP32-CAM **không** vào gallery: bố cục khác và cần nhãn cân, xem [STATION-WEIGHED-DATA.md](STATION-WEIGHED-DATA.md).
+
+```sh
+# 1. Nhập ảnh: chép gốc, tạo ảnh 800×600, tạo bản nháp data/ptnk-intake.json (chưa đụng danh mục thật)
+.venv/bin/python scripts/ingest_ptnk_photos.py ~/duong/dan/thu-muc-anh   # tùy chọn: --date 2026-11-03 --combo "Tên thực đơn"
+# 2. Gán nhãn
+python3 -m http.server 8000     # mở http://localhost:8000/tools/label-editor.html?file=ptnk-intake.json
+# 2b. LƯU từ editor: "Lưu vào file…" → chọn data/ptnk-intake.json (hoặc "Tải file JSON đã sửa" rồi chép đè file đó).
+#     Chỉnh sửa chỉ nằm trong trình duyệt cho tới khi lưu.
+# 3. Gộp vào danh mục (từ chối nếu còn ảnh chưa xác nhận); --combo điền thực đơn cho ảnh chưa có thực đơn
+.venv/bin/python scripts/ingest_ptnk_photos.py --merge --combo "Tên thực đơn ngày hôm đó"
+# 4. Huấn luyện lại, kiểm tra, dựng
+.venv/bin/python scripts/train_ecotray_vision.py && npm test && npm run build
+```
+
+Chi tiết:
+
+- Ngày lấy từ tên `IMG_YYYYMMDD_…` hoặc EXIF (hoặc `--date`). Thực đơn lấy theo thực đơn phổ biến nhất của cùng ngày trong danh mục; ngày mới thì gõ ở ô “Thực đơn” hoặc dùng `--combo`.
+- Mỗi ảnh có sẵn 0/0/0/0 chỉ là giá trị tạm. Chỉnh nhãn theo [quy ước v2](RELABEL-V2.md#quy-ước-nhãn-v2), chọn ngăn rau, nhóm khay, đánh dấu 4 góc nếu khay lệch khung, rồi bấm **Xác nhận đã gán nhãn**. `--merge` từ chối ảnh chưa xác nhận, thiếu thực đơn, nhóm không tồn tại hoặc thiếu file.
+- Ảnh bị úp ngược/xoay sai trong editor: `ingest_ptnk_photos.py --fix IMG_….jpg --rotation 180` (0, 90, −90 hoặc 180). Lệnh này làm lại ảnh và xóa 4 góc đã đánh dấu.
+- Chạy lại lệnh nhập an toàn: ảnh trùng nội dung bị bỏ qua. Không đổi tên ảnh sau khi nhập.
+- Sau khi huấn luyện lại, MAE và số ảnh/khay trên giao diện tự cập nhật từ `src/lib/ecotrayModels.json`; MAE sẽ đổi (đây là bình thường: thêm khay và nhóm mới làm thay đổi cả dữ liệu huấn luyện lẫn dữ liệu kiểm định). Con số viết tay trong README và tài liệu này (35 ảnh, 27 khay, 15,3) cần cập nhật theo kết quả mới. Chạy lại `npm run experiment:embeddings` nếu muốn so lại embedding trên bộ lớn hơn.
+- Huấn luyện lại tái lập được: chạy lại trên bộ 35 ảnh cũ cho đúng artifact cũ (MAE 15,32); với 54 ảnh cho 16,39.
+- `lib/ptnk-catalog.test.mjs` chặn việc đưa ảnh chưa gán nhãn, thiếu file hoặc chưa huấn luyện vào danh mục.
 
 15 ảnh lệch khung hiện có `trayCorners` do Claude ước lượng bằng mắt ngày 31/10; nhóm nên rà lại bằng công cụ này.
 
@@ -34,7 +62,7 @@ Trình huấn luyện đọc mọi ảnh trong danh mục (tối thiểu 18, ph�
 
 Dự đoán là đầu ra Ridge thô (đơn vị %), cắt về 0–100. Bản v3 kéo giãn đầu ra giữa hai mốc `(pred − pred_0%)/(pred_100% − pred_0%)`; bước này làm sai số tăng gần gấp đôi và kém hơn cả việc đoán bằng trung bình nhãn (27,28 so với 22,8), nên đã bỏ ở v4. Hai mốc giờ là điểm huấn luyện thường. Đặc trưng ROI cố định không phân biệt nước kho với thức ăn, nên mô hình đọc ngăn món chính của khay sạch là ~70%; vì vậy khi chọn chính ảnh mốc, kết quả hiển thị theo nhãn mốc với `predictionSource: "anchor-label"`.
 
-Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc trong tập huấn luyện và không chấm hai mốc. 33 ảnh / 27 nhóm được chấm; MAE hiện tại **14,5 điểm phần trăm** sau khi căn góc 15 ảnh lệch khung (Cơm 16,7 · Món chính 16,7 · Rau 13,2 · Canh 11,4; trước khi căn: 14,6 bằng Python, 14,62 bằng Node), so với mốc đoán bằng trung bình nhãn 25,25 (`baselineMeanLabelMAE`). Món chính yếu nhất vì thịt thường bị gắp sang ngăn cơm. Thử nghiệm 31/10: bộ 14 đặc trưng màu/kết cấu (thêm dải màu sắc, tỷ lệ vật tối, độ lệch chuẩn) với Ridge chuẩn hóa chỉ giảm MAE kiểm định khoảng 1 điểm (≈13,5), RandomForest/ExtraTrees tương đương; ở cỡ 27 khay mức này nằm trong nhiễu nên chưa thay hợp đồng vector 6 số. Đòn bẩy lớn hơn là thêm khay, chụp đúng khung và có nhãn cân. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác do một người gán lại; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
+Kiểm định: bỏ lần lượt từng nhóm ảnh liên quan, giữ hai mốc trong tập huấn luyện và không chấm hai mốc. 52 ảnh / 46 nhóm được chấm; MAE hiện tại **16,4 điểm phần trăm** (Cơm 23,2 · Món chính 16,2 · Rau 14,0 · Canh 12,2), so với mốc đoán bằng trung bình nhãn 28,5 (`baselineMeanLabelMAE`); đọc trực tiếp từ `src/lib/ecotrayModels.json`, không chép tay. Lịch sử: trên bộ 35 ảnh trước ngày 02/11 là 15,3 (mốc 26,4); các số 14,5 / 14,6 trong bản cũ và trong [RELABEL-V2.md](RELABEL-V2.md) là trước đợt sửa nhãn thủ công ngày 31/10. Mô hình mới chấm riêng trên 33 ảnh cũ cho 15,6 và trên 19 ảnh mới cho 17,8 (Cơm 29,1); ảnh ngày 02/11 khó hơn, chủ yếu ở ngăn Cơm. Chưa kết luận được nguyên nhân (khung chụp, ánh sáng, nhãn hay món mới). Cơm và Món chính yếu nhất (Món chính vì thịt thường bị gắp sang ngăn cơm). Thử nghiệm 31/10: bộ 14 đặc trưng màu/kết cấu (thêm dải màu sắc, tỷ lệ vật tối, độ lệch chuẩn) với Ridge chuẩn hóa chỉ giảm MAE kiểm định khoảng 1 điểm (≈13,5), RandomForest/ExtraTrees tương đương; ở cỡ 27 khay mức này nằm trong nhiễu nên chưa thay hợp đồng vector 6 số. Đòn bẩy lớn hơn là thêm khay, chụp đúng khung và có nhãn cân. Đây là kiểm định có điều kiện trên bộ nhỏ, dùng nhãn thị giác do một người gán lại; chưa có tập cân độc lập. Không công bố MAE 5,8%, độ chính xác 94,2%, hoặc lấy `100 − MAE` làm độ chính xác phân loại.
 
 Gallery giữ nguyên vùng đọc và mô hình Ridge đã kiểm định ở trên. Ảnh JPEG thiết bị và ảnh tải lên dùng bộ đọc diện tích pixel `ov2640-area-v1` trong `lib/station-vision.mjs`; **MAE này không áp dụng cho bộ đọc mới**.
 
@@ -47,6 +75,42 @@ Cơm dùng Value ≥0,62, saturation <0,24 và độ sáng; phản xạ sáng d�
 Ảnh ESP32 do người dùng cung cấp ngày 30/10 được giữ ở `data/vision-fixtures/esp32-top-rice.jpg` làm mẫu hồi quy riêng, không thêm vào gallery ảnh tham chiếu hoặc cohort IQR. Kết quả hiện tại Cơm 71,1%, Món chính 54,7%, Rau 58,8%, Canh 27,3% chỉ được đối chiếu khoảng ước lượng thị giác của người vận hành; không phải nhãn cân hoặc bằng chứng độ chính xác.
 
 **Ảnh chất lượng thấp (31/10).** Mô hình Ridge huấn luyện trên ảnh điện thoại không dùng cho khung ESP32; khung thiết bị đi qua bộ đọc diện tích. Thử trên ảnh ESP32 mẫu cho thấy ngưỡng cố định rất nhạy: ám màu ±15% (cân bằng trắng tự động của OV2640) làm Cơm lệch ~47 điểm, tối ×0,7 lệch ~47 điểm, nhiễu cảm biến σ12 làm Canh lệch ~20 và Món chính ~14. Vì vậy `normalizeFrame` chạy trước khi đọc: làm mờ hộp 5×5 (khử nhiễu; vệt phản xạ dài vẫn được phát hiện trên ảnh gốc rồi mở rộng 2 px), cân bằng màu theo điểm ảnh trung tính (inox/cơm) so với khung mẫu và hệ số sáng có vùng chết ±8%. Sau đó: nhiễu σ12 lệch ≤2,5 điểm, ám vàng ≤10, ám lam ≤12 (trước đó ≤47), JPEG q15 ≤2, mờ 1/4 ≤1. Còn yếu: gamma bất thường (tối/sáng phi tuyến, ±10–21 điểm), giảm bão hòa mạnh (Món chính, Rau, Canh −14 đến −18) và nhiễu rất lớn σ25 (Canh +10). Hệ số chuẩn hóa dựa trên ảnh mẫu duy nhất và nội dung khay vẫn có thể làm lệch độ sáng trung tính khoảng 10%. Đây là phép thử độ ổn định trên ảnh mô phỏng suy giảm, không phải độ chính xác; cần chụp thêm ảnh ESP32 thật ở nhiều điều kiện sáng và có nhãn cân.
+
+## Khung khay trống (tùy chọn, chưa nối vào API)
+
+`analyzeStationPixels(frame, { reference })` nhận thêm một khung khay sạch chụp bởi chính camera cố định. Điểm ảnh nào vẫn khớp khung đó (sai khác trung bình kênh ≤ 0,12, tìm trong ±2 px để chịu rung giá) là phần tĩnh của khay: vân khay, phản xạ đèn cố định, vết bẩn cố định; chúng không được tính là thức ăn thừa. Cả hai khung đi qua cùng `normalizeFrame` trước khi so. Không truyền `reference` thì kết quả y hệt trước (test ghim ảnh ESP32 mẫu ở 71,1 / 54,7 / 58,8 / 27,3). Có khung thì `method` là `ov2640-area-v1+empty-ref` và kết quả có `staticSuppressedPct` từng ngăn.
+
+Giới hạn: nước kho và thức ăn đều khác khay sạch, nên phương pháp này **không** tách được hai thứ đó; nó chỉ loại thứ đã có sẵn trên khay trống. Chưa có khung khay trống nào từ camera trạm, nên chưa đo được lợi ích thật; API `POST image/jpeg` chưa nạp khung này (cần lưu theo trạm ở Redis hoặc tệp). Kiểm chứng bằng `scripts/evaluate-station.mjs` khi có dữ liệu cân ([STATION-WEIGHED-DATA.md](STATION-WEIGHED-DATA.md)).
+
+## Thử nghiệm embedding đông lạnh + Ridge (02/11/2026)
+
+> Chạy trên bộ **35 ảnh** trước khi thêm ảnh 02/11; số trong bảng (kể cả Ridge 15,3) là của bộ đó. Chưa chạy lại trên 54 ảnh (`npm run experiment:embeddings`).
+
+`node scripts/experiment-embeddings.mjs` (`npm run experiment:embeddings`, khoảng 4 phút trên CPU): cắt từng ngăn theo ROI gallery, lấy vector 256 chiều từ MobileNet v1 0,25 đã có trong `public/model` (đông lạnh, không thêm phụ thuộc; không phải V3-small), rồi Ridge dạng đối ngẫu, chuẩn hóa từng fold, bias không bị phạt. α chọn bằng CV lồng theo nhóm chỉ trên các nhóm huấn luyện. Tăng cường (lệch màu ±15%, phơi sáng 0,75–1,15, mờ 5×5, nhiễu σ12; 4 bản sao có hạt giống cố định) chỉ dùng cho hàng huấn luyện, bản sao của nhóm bị giữ lại không bao giờ vào fold của nó. Cùng các fold bỏ-từng-nhóm như Ridge hiện tại; hai mốc nằm trong huấn luyện và không bị chấm. Quy tắc nhận được ghi vào mã trước khi chạy: hơn Ridge gallery ít nhất 3 điểm phần trăm và không ngăn nào kém đi.
+
+| Biến thể (MAE, điểm %) | Tổng | Cơm | Món chính | Rau | Canh | Hơn Ridge (khoảng 95%) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ridge gallery hiện tại (6 đặc trưng) | 15,3 | 19,4 | 16,8 | 13,6 | 11,5 | — |
+| Đoán trung bình nhãn | 26,4 | | | | | |
+| Embedding | 12,8 | 11,7 | 16,3 | 11,9 | 11,5 | 2,5 (0,6 … 4,6) |
+| Embedding + đặc trưng màu/kết cấu | 12,4 | 11,4 | 15,9 | 11,9 | 10,6 | 2,9 (1,1 … 4,9) |
+| + chênh lệch với ảnh mốc 0% | 12,3 | 11,8 | 15,5 | 11,0 | 10,8 | 3,05 (1,2 … 5,1) |
+
+Khoảng 95% lấy từ bootstrap theo nhóm có ghép cặp (4.000 lần) trên cùng ảnh giữ lại; phần này được thêm sau lần chạy đầu, chỉ để làm kết luận chặt hơn, không đổi quy tắc nhận.
+
+Đọc kết quả cho đúng:
+
+- Mọi biến thể tốt hơn Ridge gallery khoảng 2,5–3 điểm trên cùng fold và khoảng tin cậy không chứa 0. Mức tăng chủ yếu ở **Cơm** (19,4 → khoảng 11,5). **Món chính** gần như không đổi (16,8 → 15,5–16,3); đây là ngăn có nước kho, nên embedding không giải quyết điểm yếu đó.
+- Biến thể thứ ba đạt quy tắc với biên 0,05 điểm. Biên mỏng, và đó là biến thể tốt nhất trong ba biến thể thử, nên xem là **ứng viên**, không phải kết quả đã chứng minh. Khoảng tin cậy của ba biến thể chồng nhau; không xếp hạng được chúng. Thêm khung khay trống chỉ hơn 0,15 điểm so với không thêm, không phân biệt được với nhiễu (ảnh điện thoại cầm tay nên đây cũng là phép thử yếu của việc so với khay cố định).
+- Tăng cường chỉ giúp biến thể chỉ-embedding (13,4 → 12,8); hai biến thể còn lại không đổi đáng kể (12,4 → 12,4 và 12,3 → 12,3).
+- α chọn nằm trong 1–1.000 (hầu hết 1–100), nên bias thực sự gần như không bị phạt; riêng ngăn Rau thường chạm cận dưới của lưới (α = 1) nên lưới chưa chắc đã đủ rộng ở phía đó.
+- Cỡ mẫu 27 khay độc lập (bộ 35 ảnh), nhãn là ước lượng bằng mắt có sai số cùng cỡ với mức chênh. Kết quả là kiểm định có điều kiện trên bộ nhỏ.
+- **Không áp dụng cho bộ đọc trạm.** Ảnh gallery là ảnh điện thoại, bố cục khác ảnh ESP32; kết quả không phải MAE của `ov2640-area-v1` và không thỏa cổng cân ESP32 (MAE dưới khoảng 10 trên ảnh ESP32 thật). Cổng đó có thể chạy bằng `scripts/evaluate-station.mjs` nhưng **chưa chạy** vì chưa có dữ liệu cân.
+- Không thay `src/lib/ecotrayModels.json`, hợp đồng vector 6 số, API hay UI. Báo cáo đầy đủ (dự đoán từng ảnh, lựa chọn α) ở `data/vision-experiments/embeddings-ridge.json`. Đưa embedding vào gallery là quyết định riêng, cần thêm đường suy luận phía trình duyệt và API.
+
+## Cách nêu số liệu
+
+Được nêu: Ridge gallery có MAE 16,4 điểm phần trăm trên 52 ảnh / 46 khay (đọc từ artifact), nhãn ước lượng bằng mắt, so với 28,5 nếu đoán trung bình. Bộ đọc trạm OV2640 là phép đo diện tích hiệu chỉnh, chưa có sai số cân; đang thu thập. Không nêu: độ chính xác phân loại, 94,2%, 5,8%, hay `100 − MAE`.
 
 ## Hiệu chỉnh và quyết định
 
@@ -79,7 +143,7 @@ Xem [firmware và hướng dẫn thử ảnh thật](../firmware/esp32_cam_gate/
 
 ## Tương tác vận hành
 
-Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Vision mở màn trạm; gallery và hiệu chỉnh ảnh ở mục Kiểm tra ảnh, ví dụ mô phỏng ở mục Thử kịch bản. Luồng IoT và ghi nhận quyết định có ở màn trạm, không chèn vào phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.
+Không có nút sân khấu hoặc bảng hướng dẫn phím trên UI. Vision mở màn trạm; gallery và hiệu chỉnh ảnh ở mục Kiểm tra ảnh (mục Thử kịch bản đã gỡ ngày 01/11/2026). Luồng IoT và ghi nhận quyết định có ở màn trạm, không chèn vào phân tích thực đơn. NFC ở Ghi nhận khay, phễu trực tiếp ở Tổng quan. Header chỉ báo trạng thái quan sát được, không tự gắn online cho nguồn dự phòng.
 
 Phím nền: 1/2/3 = NFC hợp lệ/dị ứng/chưa đăng ký; lặp 1/2 kiểm tra trùng thẻ. Space/4 luân phiên ảnh tham chiếu; 5 ghi phê duyệt; R đặt lại nguồn dự phòng. Không can thiệp input/select/textarea hoặc tổ hợp Ctrl/Alt/Meta. Space trên button/link/summary giữ hành vi gốc. Nguồn tham chiếu vẫn được ghi rõ trên UI và không cộng vào dữ liệu phần cứng, bản ghi thực địa hay bộ 1.280 khay mô phỏng.
 

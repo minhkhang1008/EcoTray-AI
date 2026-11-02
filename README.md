@@ -241,12 +241,12 @@ Database & Vercel Dashboard
 
 Dashboard giữ React/Vite/CSS thuần và output `dist/`. Bản nâng cấp bổ sung Live Demo ngoại tuyến, drawer thực đơn, kiểm định IQR, QuickLog cân mẫu, cấu hình Lite/Standard/Pro, dự toán chi phí và Vercel Functions cho IoT. Dữ liệu sân khấu, bộ khay mô phỏng và phần cứng được tách riêng.
 
-Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [Hợp đồng IoT v1 / cấu hình môi trường](docs/IOT.md). Các mục chiến lược phía trên là yêu cầu dự án, không tự xác nhận phần cứng hoặc AWS/Vercel đã được triển khai. Kho có 35 ảnh PTNK ngày 28–30/10/2026 (27 khay độc lập ngoài hai mốc 0%/100%), gồm các góc chụp lặp. Nhãn phần còn lại là ước lượng bằng mắt (gán lại v2 ngày 31/10), chưa đối chiếu phép cân. Ridge được huấn luyện từ pixel ảnh chuẩn hóa, kiểm định bỏ từng nhóm ảnh liên quan (không chấm hai mốc) có MAE khoảng 14,5 điểm phần trăm trên 33 ảnh (15 ảnh lệch khung được căn 4 góc khay), so với 25,25 nếu chỉ đoán bằng trung bình nhãn. Chưa có bằng chứng cho MAE 5,8% hay độ chính xác 94,2%. Chi phí là dự toán, tác động trước/sau là mô phỏng theo nguồn đã nêu.
+Xem [Phạm vi triển khai & kiểm chứng](docs/SSC-IMPLEMENTATION.md) và [Hợp đồng IoT v1 / cấu hình môi trường](docs/IOT.md). Các mục chiến lược phía trên là yêu cầu dự án, không tự xác nhận phần cứng hoặc AWS/Vercel đã được triển khai. Kho có 54 ảnh PTNK ngày 28–30/10 và 02/11/2026 (46 khay độc lập ngoài hai mốc 0%/100%), gồm các góc chụp lặp. Nhãn phần còn lại là ước lượng bằng mắt (gán lại v2 ngày 31/10), chưa đối chiếu phép cân. Ridge được huấn luyện từ pixel ảnh chuẩn hóa, kiểm định bỏ từng nhóm ảnh liên quan (không chấm hai mốc) có MAE khoảng 16,4 điểm phần trăm trên 52 ảnh (ảnh lệch khung được căn 4 góc khay), so với 28,5 nếu chỉ đoán bằng trung bình nhãn. Con số này chỉ thuộc mô hình Ridge trên ảnh điện thoại; bộ đọc ảnh ESP32 của trạm (`ov2640-area-v1`) chưa có sai số đo được và chỉ được kiểm định khi có ≥100 khay có cân ở ≥3 điều kiện sáng ([quy trình](docs/STATION-WEIGHED-DATA.md)). Chưa có bằng chứng cho MAE 5,8% hay độ chính xác 94,2%. Chi phí là dự toán, tác động trước/sau là mô phỏng theo nguồn đã nêu.
 
 
 ### Vision thực địa và luồng thiết bị
 
-Tab EcoTray Vision mở Trạm căn tin; Kiểm tra ảnh giữ gallery 35 ảnh và hiệu chỉnh bốn thành phần, Thử kịch bản giữ các ví dụ mô phỏng riêng. Phản hồi cập nhật trọng số trong phiên trình duyệt; không thay trọng số máy chủ hoặc kết quả kiểm định gốc. Khối lượng là ước tính từ khẩu phần giả định 200/110/90/150 g (Cơm/Món chính/Rau/Canh), chưa phải số đo cân. W_min = 85 g là chính sách bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng xác thực.
+Tab EcoTray Vision mở Trạm căn tin; Kiểm tra ảnh giữ gallery 54 ảnh và hiệu chỉnh bốn thành phần. Phản hồi cập nhật trọng số trong phiên trình duyệt; không thay trọng số máy chủ hoặc kết quả kiểm định gốc. Khối lượng là ước tính từ khẩu phần giả định 200/110/90/150 g (Cơm/Món chính/Rau/Canh), chưa phải số đo cân. W_min = 85 g là chính sách bảo vệ thử nghiệm, chưa phải chuẩn dinh dưỡng xác thực.
 
 Luồng `/api/ai/analyze-tray` tích hợp trong tab Vision, thăm dò mỗi 1,5 giây. Màn trạm hiển thị một kết quả mới nhất từ API này hoặc callback worker IoT; ảnh dự phòng luôn có nhãn riêng. NFC và phễu vận hành sử dụng nguồn riêng. Không có nút hoặc màn hình sân khấu; các phím dự phòng chạy nền và luôn giữ nguồn tham chiếu/mô phỏng tách biệt. Không xác nhận thiết bị online chỉ vì API trả 200.
 
@@ -254,8 +254,8 @@ Xem [hợp đồng Vision và tái huấn luyện](docs/VISION-PTNK.md) và [fir
 
 ### Tinh giản giao diện vận hành (29/10/2026)
 
-Thực đơn mặc định dùng danh sách gọn; ví dụ phối món và thử định lượng chuyển sang Vision → Thử kịch bản. Chi tiết món chỉ hiển thị số liệu riêng, không chèn ví dụ 90 g rau hoặc kịch bản 63,1 → 52,5 kg. Một ngày dữ liệu hiển thị bảng thay cho biểu đồ xu hướng.
+Thực đơn mặc định dùng danh sách gọn; ví dụ phối món và thử định lượng không nằm trong báo cáo từng món. Chi tiết món chỉ hiển thị số liệu riêng, không chèn ví dụ 90 g rau hoặc kịch bản 63,1 → 52,5 kg. Một ngày dữ liệu hiển thị bảng thay cho biểu đồ xu hướng.
 
 Dữ liệu → Thông tin dự án chứa minh chứng, lộ trình, kịch bản trước/sau và dự toán. Cấu hình trường giữ bộ chọn Lite/Standard/Pro. Ghi nhận quyết định từ Vision và worker dùng chung lịch sử trên trình duyệt, chống lặp và giữ ba nguồn `hardware`, `simulation`, `reference-fallback`. Tải lại trang giữ lịch sử; R đặt lại sự kiện và lịch sử dự phòng, giữ quyết định phần cứng. Đây chưa phải lệnh gửi tới bếp.
 
-Mẫu cân dùng để quy đổi gram trong Vision → Thử kịch bản; mô hình PTNK vẫn dùng định lượng giả định, không tự thay trọng số hoặc kết quả kiểm định từ mẫu cân. Các màn UI cũ không còn được App mở đã được gỡ; các thư viện, test và script model vẫn giữ nguyên mục đích.
+Mẫu cân (Ghi nhận khay → Lưu mẫu cân) chỉ dùng để quy đổi gram mô phỏng; mô hình PTNK vẫn dùng định lượng giả định, không tự thay trọng số hoặc kết quả kiểm định từ mẫu cân. Các màn UI cũ không còn được App mở đã được gỡ; các thư viện, test và script model vẫn giữ nguyên mục đích.

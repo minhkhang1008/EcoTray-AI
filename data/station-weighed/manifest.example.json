@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "_comment": "Mẫu cấu trúc. Sao chép thành manifest.json và thay bằng số liệu cân thật. Không thêm tên, UID thẻ hay ảnh khuôn mặt.",
+  "sessions": [
+    { "id": "s01", "date": "2026-11-05", "lighting": "den-huynh-quang", "emptyFrame": "frames/s01-khay-trong.jpg" }
+  ],
+  "trays": [
+    {
+      "id": "t0001",
+      "sessionId": "s01",
+      "frame": "frames/t0001.jpg",
+      "menu": "Thịt kho tàu + Bắp cải xào + Canh bầu",
+      "servedGrams": { "rice": 200, "main": 112, "veg": 88, "soup": 150 },
+      "leftoverGrams": { "rice": 40, "main": 12, "veg": 60, "soup": 0 }
+    }
+  ]
+}

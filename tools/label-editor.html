@@ -60,7 +60,7 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:
   <div class="actions">
     <label class="inline"><input type="file" id="openFile" accept="application/json" hidden><button type="button" id="openBtn">Mở file JSON khác</button></label>
     <button type="button" id="saveFs" hidden>Lưu vào file…</button>
-    <button type="button" class="primary" id="download">Tải ptnk-trays.json</button>
+    <button type="button" class="primary" id="download">Tải file JSON đã sửa</button>
   </div>
 </header>
 <div class="banner" id="draftBanner" role="status">
@@ -105,11 +105,14 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:
       <legend>Cờ nhiễu</legend>
       <div class="flags" id="flags"></div>
     </fieldset>
+    <label style="display:block;margin-bottom:8px">Nhóm khay (chụp lại cùng một khay → chọn ảnh kia)<select id="group"></select></label>
     <label>Thực đơn<input type="text" id="combo"></label>
     <label style="display:block;margin-top:8px">Ghi chú<textarea id="note" rows="3"></textarea></label>
     <div style="display:flex;gap:8px;margin-top:10px">
       <button type="button" id="revert">Hoàn tác ảnh này</button>
+      <button type="button" class="primary" id="confirmLabel" hidden>Xác nhận đã gán nhãn</button>
     </div>
+    <p class="note" id="pendingNote" hidden>Ảnh mới: nhãn đang là 0/0/0/0 chỉ là giá trị tạm. Chỉnh bốn thanh trượt, ngăn rau, thực đơn, nhóm khay rồi bấm “Xác nhận đã gán nhãn”; bước merge từ chối ảnh chưa xác nhận.</p>
     <p class="note" id="anchorNote" hidden>Ảnh mốc: trình huấn luyện luôn dùng 0% (khay sạch) hoặc 100% (khay đầy) cho cả bốn thành phần.</p>
   </section>
 </main>
@@ -130,7 +133,10 @@ const FLAGS = {
   other_tray_in_frame: "Khay khác lọt khung", veg_slot_uncertain: "Không rõ ngăn rau",
 };
 const ANCHORS = ["IMG_20261028_115429.jpg", "IMG_20261029_112146.jpg"];
-const DRAFT_KEY = "ecotray-label-editor-draft-v1";
+const DRAFT_BASE = "ecotray-label-editor-draft-v1";
+const requested = new URLSearchParams(location.search).get("file");
+let openedName = /^[\w.-]+\.json$/.test(requested ?? "") ? requested : "ptnk-trays.json";
+const draftKey = () => (openedName === "ptnk-trays.json" ? DRAFT_BASE : DRAFT_BASE + ":" + openedName);
 const CORNER_NAMES = ["trên trái", "trên phải", "dưới phải", "dưới trái"];
 
 const $ = (id) => document.getElementById(id);
@@ -145,8 +151,8 @@ function showError(msg) { const b = $("errorBanner"); b.textContent = msg; b.cla
 function store(fn) { try { return fn(); } catch { return null; } }
 
 async function loadCatalog() {
-  const res = await fetch("../data/ptnk-trays.json", { cache: "no-store" });
-  if (!res.ok) throw Error("Không đọc được ../data/ptnk-trays.json (HTTP " + res.status + ").");
+  const res = await fetch("../data/" + openedName, { cache: "no-store" });
+  if (!res.ok) throw Error("Không đọc được ../data/" + openedName + " (HTTP " + res.status + ").");
   return res.json();
 }
 function setCatalog(data) {
@@ -166,12 +172,13 @@ function touch(id) {
     m.labelSource = original[id]?.labelSource; delete m.editedAt;
     if (original[id]?.editedAt) m.editedAt = original[id].editedAt;
   } else { m.labelSource = "manual-edit"; m.editedAt = new Date().toISOString().slice(0, 10); }
-  store(() => localStorage.setItem(DRAFT_KEY, JSON.stringify({ base: original, catalog })));
+  store(() => localStorage.setItem(draftKey(), JSON.stringify({ base: original, catalog })));
   updateStat(); updateListItem(id);
 }
 function updateStat() {
   const edited = editedIds().length, aligned = ids.filter((id) => catalog[id].trayCorners).length;
-  $("stat").textContent = `${ids.length} ảnh · ${edited} đã sửa · ${aligned} đã đánh dấu góc khay`;
+  const pending = ids.filter((id) => catalog[id].needsLabel).length;
+  $("stat").textContent = `${ids.length} ảnh · ${edited} đã sửa · ${aligned} đã đánh dấu góc khay` + (pending ? ` · ${pending} chưa gán nhãn` : "");
 }
 
 function renderList() {
@@ -194,6 +201,7 @@ function updateListItem(id) {
   span.append(name, small);
   if (!same(stripMeta(m), stripMeta(original[id] ?? {}))) { const t = document.createElement("span"); t.className = "tag edit"; t.textContent = "đã sửa"; small.append(" ", t); }
   if (m.trayCorners) { const t = document.createElement("span"); t.className = "tag"; t.textContent = "góc"; small.append(" ", t); }
+  if (m.needsLabel) { const t = document.createElement("span"); t.className = "tag edit"; t.textContent = "chưa gán nhãn"; small.append(" ", t); }
   b.setAttribute("aria-current", ids[index] === id ? "true" : "false");
 }
 
@@ -256,11 +264,27 @@ function renderForm() {
     l.append(c, label); flags.append(l);
   });
   $("combo").value = m.combo ?? ""; $("note").value = m.note ?? "";
+  const g = $("group"); g.textContent = "";
+  ids.forEach((other) => {
+    if (other === id) return;
+    const o = document.createElement("option"); o.value = other; o.textContent = other.replace(/^IMG_|\.jpg$/g, "") + (catalog[other].group === m.group ? "  ✓ cùng nhóm" : "");
+    g.append(o);
+  });
+  const own = document.createElement("option"); own.value = ""; own.textContent = "Khay riêng (nhóm 1 ảnh)"; g.prepend(own);
+  const mates = ids.filter((o) => o !== id && catalog[o].group === m.group);
+  g.value = mates.length ? mates[0] : "";
+  $("confirmLabel").hidden = $("pendingNote").hidden = !m.needsLabel;
 }
 document.querySelectorAll('input[name=veg]').forEach((r) => r.addEventListener("change", () => { current().veg_pos = r.value; touch(ids[index]); draw(); }));
 $("soupBowl").addEventListener("change", (e) => { current().soupBowl = e.target.value; touch(ids[index]); });
 $("combo").addEventListener("change", (e) => { current().combo = e.target.value.trim(); touch(ids[index]); });
 $("note").addEventListener("change", (e) => { current().note = e.target.value.trim(); touch(ids[index]); });
+$("group").addEventListener("change", (e) => {
+  const id = ids[index], m = current(), target = e.target.value;
+  m.group = target ? catalog[target].group : id;
+  touch(id); renderForm(); $("subtitle").textContent = "Nhóm: " + m.group.replace(/^IMG_|\.jpg$/g, "");
+});
+$("confirmLabel").addEventListener("click", () => { const id = ids[index]; delete current().needsLabel; touch(id); renderForm(); });
 $("revert").addEventListener("click", () => { const id = ids[index]; catalog[id] = clone(original[id]); touch(id); renderForm(); draw(); });
 
 function warpedImageData(img, corners) {
@@ -342,11 +366,11 @@ function warnIncomplete() {
   const bad = incomplete();
   return !bad.length || confirm(`${bad.length} ảnh chưa đủ 4 góc khay; phần góc dở dang sẽ bị bỏ. Tiếp tục?`);
 }
-function afterSave() { original = clone(JSON.parse(serialize())); catalog = clone(original); store(() => localStorage.removeItem(DRAFT_KEY)); ids.forEach(updateListItem); updateStat(); renderForm(); }
+function afterSave() { original = clone(JSON.parse(serialize())); catalog = clone(original); store(() => localStorage.removeItem(draftKey())); ids.forEach(updateListItem); updateStat(); renderForm(); }
 $("download").addEventListener("click", () => {
   if (!warnIncomplete()) return;
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([serialize()], { type: "application/json" }));
-  a.download = "ptnk-trays.json"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  a.download = openedName; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   afterSave();
 });
 if ("showSaveFilePicker" in window) {
@@ -354,7 +378,7 @@ if ("showSaveFilePicker" in window) {
   $("saveFs").addEventListener("click", async () => {
     if (!warnIncomplete()) return;
     try {
-      fileHandle ??= await window.showSaveFilePicker({ suggestedName: "ptnk-trays.json", types: [{ description: "JSON", accept: { "application/json": [".json"] } }] });
+      fileHandle ??= await window.showSaveFilePicker({ suggestedName: openedName, types: [{ description: "JSON", accept: { "application/json": [".json"] } }] });
       const w = await fileHandle.createWritable(); await w.write(serialize()); await w.close();
       afterSave(); showError("");
     } catch (e) { if (e.name !== "AbortError") showError("Không lưu được: " + e.message); }
@@ -363,7 +387,7 @@ if ("showSaveFilePicker" in window) {
 $("openBtn").addEventListener("click", () => $("openFile").click());
 $("openFile").addEventListener("change", async (e) => {
   const f = e.target.files?.[0]; if (!f) return;
-  try { const data = JSON.parse(await f.text()); if (!Object.values(data).every((m) => Array.isArray(m?.y) && m.y.length === 4)) throw Error("File không đúng định dạng ptnk-trays.json."); setCatalog(data); showError(""); }
+  try { const data = JSON.parse(await f.text()); if (!Object.values(data).every((m) => Array.isArray(m?.y) && m.y.length === 4)) throw Error("File không đúng định dạng ptnk-trays.json."); openedName = f.name; fileHandle = null; setCatalog(data); showError(""); }
   catch (err) { showError(err.message); }
 });
 document.addEventListener("keydown", (e) => {
@@ -377,11 +401,11 @@ window.addEventListener("beforeunload", (e) => { if (editedIds().length) e.preve
 
 try {
   const data = await loadCatalog(); setCatalog(data);
-  const draft = store(() => JSON.parse(localStorage.getItem(DRAFT_KEY) ?? "null"));
+  const draft = store(() => JSON.parse(localStorage.getItem(draftKey()) ?? "null"));
   if (draft?.catalog && same(draft.base, data) && !same(draft.catalog, data)) {
     $("draftBanner").classList.add("show");
     $("restoreDraft").addEventListener("click", () => { catalog = clone(draft.catalog); ids.forEach(updateListItem); updateStat(); renderForm(); draw(); $("draftBanner").classList.remove("show"); });
-    $("dropDraft").addEventListener("click", () => { store(() => localStorage.removeItem(DRAFT_KEY)); $("draftBanner").classList.remove("show"); });
+    $("dropDraft").addEventListener("click", () => { store(() => localStorage.removeItem(draftKey())); $("draftBanner").classList.remove("show"); });
   }
 } catch (e) {
   $("stat").textContent = "Chưa có dữ liệu";

@@ -11,6 +11,7 @@ import {
   CANONICAL_TRAY_CORNERS,
   updateWeights,
   visionKeys,
+  galleryDateRange,
   type FeatureVectors,
   type ModelWeights,
   type Percentages,
@@ -327,7 +328,7 @@ export default function PTNKVision() {
           <h2>Kiểm tra ảnh khay PTNK</h2>
           <p>
             {MODEL.realTraysCount} ảnh thật ({MODEL.independentTrays} khay độc lập,
-            không tính hai mốc) · 28–30/10/2026 · nhãn phần còn lại ước lượng
+            không tính hai mốc) · {galleryDateRange()} · nhãn phần còn lại ước lượng
             bằng mắt
           </p>
         </div>

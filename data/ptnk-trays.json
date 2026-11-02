@@ -1041,5 +1041,757 @@
         0.97
       ]
     ]
+  },
+  "IMG_20261102_114235.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      10,
+      0,
+      0,
+      20
+    ],
+    "combo": "Thịt chiên thanh cua trứng + Sườn chay chiên + Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114235.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": -90,
+    "soupBowl": "present",
+    "flags": [
+      "rice_in_main",
+      "near_clean",
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "main-unknown; day-menu-only",
+    "editedAt": "2026-11-02",
+    "trayCorners": [
+      [
+        0.0116,
+        0.0005
+      ],
+      [
+        0.9706,
+        0.0674
+      ],
+      [
+        0.9612,
+        0.991
+      ],
+      [
+        0.0027,
+        0.9538
+      ]
+    ]
+  },
+  "IMG_20261102_114240.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      60,
+      50,
+      85,
+      0
+    ],
+    "combo": "Thịt chiên thanh cua trứng + Sườn chay chiên + Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114240.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "absent",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "main-unknown; day-menu-only",
+    "editedAt": "2026-11-02",
+    "trayCorners": [
+      [
+        0.1506,
+        0.0108
+      ],
+      [
+        0.9789,
+        0.0901
+      ],
+      [
+        0.9483,
+        0.9544
+      ],
+      [
+        0.0748,
+        0.8737
+      ]
+    ]
+  },
+  "IMG_20261102_114245.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      5,
+      5,
+      10,
+      15
+    ],
+    "combo": "Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114245.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "bones",
+      "condiment"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.995,
+        0.9539
+      ],
+      [
+        0.0634,
+        0.9655
+      ],
+      [
+        0.1133,
+        0.0202
+      ],
+      [
+        0.977,
+        0.0269
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114250.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      50,
+      80,
+      75,
+      0
+    ],
+    "combo": "Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114250.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "absent",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.0713,
+        -0.0001
+      ],
+      [
+        0.9479,
+        0.0255
+      ],
+      [
+        0.9791,
+        0.9058
+      ],
+      [
+        0.0035,
+        0.8503
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114252.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      5,
+      0,
+      0,
+      60
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114252.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "rice_in_soup",
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9981,
+        0.992
+      ],
+      [
+        0.0023,
+        0.9941
+      ],
+      [
+        0.0614,
+        0.0024
+      ],
+      [
+        0.998,
+        0.0291
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114255.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      40,
+      80,
+      95,
+      20
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114255.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.0498,
+        0.0261
+      ],
+      [
+        0.9878,
+        0.05
+      ],
+      [
+        0.9968,
+        0.9945
+      ],
+      [
+        0.0168,
+        0.9892
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114257.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      85,
+      100,
+      80,
+      25
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114257.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9971,
+        0.9926
+      ],
+      [
+        0.0036,
+        0.995
+      ],
+      [
+        0.0025,
+        0.0997
+      ],
+      [
+        0.9633,
+        0.0548
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114300.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      85,
+      75,
+      35,
+      40
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114300.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [],
+    "note": "Ánh sáng không đều",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9987,
+        0.9602
+      ],
+      [
+        0.0631,
+        0.9735
+      ],
+      [
+        0.1107,
+        0.037
+      ],
+      [
+        0.9974,
+        0.0488
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114305.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      60,
+      30,
+      0,
+      30
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114305.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9953,
+        0.995
+      ],
+      [
+        0.0095,
+        0.9961
+      ],
+      [
+        0.0656,
+        -0.0005
+      ],
+      [
+        0.9972,
+        0.0063
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114314.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "combo": "Thịt chiên thanh cua trứng + Sườn chay chiên + Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114314.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": -90,
+    "soupBowl": "present",
+    "flags": [
+      "rice_in_main",
+      "near_clean"
+    ],
+    "note": "",
+    "comboConfidence": "main-unknown; day-menu-only",
+    "trayCorners": [
+      [
+        0.0243,
+        0
+      ],
+      [
+        0.9779,
+        0.0489
+      ],
+      [
+        0.9507,
+        0.9347
+      ],
+      [
+        0.0058,
+        0.9368
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114319.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      10,
+      0,
+      0,
+      10
+    ],
+    "combo": "Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114319.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "cropped_frame",
+      "bones",
+      "condiment"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9975,
+        0.9952
+      ],
+      [
+        0.0016,
+        0.9784
+      ],
+      [
+        0.0037,
+        0.0034
+      ],
+      [
+        0.9967,
+        0.0033
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114322.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      65,
+      45,
+      95,
+      0
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114322.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "absent",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.0116,
+        0.0021
+      ],
+      [
+        0.9853,
+        0.0089
+      ],
+      [
+        0.9988,
+        0.959
+      ],
+      [
+        0.0036,
+        0.9507
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114659.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      5,
+      10,
+      80,
+      0
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114659.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": -90,
+    "soupBowl": "absent",
+    "flags": [],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9946,
+        0.9981
+      ],
+      [
+        0.0026,
+        0.9955
+      ],
+      [
+        0.0024,
+        0.0042
+      ],
+      [
+        0.9961,
+        0.0054
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114701.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      0,
+      0,
+      5,
+      0
+    ],
+    "combo": "Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114701.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "absent",
+    "flags": [
+      "bones"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "editedAt": "2026-11-02",
+    "trayCorners": [
+      [
+        0.1053,
+        0.0268
+      ],
+      [
+        0.9988,
+        0.0708
+      ],
+      [
+        0.9977,
+        0.9926
+      ],
+      [
+        0.0018,
+        0.973
+      ]
+    ]
+  },
+  "IMG_20261102_114703.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "combo": "Thịt chiên thanh cua trứng + Sườn chay chiên + Gà chiên mắm tỏi",
+    "group": "IMG_20261102_114703.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "absent",
+    "flags": [
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "main-unknown; day-menu-only",
+    "trayCorners": [
+      [
+        0.9977,
+        0.9939
+      ],
+      [
+        0.0162,
+        0.9639
+      ],
+      [
+        0.0836,
+        0.0009
+      ],
+      [
+        0.9964,
+        0.0019
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114705.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      5,
+      35,
+      95,
+      10
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114705.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "cropped_frame",
+      "main_in_other_slot"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.005,
+        0.0043
+      ],
+      [
+        0.9967,
+        0.0068
+      ],
+      [
+        0.985,
+        0.9968
+      ],
+      [
+        0.0015,
+        0.9947
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114707.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      5,
+      35,
+      80,
+      5
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114707.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.0361,
+        0.0009
+      ],
+      [
+        0.9976,
+        0.0092
+      ],
+      [
+        0.9624,
+        0.9853
+      ],
+      [
+        0.0179,
+        0.8546
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114715.jpg": {
+    "veg_pos": "TL",
+    "y": [
+      85,
+      0,
+      80,
+      90
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114715.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": -90,
+    "soupBowl": "present",
+    "flags": [
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9977,
+        0.9906
+      ],
+      [
+        0.007,
+        0.9972
+      ],
+      [
+        0.0007,
+        0.09
+      ],
+      [
+        0.9652,
+        0.0148
+      ]
+    ],
+    "editedAt": "2026-11-02"
+  },
+  "IMG_20261102_114716.jpg": {
+    "veg_pos": "TR",
+    "y": [
+      20,
+      40,
+      30,
+      30
+    ],
+    "combo": "Thịt chiên thanh cua trứng",
+    "group": "IMG_20261102_114716.jpg",
+    "date": "2026-11-02",
+    "referenceOnly": false,
+    "labelSource": "manual-edit",
+    "rotation": 0,
+    "soupBowl": "present",
+    "flags": [
+      "utensil"
+    ],
+    "note": "",
+    "comboConfidence": "chưa xác nhận",
+    "trayCorners": [
+      [
+        0.9949,
+        0.9971
+      ],
+      [
+        0.0017,
+        0.9923
+      ],
+      [
+        0.0066,
+        0.0013
+      ],
+      [
+        0.996,
+        0.0082
+      ]
+    ],
+    "editedAt": "2026-11-02"
   }
 }

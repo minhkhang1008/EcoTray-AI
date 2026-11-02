@@ -92,7 +92,9 @@ Phương pháp: bỏ ra từng nhóm ảnh (leave-one-group-out). Đơn vị là
 | Ridge, **bỏ hiệu chuẩn 2 mốc**, nhãn cũ, 18 ảnh | 16,8 | 13,8 | 18,3 | 11,0 | 15,0 |
 | Ridge, bỏ hiệu chuẩn, nhãn v2, 35 ảnh | 16,1 | 17,0 | 13,1 | 12,3 | 14,6 |
 | Hồi quy tuyến tính 1 đặc trưng/món, nhãn v2, 35 ảnh | 14,9 | 15,8 | 13,2 | 12,5 | 14,1 |
-| **Model v4 đang dùng** (Ridge, bỏ hiệu chuẩn, nhãn v2, 35 ảnh) | 16,1 | 17,0 | 13,1 | 12,3 | **14,6** (mốc trung bình 25,3) |
+| **Model v4 tại thời điểm gán lại v2** (Ridge, bỏ hiệu chuẩn, nhãn v2, 35 ảnh) | 16,1 | 17,0 | 13,1 | 12,3 | **14,6** (mốc trung bình 25,3) |
+
+> Sau đợt sửa nhãn thủ công ngày 31/10 (`Cập nhật nhãn khay`), artifact hiện tại cho MAE 15,3 (mốc trung bình 26,4). Số liệu đang dùng nằm ở `src/lib/ecotrayModels.json` và [VISION-PTNK.md](VISION-PTNK.md).
 
 Cách đọc bảng:
 

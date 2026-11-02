@@ -1,0 +1,1153 @@
+{
+  "generatedFor": "frozen-embedding experiment; see docs/VISION-PTNK.md",
+  "backbone": "MobileNet v1 0.25, public/model, global_average_pooling2d_1 (256-d), frozen",
+  "scope": "gallery phone photos only; says nothing about the OV2640 station path",
+  "data": {
+    "photos": 54,
+    "independentTrays": 48,
+    "scoredPhotos": 52,
+    "labels": "visual estimates (relabel v2), not weighed"
+  },
+  "method": {
+    "crop": "calibrated gallery ROI per compartment (after 4-corner alignment where available), stretched to 224×224",
+    "model": "Ridge in dual form, z-scored features per fold, unpenalised bias",
+    "alphaSelection": "inner grouped 6-fold CV on training groups only",
+    "validation": "leave-one-related-view-group-out; both anchor photos train, neither is scored",
+    "augmentation": "4 seeded OV2640-like copies per photo (colour cast ±15%, exposure 0.75–1.15, 5×5 blur, σ12 noise); training rows only",
+    "emptyDiff": "diff vs the 0% anchor photo; phone photos are hand-held, so registration is poor and this variant is only a weak proxy for a fixed station camera"
+  },
+  "adoptionRule": {
+    "comparedAgainst": "gallery Ridge held-out predictions stored in src/lib/ecotrayModels.json",
+    "minOverallGainPP": 3,
+    "componentTolerancePP": 0,
+    "scope": "gallery phone photos only; says nothing about the OV2640 station path"
+  },
+  "galleryRidgeReference": {
+    "overall": 16.391201923076924,
+    "byComponent": {
+      "rice": 23.214615384615385,
+      "main": 16.197307692307696,
+      "veg": 13.978846153846153,
+      "soup": 12.174038461538462
+    },
+    "scoredImages": 52,
+    "meanLabelBaseline": {
+      "rice": 27.54817311540002,
+      "main": 27.375337211807803,
+      "veg": 32.11186997876072,
+      "soup": 27.06464124111182
+    },
+    "meanLabelBaselineOverall": 28.52500538677009
+  },
+  "results": {
+    "embedding-only": {
+      "withAugmentation": {
+        "overall": 12.486717611953612,
+        "byComponent": {
+          "rice": 9.828535162611937,
+          "main": 14.079465496558734,
+          "veg": 14.481535508774918,
+          "soup": 11.557334279868853
+        },
+        "alphaChoices": {
+          "rice": {
+            "100": 46
+          },
+          "main": {
+            "100": 46
+          },
+          "veg": {
+            "10": 1,
+            "100": 43,
+            "1000": 2
+          },
+          "soup": {
+            "1": 1,
+            "100": 45
+          }
+        }
+      },
+      "withoutAugmentation": {
+        "overall": 11.717862270854294,
+        "byComponent": {
+          "rice": 9.39491550355677,
+          "main": 12.761682238984168,
+          "veg": 13.948883080881497,
+          "soup": 10.765968259994736
+        }
+      },
+      "decision": {
+        "overallGainPP": 3.904484311123312,
+        "componentsWorse": [
+          "veg"
+        ],
+        "passes": false
+      },
+      "pairedBootstrap": {
+        "gainPP": 3.9043750000000013,
+        "ci95": [
+          1.8111274509803927,
+          5.924807692307694
+        ],
+        "groups": 46,
+        "draws": 4000
+      },
+      "heldOutPredictions": {
+        "IMG_20261028_114612.jpg": {
+          "rice": 68.98,
+          "main": 62.8,
+          "veg": 67.4,
+          "soup": 0
+        },
+        "IMG_20261028_114613.jpg": {
+          "rice": 64.58,
+          "main": 66.77,
+          "veg": 56.7,
+          "soup": 0
+        },
+        "IMG_20261028_114807.jpg": {
+          "rice": 74.28,
+          "main": 64.06,
+          "veg": 35.79,
+          "soup": 0
+        },
+        "IMG_20261028_114814.jpg": {
+          "rice": 35.06,
+          "main": 46.73,
+          "veg": 37.15,
+          "soup": 15.05
+        },
+        "IMG_20261028_115432.jpg": {
+          "rice": 34.46,
+          "main": 42.69,
+          "veg": 7.91,
+          "soup": 53.07
+        },
+        "IMG_20261028_115435.jpg": {
+          "rice": 84.26,
+          "main": 48.14,
+          "veg": 64.04,
+          "soup": 39.19
+        },
+        "IMG_20261028_115435_1.jpg": {
+          "rice": 79.39,
+          "main": 53.2,
+          "veg": 58.62,
+          "soup": 26.78
+        },
+        "IMG_20261028_115444.jpg": {
+          "rice": 71.98,
+          "main": 62.21,
+          "veg": 69.7,
+          "soup": 46.2
+        },
+        "IMG_20261028_115444_1.jpg": {
+          "rice": 80.46,
+          "main": 61.77,
+          "veg": 73.31,
+          "soup": 58.98
+        },
+        "IMG_20261028_115445.jpg": {
+          "rice": 59.12,
+          "main": 56.08,
+          "veg": 91.64,
+          "soup": 56.73
+        },
+        "IMG_20261028_115447.jpg": {
+          "rice": 20.9,
+          "main": 80.24,
+          "veg": 8.85,
+          "soup": 49.92
+        },
+        "IMG_20261029_112143.jpg": {
+          "rice": 69.8,
+          "main": 100,
+          "veg": 0.37,
+          "soup": 93.72
+        },
+        "IMG_20261029_112148.jpg": {
+          "rice": 41.37,
+          "main": 74.32,
+          "veg": 60.22,
+          "soup": 3.27
+        },
+        "IMG_20261029_112154.jpg": {
+          "rice": 69.09,
+          "main": 59.6,
+          "veg": 71.23,
+          "soup": 0
+        },
+        "IMG_20261029_112159.jpg": {
+          "rice": 79.3,
+          "main": 100,
+          "veg": 91.08,
+          "soup": 0
+        },
+        "IMG_20261029_112201.jpg": {
+          "rice": 68.62,
+          "main": 71.98,
+          "veg": 75.06,
+          "soup": 82.17
+        },
+        "IMG_20261029_113321.jpg": {
+          "rice": 11.79,
+          "main": 71.7,
+          "veg": 70.73,
+          "soup": 5.17
+        },
+        "IMG_20261029_113324.jpg": {
+          "rice": 15.14,
+          "main": 5.27,
+          "veg": 23.87,
+          "soup": 38.11
+        },
+        "IMG_20261029_113326.jpg": {
+          "rice": 4.34,
+          "main": 14.22,
+          "veg": 50.38,
+          "soup": 0.15
+        },
+        "IMG_20261030_112909.jpg": {
+          "rice": 66.48,
+          "main": 54.89,
+          "veg": 75.55,
+          "soup": 0
+        },
+        "IMG_20261030_112911.jpg": {
+          "rice": 51.44,
+          "main": 24.95,
+          "veg": 42.89,
+          "soup": 31.76
+        },
+        "IMG_20261030_112912.jpg": {
+          "rice": 57.45,
+          "main": 46.23,
+          "veg": 40.74,
+          "soup": 60.66
+        },
+        "IMG_20261030_112922.jpg": {
+          "rice": 39.01,
+          "main": 49.82,
+          "veg": 5.79,
+          "soup": 38.13
+        },
+        "IMG_20261030_112923.jpg": {
+          "rice": 66.41,
+          "main": 70.09,
+          "veg": 74.87,
+          "soup": 34.44
+        },
+        "IMG_20261030_112925.jpg": {
+          "rice": 56.03,
+          "main": 22.46,
+          "veg": 0,
+          "soup": 55.26
+        },
+        "IMG_20261030_112927.jpg": {
+          "rice": 27.17,
+          "main": 50.67,
+          "veg": 87.55,
+          "soup": 0
+        },
+        "IMG_20261030_112927_1.jpg": {
+          "rice": 28.53,
+          "main": 48.78,
+          "veg": 83.16,
+          "soup": 0
+        },
+        "IMG_20261030_112930.jpg": {
+          "rice": 61.72,
+          "main": 72.08,
+          "veg": 36.99,
+          "soup": 0.45
+        },
+        "IMG_20261030_112933.jpg": {
+          "rice": 79.7,
+          "main": 68.24,
+          "veg": 72.55,
+          "soup": 64.23
+        },
+        "IMG_20261030_112937.jpg": {
+          "rice": 12.2,
+          "main": 41.9,
+          "veg": 53.26,
+          "soup": 65.05
+        },
+        "IMG_20261030_112939.jpg": {
+          "rice": 45.44,
+          "main": 36.35,
+          "veg": 73.12,
+          "soup": 2.65
+        },
+        "IMG_20261030_113406.jpg": {
+          "rice": 37.46,
+          "main": 92.86,
+          "veg": 97.8,
+          "soup": 0
+        },
+        "IMG_20261030_113412.jpg": {
+          "rice": 78.97,
+          "main": 68.59,
+          "veg": 0,
+          "soup": 61.02
+        },
+        "IMG_20261102_114235.jpg": {
+          "rice": 13.64,
+          "main": 0,
+          "veg": 1.01,
+          "soup": 29.74
+        },
+        "IMG_20261102_114240.jpg": {
+          "rice": 73.66,
+          "main": 64.83,
+          "veg": 57.6,
+          "soup": 0
+        },
+        "IMG_20261102_114245.jpg": {
+          "rice": 8.99,
+          "main": 29.62,
+          "veg": 21.19,
+          "soup": 45.18
+        },
+        "IMG_20261102_114250.jpg": {
+          "rice": 47.3,
+          "main": 77.38,
+          "veg": 85.08,
+          "soup": 0
+        },
+        "IMG_20261102_114252.jpg": {
+          "rice": 22.85,
+          "main": 6.11,
+          "veg": 19.2,
+          "soup": 57.16
+        },
+        "IMG_20261102_114255.jpg": {
+          "rice": 23,
+          "main": 73.12,
+          "veg": 76.28,
+          "soup": 45.1
+        },
+        "IMG_20261102_114257.jpg": {
+          "rice": 80.23,
+          "main": 61.9,
+          "veg": 85.2,
+          "soup": 55.72
+        },
+        "IMG_20261102_114300.jpg": {
+          "rice": 59.03,
+          "main": 56.78,
+          "veg": 39.48,
+          "soup": 25.21
+        },
+        "IMG_20261102_114305.jpg": {
+          "rice": 71.65,
+          "main": 31.71,
+          "veg": 15.54,
+          "soup": 46.25
+        },
+        "IMG_20261102_114314.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 0,
+          "soup": 6.67
+        },
+        "IMG_20261102_114319.jpg": {
+          "rice": 12.62,
+          "main": 6.75,
+          "veg": 4.18,
+          "soup": 19.66
+        },
+        "IMG_20261102_114322.jpg": {
+          "rice": 60.43,
+          "main": 51.13,
+          "veg": 70.64,
+          "soup": 0
+        },
+        "IMG_20261102_114659.jpg": {
+          "rice": 24.72,
+          "main": 45.97,
+          "veg": 83.27,
+          "soup": 0
+        },
+        "IMG_20261102_114701.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 35.09,
+          "soup": 1.54
+        },
+        "IMG_20261102_114703.jpg": {
+          "rice": 0,
+          "main": 5.83,
+          "veg": 12.55,
+          "soup": 16.47
+        },
+        "IMG_20261102_114705.jpg": {
+          "rice": 16.4,
+          "main": 33.44,
+          "veg": 93.18,
+          "soup": 5.49
+        },
+        "IMG_20261102_114707.jpg": {
+          "rice": 16.16,
+          "main": 42.05,
+          "veg": 57.38,
+          "soup": 13.09
+        },
+        "IMG_20261102_114715.jpg": {
+          "rice": 74.14,
+          "main": 3.32,
+          "veg": 75.25,
+          "soup": 47.38
+        },
+        "IMG_20261102_114716.jpg": {
+          "rice": 22.02,
+          "main": 15.94,
+          "veg": 38,
+          "soup": 0
+        }
+      }
+    },
+    "embedding+hand-features": {
+      "withAugmentation": {
+        "overall": 12.292101086273068,
+        "byComponent": {
+          "rice": 9.611409608804433,
+          "main": 14.0108306820843,
+          "veg": 13.828526885020379,
+          "soup": 11.717637169183158
+        },
+        "alphaChoices": {
+          "rice": {
+            "100": 46
+          },
+          "main": {
+            "100": 46
+          },
+          "veg": {
+            "10": 1,
+            "100": 44,
+            "1000": 1
+          },
+          "soup": {
+            "1": 6,
+            "100": 40
+          }
+        }
+      },
+      "withoutAugmentation": {
+        "overall": 11.338237167750334,
+        "byComponent": {
+          "rice": 9.46505018085421,
+          "main": 12.542419994665412,
+          "veg": 12.993627468191193,
+          "soup": 10.351851027290524
+        }
+      },
+      "decision": {
+        "overallGainPP": 4.099100836803856,
+        "componentsWorse": [],
+        "passes": true
+      },
+      "pairedBootstrap": {
+        "gainPP": 4.099086538461538,
+        "ci95": [
+          1.949754901960785,
+          6.17429245283019
+        ],
+        "groups": 46,
+        "draws": 4000
+      },
+      "heldOutPredictions": {
+        "IMG_20261028_114612.jpg": {
+          "rice": 68.74,
+          "main": 63.37,
+          "veg": 69.88,
+          "soup": 0
+        },
+        "IMG_20261028_114613.jpg": {
+          "rice": 63.66,
+          "main": 67.35,
+          "veg": 59.45,
+          "soup": 22.5
+        },
+        "IMG_20261028_114807.jpg": {
+          "rice": 74.72,
+          "main": 63.42,
+          "veg": 38.71,
+          "soup": 0
+        },
+        "IMG_20261028_114814.jpg": {
+          "rice": 34.12,
+          "main": 48.42,
+          "veg": 37.48,
+          "soup": 14.89
+        },
+        "IMG_20261028_115432.jpg": {
+          "rice": 34.2,
+          "main": 43.92,
+          "veg": 9.88,
+          "soup": 47.29
+        },
+        "IMG_20261028_115435.jpg": {
+          "rice": 85.19,
+          "main": 48.69,
+          "veg": 61.33,
+          "soup": 37.96
+        },
+        "IMG_20261028_115435_1.jpg": {
+          "rice": 80.22,
+          "main": 53.27,
+          "veg": 57.81,
+          "soup": 25.8
+        },
+        "IMG_20261028_115444.jpg": {
+          "rice": 70.7,
+          "main": 63.09,
+          "veg": 70.49,
+          "soup": 46.55
+        },
+        "IMG_20261028_115444_1.jpg": {
+          "rice": 79.7,
+          "main": 62.82,
+          "veg": 74.53,
+          "soup": 58.57
+        },
+        "IMG_20261028_115445.jpg": {
+          "rice": 58.42,
+          "main": 57.14,
+          "veg": 91.22,
+          "soup": 57.48
+        },
+        "IMG_20261028_115447.jpg": {
+          "rice": 21.37,
+          "main": 79.61,
+          "veg": 7.85,
+          "soup": 50.27
+        },
+        "IMG_20261029_112143.jpg": {
+          "rice": 70.53,
+          "main": 100,
+          "veg": 0,
+          "soup": 94.18
+        },
+        "IMG_20261029_112148.jpg": {
+          "rice": 41.29,
+          "main": 73.79,
+          "veg": 62.05,
+          "soup": 3.12
+        },
+        "IMG_20261029_112154.jpg": {
+          "rice": 69.73,
+          "main": 58.61,
+          "veg": 69.51,
+          "soup": 0
+        },
+        "IMG_20261029_112159.jpg": {
+          "rice": 78.71,
+          "main": 100,
+          "veg": 88.63,
+          "soup": 0
+        },
+        "IMG_20261029_112201.jpg": {
+          "rice": 67.45,
+          "main": 72.49,
+          "veg": 77.99,
+          "soup": 85.45
+        },
+        "IMG_20261029_113321.jpg": {
+          "rice": 12.13,
+          "main": 72.1,
+          "veg": 71.52,
+          "soup": 3.56
+        },
+        "IMG_20261029_113324.jpg": {
+          "rice": 12.94,
+          "main": 3.71,
+          "veg": 21.82,
+          "soup": 34.19
+        },
+        "IMG_20261029_113326.jpg": {
+          "rice": 2.26,
+          "main": 15.63,
+          "veg": 47.61,
+          "soup": 1.01
+        },
+        "IMG_20261030_112909.jpg": {
+          "rice": 66.12,
+          "main": 55.12,
+          "veg": 75.47,
+          "soup": 0
+        },
+        "IMG_20261030_112911.jpg": {
+          "rice": 50.57,
+          "main": 25.24,
+          "veg": 41.52,
+          "soup": 32.15
+        },
+        "IMG_20261030_112912.jpg": {
+          "rice": 56.52,
+          "main": 45.95,
+          "veg": 39.66,
+          "soup": 60.62
+        },
+        "IMG_20261030_112922.jpg": {
+          "rice": 38.37,
+          "main": 49.02,
+          "veg": 5.11,
+          "soup": 38.97
+        },
+        "IMG_20261030_112923.jpg": {
+          "rice": 64.8,
+          "main": 69.68,
+          "veg": 76.32,
+          "soup": 33.8
+        },
+        "IMG_20261030_112925.jpg": {
+          "rice": 54.94,
+          "main": 23.4,
+          "veg": 0,
+          "soup": 55.11
+        },
+        "IMG_20261030_112927.jpg": {
+          "rice": 27.64,
+          "main": 49.36,
+          "veg": 88.72,
+          "soup": 0
+        },
+        "IMG_20261030_112927_1.jpg": {
+          "rice": 29.1,
+          "main": 47.49,
+          "veg": 83.47,
+          "soup": 0
+        },
+        "IMG_20261030_112930.jpg": {
+          "rice": 61.35,
+          "main": 71.97,
+          "veg": 37.59,
+          "soup": 0
+        },
+        "IMG_20261030_112933.jpg": {
+          "rice": 79.04,
+          "main": 67.8,
+          "veg": 70.28,
+          "soup": 65.47
+        },
+        "IMG_20261030_112937.jpg": {
+          "rice": 12.05,
+          "main": 42.12,
+          "veg": 50.82,
+          "soup": 64.9
+        },
+        "IMG_20261030_112939.jpg": {
+          "rice": 44.88,
+          "main": 36.51,
+          "veg": 72.61,
+          "soup": 1.33
+        },
+        "IMG_20261030_113406.jpg": {
+          "rice": 36.87,
+          "main": 93.26,
+          "veg": 99.16,
+          "soup": 0
+        },
+        "IMG_20261030_113412.jpg": {
+          "rice": 78.79,
+          "main": 68.46,
+          "veg": 0,
+          "soup": 59.46
+        },
+        "IMG_20261102_114235.jpg": {
+          "rice": 12.38,
+          "main": 0,
+          "veg": 0,
+          "soup": 29.41
+        },
+        "IMG_20261102_114240.jpg": {
+          "rice": 73.09,
+          "main": 64.65,
+          "veg": 58.33,
+          "soup": 0
+        },
+        "IMG_20261102_114245.jpg": {
+          "rice": 9.25,
+          "main": 30.11,
+          "veg": 10.83,
+          "soup": 45.22
+        },
+        "IMG_20261102_114250.jpg": {
+          "rice": 47.66,
+          "main": 76.61,
+          "veg": 85.33,
+          "soup": 0
+        },
+        "IMG_20261102_114252.jpg": {
+          "rice": 23.3,
+          "main": 5.81,
+          "veg": 17.86,
+          "soup": 55.4
+        },
+        "IMG_20261102_114255.jpg": {
+          "rice": 23.14,
+          "main": 73,
+          "veg": 75.39,
+          "soup": 43.9
+        },
+        "IMG_20261102_114257.jpg": {
+          "rice": 79.55,
+          "main": 61.73,
+          "veg": 85.23,
+          "soup": 54.25
+        },
+        "IMG_20261102_114300.jpg": {
+          "rice": 59.8,
+          "main": 55.68,
+          "veg": 40.86,
+          "soup": 26.9
+        },
+        "IMG_20261102_114305.jpg": {
+          "rice": 71.25,
+          "main": 31.44,
+          "veg": 16.65,
+          "soup": 46.39
+        },
+        "IMG_20261102_114314.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 0,
+          "soup": 6
+        },
+        "IMG_20261102_114319.jpg": {
+          "rice": 11.6,
+          "main": 7.46,
+          "veg": 0.2,
+          "soup": 19.21
+        },
+        "IMG_20261102_114322.jpg": {
+          "rice": 59.51,
+          "main": 51.55,
+          "veg": 71.69,
+          "soup": 0
+        },
+        "IMG_20261102_114659.jpg": {
+          "rice": 23.95,
+          "main": 45.71,
+          "veg": 83.43,
+          "soup": 0
+        },
+        "IMG_20261102_114701.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 33.38,
+          "soup": 1.58
+        },
+        "IMG_20261102_114703.jpg": {
+          "rice": 0,
+          "main": 5.64,
+          "veg": 11.5,
+          "soup": 16.12
+        },
+        "IMG_20261102_114705.jpg": {
+          "rice": 16,
+          "main": 32.34,
+          "veg": 92.06,
+          "soup": 4.86
+        },
+        "IMG_20261102_114707.jpg": {
+          "rice": 17.73,
+          "main": 42.01,
+          "veg": 56.54,
+          "soup": 11.59
+        },
+        "IMG_20261102_114715.jpg": {
+          "rice": 74.58,
+          "main": 3.06,
+          "veg": 74.78,
+          "soup": 42.93
+        },
+        "IMG_20261102_114716.jpg": {
+          "rice": 21.3,
+          "main": 16.35,
+          "veg": 36.01,
+          "soup": 0
+        }
+      }
+    },
+    "embedding+hand+empty-diff": {
+      "withAugmentation": {
+        "overall": 12.335628372776906,
+        "byComponent": {
+          "rice": 9.607023362208496,
+          "main": 14.007052515918277,
+          "veg": 13.43752593924955,
+          "soup": 12.290911673731298
+        },
+        "alphaChoices": {
+          "rice": {
+            "100": 46
+          },
+          "main": {
+            "100": 45,
+            "1000": 1
+          },
+          "veg": {
+            "100": 45,
+            "1000": 1
+          },
+          "soup": {
+            "1": 3,
+            "10": 2,
+            "100": 41
+          }
+        }
+      },
+      "withoutAugmentation": {
+        "overall": 11.334969307742492,
+        "byComponent": {
+          "rice": 9.65371741937723,
+          "main": 12.603849647958231,
+          "veg": 12.747394582102942,
+          "soup": 10.33491558153157
+        }
+      },
+      "decision": {
+        "overallGainPP": 4.055573550300018,
+        "componentsWorse": [
+          "soup"
+        ],
+        "passes": false
+      },
+      "pairedBootstrap": {
+        "gainPP": 4.055625,
+        "ci95": [
+          1.9352314814814817,
+          6.1446499999999995
+        ],
+        "groups": 46,
+        "draws": 4000
+      },
+      "heldOutPredictions": {
+        "IMG_20261028_114612.jpg": {
+          "rice": 67.84,
+          "main": 63.5,
+          "veg": 73.31,
+          "soup": 0
+        },
+        "IMG_20261028_114613.jpg": {
+          "rice": 63.25,
+          "main": 67.74,
+          "veg": 61.43,
+          "soup": 0
+        },
+        "IMG_20261028_114807.jpg": {
+          "rice": 73.81,
+          "main": 56.92,
+          "veg": 46.15,
+          "soup": 0
+        },
+        "IMG_20261028_114814.jpg": {
+          "rice": 34,
+          "main": 50.5,
+          "veg": 38.02,
+          "soup": 14.17
+        },
+        "IMG_20261028_115432.jpg": {
+          "rice": 33.84,
+          "main": 43.56,
+          "veg": 11.86,
+          "soup": 40.94
+        },
+        "IMG_20261028_115435.jpg": {
+          "rice": 85.6,
+          "main": 47.08,
+          "veg": 58.41,
+          "soup": 37.3
+        },
+        "IMG_20261028_115435_1.jpg": {
+          "rice": 80.82,
+          "main": 51.52,
+          "veg": 55.47,
+          "soup": 25.41
+        },
+        "IMG_20261028_115444.jpg": {
+          "rice": 71.08,
+          "main": 64.05,
+          "veg": 70.79,
+          "soup": 46.45
+        },
+        "IMG_20261028_115444_1.jpg": {
+          "rice": 80.2,
+          "main": 64.69,
+          "veg": 75.13,
+          "soup": 58.59
+        },
+        "IMG_20261028_115445.jpg": {
+          "rice": 58.74,
+          "main": 58.27,
+          "veg": 89.23,
+          "soup": 56.93
+        },
+        "IMG_20261028_115447.jpg": {
+          "rice": 21.77,
+          "main": 79.04,
+          "veg": 10.86,
+          "soup": 49.86
+        },
+        "IMG_20261029_112143.jpg": {
+          "rice": 69.47,
+          "main": 100,
+          "veg": 0,
+          "soup": 95.41
+        },
+        "IMG_20261029_112148.jpg": {
+          "rice": 41.72,
+          "main": 72.62,
+          "veg": 60.9,
+          "soup": 2.2
+        },
+        "IMG_20261029_112154.jpg": {
+          "rice": 69.98,
+          "main": 60.58,
+          "veg": 69.11,
+          "soup": 0
+        },
+        "IMG_20261029_112159.jpg": {
+          "rice": 78.95,
+          "main": 100,
+          "veg": 84.58,
+          "soup": 0
+        },
+        "IMG_20261029_112201.jpg": {
+          "rice": 68.21,
+          "main": 74.41,
+          "veg": 77.64,
+          "soup": 88.47
+        },
+        "IMG_20261029_113321.jpg": {
+          "rice": 11.9,
+          "main": 70.8,
+          "veg": 70.08,
+          "soup": 3.5
+        },
+        "IMG_20261029_113324.jpg": {
+          "rice": 13.19,
+          "main": 4.19,
+          "veg": 21.15,
+          "soup": 88.76
+        },
+        "IMG_20261029_113326.jpg": {
+          "rice": 2.62,
+          "main": 20.63,
+          "veg": 46.11,
+          "soup": 1.53
+        },
+        "IMG_20261030_112909.jpg": {
+          "rice": 66.34,
+          "main": 55.64,
+          "veg": 77.16,
+          "soup": 0
+        },
+        "IMG_20261030_112911.jpg": {
+          "rice": 51.78,
+          "main": 28.08,
+          "veg": 39.74,
+          "soup": 32.9
+        },
+        "IMG_20261030_112912.jpg": {
+          "rice": 57.23,
+          "main": 49.03,
+          "veg": 37.43,
+          "soup": 61.09
+        },
+        "IMG_20261030_112922.jpg": {
+          "rice": 37.08,
+          "main": 48.3,
+          "veg": 3.5,
+          "soup": 38.47
+        },
+        "IMG_20261030_112923.jpg": {
+          "rice": 65.58,
+          "main": 68.89,
+          "veg": 77.88,
+          "soup": 34.22
+        },
+        "IMG_20261030_112925.jpg": {
+          "rice": 54.56,
+          "main": 22.17,
+          "veg": 0,
+          "soup": 54.31
+        },
+        "IMG_20261030_112927.jpg": {
+          "rice": 27.96,
+          "main": 47.23,
+          "veg": 83.99,
+          "soup": 0
+        },
+        "IMG_20261030_112927_1.jpg": {
+          "rice": 29.37,
+          "main": 44.46,
+          "veg": 80,
+          "soup": 0
+        },
+        "IMG_20261030_112930.jpg": {
+          "rice": 60.71,
+          "main": 71.8,
+          "veg": 33.04,
+          "soup": 0
+        },
+        "IMG_20261030_112933.jpg": {
+          "rice": 80.39,
+          "main": 65.8,
+          "veg": 72.24,
+          "soup": 65
+        },
+        "IMG_20261030_112937.jpg": {
+          "rice": 12.67,
+          "main": 41.8,
+          "veg": 52.68,
+          "soup": 63.8
+        },
+        "IMG_20261030_112939.jpg": {
+          "rice": 44.3,
+          "main": 34.43,
+          "veg": 75.33,
+          "soup": 1.56
+        },
+        "IMG_20261030_113406.jpg": {
+          "rice": 36.32,
+          "main": 93,
+          "veg": 98.36,
+          "soup": 0
+        },
+        "IMG_20261030_113412.jpg": {
+          "rice": 78.19,
+          "main": 68.77,
+          "veg": 0,
+          "soup": 60.34
+        },
+        "IMG_20261102_114235.jpg": {
+          "rice": 12.5,
+          "main": 0,
+          "veg": 2.24,
+          "soup": 30.53
+        },
+        "IMG_20261102_114240.jpg": {
+          "rice": 73.59,
+          "main": 63.48,
+          "veg": 59.19,
+          "soup": 0
+        },
+        "IMG_20261102_114245.jpg": {
+          "rice": 9.3,
+          "main": 29.1,
+          "veg": 14.04,
+          "soup": 43.95
+        },
+        "IMG_20261102_114250.jpg": {
+          "rice": 47.34,
+          "main": 77.54,
+          "veg": 84.66,
+          "soup": 0
+        },
+        "IMG_20261102_114252.jpg": {
+          "rice": 22.74,
+          "main": 9.21,
+          "veg": 17.93,
+          "soup": 53.8
+        },
+        "IMG_20261102_114255.jpg": {
+          "rice": 22.74,
+          "main": 71.29,
+          "veg": 75.32,
+          "soup": 43.02
+        },
+        "IMG_20261102_114257.jpg": {
+          "rice": 79.61,
+          "main": 62.76,
+          "veg": 87.84,
+          "soup": 52.95
+        },
+        "IMG_20261102_114300.jpg": {
+          "rice": 60.49,
+          "main": 58.54,
+          "veg": 41.85,
+          "soup": 31.66
+        },
+        "IMG_20261102_114305.jpg": {
+          "rice": 71.16,
+          "main": 31.91,
+          "veg": 15.36,
+          "soup": 46.8
+        },
+        "IMG_20261102_114314.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 0,
+          "soup": 5.74
+        },
+        "IMG_20261102_114319.jpg": {
+          "rice": 11.18,
+          "main": 4.27,
+          "veg": 0,
+          "soup": 18.83
+        },
+        "IMG_20261102_114322.jpg": {
+          "rice": 59.5,
+          "main": 48.52,
+          "veg": 72.3,
+          "soup": 0
+        },
+        "IMG_20261102_114659.jpg": {
+          "rice": 23.59,
+          "main": 46.5,
+          "veg": 83.23,
+          "soup": 0
+        },
+        "IMG_20261102_114701.jpg": {
+          "rice": 0,
+          "main": 0,
+          "veg": 31.54,
+          "soup": 2.16
+        },
+        "IMG_20261102_114703.jpg": {
+          "rice": 0,
+          "main": 5.37,
+          "veg": 13.1,
+          "soup": 15.88
+        },
+        "IMG_20261102_114705.jpg": {
+          "rice": 16.35,
+          "main": 32.64,
+          "veg": 89.22,
+          "soup": 3.68
+        },
+        "IMG_20261102_114707.jpg": {
+          "rice": 16.84,
+          "main": 44.46,
+          "veg": 57.93,
+          "soup": 11.23
+        },
+        "IMG_20261102_114715.jpg": {
+          "rice": 74.17,
+          "main": 4.91,
+          "veg": 75.08,
+          "soup": 45.28
+        },
+        "IMG_20261102_114716.jpg": {
+          "rice": 21.07,
+          "main": 16.53,
+          "veg": 34.42,
+          "soup": 0
+        }
+      }
+    }
+  },
+  "verdict": {
+    "bestVariant": "embedding+hand-features",
+    "bestOverallMAE": 12.292101086273068,
+    "meetsPreRegisteredRule": true,
+    "gainDistinguishableFromNoise": true,
+    "candidateForGallery": true,
+    "bestGainMinusRulePP": 1.0991008368038564,
+    "note": "The variants' intervals overlap, so their ranking is not reliable; the margin over the rule is the number above. Any candidate applies to the gallery only: the live station path still needs the weighed ESP32 gate."
+  }
+}

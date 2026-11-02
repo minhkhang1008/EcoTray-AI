@@ -4,7 +4,7 @@ import jpeg from "jpeg-js";
 import {
   evaluateTrayWithTrainedModel,
   validFeatures,
-  PTNK_18_TRAYS_CATALOG,
+  PTNK_TRAYS_CATALOG,
   visionKeys,
 } from "../lib/ptnk-vision.mjs";
 import { RedisStore, MemoryStore, digest } from "./store.mjs";
@@ -294,7 +294,7 @@ export function createVisionService({ store = null, schoolId = "ptnk" } = {}) {
         if (
           body.sampleId !== undefined &&
           (typeof body.sampleId !== "string" ||
-            !Object.hasOwn(PTNK_18_TRAYS_CATALOG, body.sampleId))
+            !Object.hasOwn(PTNK_TRAYS_CATALOG, body.sampleId))
         )
           return fail("UNKNOWN_SAMPLE", "Mẫu ảnh không có trong danh mục.");
         if (
