@@ -343,7 +343,7 @@ export default function App({
             className="logout-button"
             onNavigate={() => setMessage("")}
           >
-            <Icon name="help" size={20} /> Phương pháp & trợ giúp
+            <Icon name="help" size={20} /> Giới thiệu EcoTray AI
           </Link>
           <button className="logout-button" onClick={onLogout}>
             <Icon name="logout" size={20} /> Đăng xuất

@@ -187,7 +187,7 @@ export default function ProjectInfo({
         <Section
           id="mo-dun"
           eyebrow="03 · NHÂN RỘNG"
-          title="Kiến trúc ba mô-đun"
+          title="Kiến trúc ba modules"
           lead="Mỗi trường chọn đầu vào phù hợp và dùng chung vòng phản hồi cho bếp."
         >
           <div className="pj-modules">
