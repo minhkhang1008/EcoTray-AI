@@ -92,13 +92,10 @@ export default function ProjectInfo({
 
       <main id="content" tabIndex={-1}>
         <section className="pj-hero" aria-labelledby="pj-title">
-          <span className="pj-eyebrow">THÔNG TIN DỰ ÁN · SSC 2026 CHUNG KẾT</span>
+          <span className="pj-eyebrow">THÔNG TIN DỰ ÁN</span>
           <h1 id="pj-title">{projectMeta.name}</h1>
           <p className="pj-tagline">{projectMeta.tagline}</p>
           <p className="pj-lead">{projectMeta.lead}</p>
-          <p className="pj-source">
-            Nguồn: {projectMeta.source} · {account.schoolName}
-          </p>
         </section>
 
         <Section
@@ -211,7 +208,6 @@ export default function ProjectInfo({
           id="hieu-qua"
           eyebrow="05 · KINH TẾ & BỀN VỮNG"
           title="Hiệu quả và chi phí"
-          lead="Các con số dưới đây là dự toán và kịch bản theo giả định đã nêu, chưa phải kết quả đo thực địa."
         >
           <ul className="pj-stats pj-econ">
             {economics.map((e) => (

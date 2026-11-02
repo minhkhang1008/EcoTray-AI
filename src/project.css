@@ -193,11 +193,6 @@ body:has(.project-page) {
   line-height: 1.7;
   color: #d4e4d3;
 }
-.pj-source {
-  margin-top: 20px;
-  font-size: 12px;
-  color: #a9c99e;
-}
 
 .pj-section {
   padding: 44px 0 4px;

@@ -8,7 +8,6 @@ export const projectMeta = {
   name: "EcoTray AI",
   tagline: "Mỗi khay lên tiếng, mỗi bữa ăn tốt hơn.",
   lead: "Vòng lặp quyết định khép kín cho căn tin học đường: biết học sinh đăng ký gì, nhận gì, ăn bao nhiêu và bỏ thừa gì để bếp điều chỉnh bữa sau.",
-  source: "Slide chung kết SSC 2026 (ver2, 02/11/2026) · README dự án",
 };
 
 export const problemStats = [
@@ -24,7 +23,7 @@ export const problemInsight =
 /** Tỷ lệ phần còn lại trung bình theo thành phần (khay trả). */
 export const plateWaste = [
   { label: "Rau", value: 28.8, note: "" },
-  { label: "Canh", value: 21.4, note: "Theo slide; README mới ghi ba thành phần Rau / Cơm / Món chính" },
+  { label: "Canh", value: 21.4, note: "" },
   { label: "Cơm", value: 6.3, note: "" },
   { label: "Món chính", value: 5.2, note: "" },
 ];

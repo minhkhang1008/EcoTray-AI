@@ -174,8 +174,8 @@ export function CloudCalculator() {
           </strong>
           <dl>
             {[
-              ["API Gateway (giả định Free Tier)", cost.api],
-              ["Lambda (giả định Free Tier)", cost.lambda],
+              ["API Gateway", cost.api],
+              ["Lambda", cost.lambda],
               ["Lưu ảnh S3, 30 ngày", cost.storage],
               ["AI inference & cơ sở dữ liệu", cost.inference],
             ].map(([label, value]) => (

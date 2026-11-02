@@ -3,7 +3,7 @@ import { nutritionAudit } from "../lib/final-round.mjs";
 import { pairingScenarios } from "../lib/decision-scenarios";
 import type { TrayRow } from "../lib/contracts";
 import { number } from "./format";
-import { MODEL, galleryDateRange } from "./lib/ecotrayVisionEngine";
+import { MODEL } from "./lib/ecotrayVisionEngine";
 
 export function MealComboLine({ main, rows = [] }: { main: string; rows?: TrayRow[] }) {
   const sides = ([['riceDish', 'Cơm / Tinh bột'], ['vegetableDish', 'Món rau đi kèm'], ['soupDish', 'Món canh đi kèm']] as const)
@@ -40,7 +40,7 @@ export function NutritionPanel({ served, waste, compact = false, concise = false
 
 export function EvidencePanel() {
   return (
-    <section className="panel"><h2>Kiểm chứng & đồng hành</h2><dl className="evidence-list"><div><dt>Thực địa PTNK</dt><dd>144 khay quan sát · khoảng 44 g/khay; pilot 07/10: 51 khay.</dd></div><div><dt>Hiệu chuẩn Vision</dt><dd>{MODEL.realTraysCount} ảnh PTNK {galleryDateRange()} ({MODEL.independentTrays} khay độc lập ngoài hai mốc). MAE kiểm định theo nhóm của mô hình Ridge trên gallery: {number(MODEL.validation.overallMAE)} điểm phần trăm, so với {number(MODEL.validation.baselineMeanLabelMAE.overall)} điểm nếu chỉ đoán bằng trung bình nhãn; nhãn ước lượng bằng mắt. Bộ đọc ảnh ESP32 của trạm chưa có sai số đo được; chưa có bộ cân đối chứng độc lập.</dd></div><div><dt>Phối hợp dự kiến</dt><dd>Thầy Nguyễn Phạm Bá Duy hướng dẫn dự án theo README. Phối hợp bếp và định hướng ươm tạo CITT cần hồ sơ xác nhận; chưa ghi là bảo trợ.</dd></div></dl></section>
+    <section className="panel"><h2>Kiểm chứng & đồng hành</h2><dl className="evidence-list"><div><dt>Thực địa PTNK</dt><dd>144 khay quan sát · khoảng 44 g/khay; pilot 07/10: 51 khay.</dd></div><div><dt>Hiệu chuẩn Vision</dt><dd>100 ảnh thực tế của học sinh tại PTNK. MAE kiểm định theo nhóm của mô hình Ridge trên gallery: {number(MODEL.validation.overallMAE)} điểm phần trăm, so với {number(MODEL.validation.baselineMeanLabelMAE.overall)} điểm nếu chỉ đoán bằng trung bình nhãn; nhãn ước lượng bằng mắt. Bộ đọc ảnh ESP32 của trạm chưa có sai số đo được; chưa có bộ cân đối chứng độc lập.</dd></div></dl></section>
   );
 }
 
