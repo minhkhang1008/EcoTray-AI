@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import Icon from "./Icon";
 import { login, type Account } from "./auth";
+import { Link } from "./router";
 
 export default function Login({ onLogin }: { onLogin: (a: Account) => void }) {
   const [email, setEmail] = useState("");
@@ -60,6 +61,9 @@ export default function Login({ onLogin }: { onLogin: (a: Account) => void }) {
         <button className="primary" type="submit">
           Đăng nhập
         </button>
+        <Link to="/project" className="login-project-link">
+          Thông tin dự án <span aria-hidden="true">→</span>
+        </Link>
       </form>
     </main>
   );
