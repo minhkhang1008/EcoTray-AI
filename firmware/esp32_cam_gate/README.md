@@ -15,20 +15,40 @@ Hai luồng có snapshot riêng. Gửi ảnh vào IoT không tự cập nhật s
 
 1. Cài Arduino IDE và **esp32 by Espressif Systems 3.3.2** (phiên bản dùng để kiểm tra biên dịch). Chọn **AI Thinker ESP32-CAM**, PSRAM bật, partition Huge APP, baud nạp 115200. Sketch nằm tại `esp32_cam_gate.ino` cùng thư mục này.
 2. Sao chép `config.example.h` thành `config.h`. Điền Wi-Fi 2,4 GHz, trường và mã trạm; `config.h` đã được gitignore. `ROOT_CA` phải chứa PEM CA gốc của chuỗi chứng thư endpoint đang dùng. Xác minh chuỗi bằng trình duyệt/hệ thống CA tin cậy rồi lấy CA từ tổ chức cấp; không tin chứng thư vừa tải qua kết nối chưa xác minh. Dùng `setCACert`, không bỏ kiểm tra TLS. Khi đổi nhà cấp chứng thư cần cập nhật CA.
-3. Giữ `USE_EXTERNAL_SENSOR=false` để thử qua Serial. Giữ flash tắt ban đầu vì inox phản chiếu mạnh. Điền tên thực đơn đã URL encode và ngày nếu biết; để trống nếu chưa biết, không gán ngày/thực đơn giả.
+3. `config.example.h` mặc định bật `USE_HCSR04=true` (cảm biến siêu âm của nhóm; đấu dây ở mục dưới). Vẫn chụp thủ công được bằng Serial `c`. Giữ flash tắt ban đầu vì inox phản chiếu mạnh. Điền tên thực đơn đã URL encode và ngày nếu biết; để trống nếu chưa biết, không gán ngày/thực đơn giả.
 4. Cắm đế nạp USB, cấp nguồn 5V đủ dòng theo thông số board. Nếu cần chế độ nạp thủ công: nối IO0-GND khi reset để nạp, **tháo nối rồi reset sau khi nạp**. Không nhấn BOOT/IO0 để chụp: IO0 được dùng làm XCLK của camera.
 5. Mở Serial Monitor 115200. Gõ `t` để thử lấy JPEG tại chỗ, không cần Wi-Fi/CA và không gửi API. Chờ Wi-Fi và NTP; gõ `c` để chụp và gửi. Không có cam kết độ trễ 0,5s: cần đo thực tế cả chụp, TLS, tải lên và suy luận.
 
 Nguồn chính thức: [sơ đồ chân CameraWebServer](https://github.com/espressif/arduino-esp32/blob/3.3.2/libraries/ESP32/examples/Camera/CameraWebServer/camera_pins.h), [ESP32 camera driver](https://github.com/espressif/esp32-camera), [TLS client](https://github.com/espressif/arduino-esp32/blob/3.3.2/libraries/NetworkClientSecure/src/NetworkClientSecure.h).
 
-Không dùng GPIO12 làm nút mặc định. Nút ngoài tùy chọn: đặt `TEST_BUTTON_PIN=14`, nối GPIO14 qua nút xuống GND, không dùng microSD đồng thời. Cảm biến tùy chọn: OUT mức logic 3,3V vào GPIO13, chung GND, active LOW; không đưa tín hiệu 5V trực tiếp vào ESP32. Bật `USE_EXTERNAL_SENSOR=true` sau khi đấu đúng phần cứng. Không dùng các chân này đồng thời cho SD/NFC; reader NFC cần sơ đồ riêng.
+## Đấu dây HC-SR04
+
+| HC-SR04 | ESP32-CAM (AI Thinker) | Ghi chú |
+| --- | --- | --- |
+| VCC | 5V | Bản HC-SR04 thường cần 5V; cấp đủ dòng, chung nguồn với board |
+| GND | GND | Chung GND với ESP32-CAM |
+| TRIG | GPIO14 | ESP32 xuất 3,3V, HC-SR04 đọc được |
+| ECHO | GPIO13 **qua chia áp** | ECHO ra 5V: nối ECHO → R1 1 kΩ → GPIO13, và GPIO13 → R2 2 kΩ → GND. Bản HC-SR04P/3,3V nối thẳng |
+
+- Mặc định `HCSR04_TRIG_PIN=14`, `HCSR04_ECHO_PIN=13` trong `config.h`. Hai chân này rảnh khi không dùng microSD. Sketch từ chối biên dịch (`static_assert`) nếu TRIG/ECHO trùng chân camera, UART0 (GPIO1/3), PSRAM (GPIO16) hoặc flash (GPIO4); chân khởi động GPIO2/12/15 chỉ được cảnh báo trên Serial. Nút thử nếu cần đặt `TEST_BUTTON_PIN=15` (GPIO15 → nút → GND), không dùng GPIO14.
+- Không đưa ECHO 5V trực tiếp vào GPIO13: sai điện áp có thể làm hỏng ESP32.
+- Cảm biến số khác (IR obstacle, active LOW, GPIO13) vẫn dùng được: đặt `USE_HCSR04=false`, `USE_EXTERNAL_SENSOR=true`. Chỉ bật một loại.
+- Reader NFC không thuộc sketch này và cần sơ đồ chân riêng.
+
+### Hiệu chỉnh khoảng cách tại chỗ
+
+1. Nạp sketch, mở Serial 115200. Khi khởi động sketch đo thử 5 lần và in `[SR04] Đo thử ...`. Nếu cả 5 lần là "không có echo" mà trước cảm biến có vật trong 4 m, kiểm tra VCC 5V, GND chung, TRIG/ECHO có bị đảo, và mạch chia áp.
+2. Gắn cảm biến và camera ở vị trí thật, gõ `d` để xem khoảng cách liên tục (`CÓ KHAY`/`trống`). Đưa khay inox vào đúng vị trí chụp rồi lấy ra; inox nghiêng có thể phản xạ lệch hoặc mất echo.
+3. Chỉnh `TRAY_ENTER_CM` (mặc định 25 cm theo tài liệu SSC) sao cho khay đặt đúng chỗ luôn nhỏ hơn mức này còn người đứng phía sau thì lớn hơn. `TRAY_LEAVE_CM` lớn hơn 1–3 cm để biên không rung. Dưới `SENSOR_MIN_CM` (2 cm) là vùng mù, bị coi như không hợp lệ.
+4. Cảm biến đo mỗi 60 ms; nhiễu lẻ được lọc bằng trung vị 3 mẫu. Vì vậy từ lúc khay vào vùng đến lúc chụp khoảng 360–420 ms (300 ms giữ ổn định cộng độ trễ lọc), không phải đúng 300,0 ms. Khay chỉ lướt qua dưới 0,3 s sẽ **không** được chụp: đặt khay xuống bàn trước cảm biến.
 
 ## Hành vi và thử lại
 
-- Cảm biến giữ khay 300ms mới kích hoạt; giữ nguyên khay không chụp lặp; vắng khay liên tục **hơn** 1.000ms mới mở khóa. Nút ngoài có debounce 50ms và giữ nút không chụp lặp. Lệnh `c` là yêu cầu chụp thủ công; khi dùng cảm biến, nó cũng khóa lượt tự động hiện tại.
+- Cảm biến giữ khay 300ms mới kích hoạt; giữ nguyên khay không chụp lặp; vắng khay liên tục **hơn** 1.000ms mới mở khóa. Hai khay cách nhau dưới 1 giây chỉ được chụp một lần (ưu tiên không chụp trùng hơn là chụp thừa). Nút ngoài có debounce 50ms và giữ nút không chụp lặp. Lệnh `c` là yêu cầu chụp thủ công; khi dùng cảm biến, nó cũng khóa lượt tự động hiện tại. Lệnh `d` bật/tắt xem khoảng cách HC-SR04.
+- Trong lúc tải ảnh lên (có thể vài giây) trạm không đọc cảm biến; khay đến lúc đó có thể bị bỏ lỡ.
 - Bắt buộc PSRAM và JPEG 800×600; không tự hạ xuống VGA rồi gửi ảnh sai hợp đồng. Giới hạn firmware 150KB phù hợp cả hai endpoint.
 - Header đầy đủ: `X-School-Id`, `X-Station-Id`, `X-Captured-At` UTC và `Idempotency-Key`. Không cần token truy cập API.
-- Nếu HTTP lỗi hoặc mất phản hồi, giữ JPEG, thời điểm và khóa trong RAM; gõ `r` gửi lại chính sự kiện đó. Chặn chụp mới khi còn ảnh chờ. HTTP 409 cần kiểm tra cấu hình/body, 503 cần kiểm tra Redis. Không thay key chỉ để né lỗi. Biên nhận API có hạn 48h; không retry sau cửa sổ này khi chưa đối soát.
+- Nếu HTTP lỗi hoặc mất phản hồi, giữ JPEG, thời điểm và khóa trong RAM và **tự gửi lại** chính sự kiện đó sau 3 s, rồi 6 s, 12 s... tối đa 30 s giữa hai lần (hoặc gõ `r` ngay). Sau 10 phút vẫn không gửi được thì bỏ ảnh đó để trạm không kẹt vĩnh viễn; ảnh bỏ là mất, không thay khóa hay chụp lại. Chặn chụp mới khi còn ảnh chờ. HTTP 409 cần kiểm tra cấu hình/body, 503 cần kiểm tra Redis. Không thay key chỉ để né lỗi. Biên nhận API có hạn 48h; không retry sau cửa sổ này khi chưa đối soát.
 - Tắt nguồn/reset làm mất ảnh đang chờ trong RAM. Đây chưa phải hàng đợi lưu bền trên thiết bị. Wi-Fi/NTP/TLS là điều kiện của luồng thật; fallback ngoại tuyến của web vẫn là nguồn riêng và không tạo dữ liệu phần cứng.
 - HTTP 200 của API Vision là xử lý thành công tại API; 202 của IoT chỉ là tiếp nhận. Xác minh ảnh, revision và kết quả trên dashboard trước khi kết luận toàn luồng hoạt động.
 
@@ -60,11 +80,12 @@ NFC là luồng riêng: [hợp đồng NFC](../../docs/IOT.md). Không gửi m�
 ## Kiểm tra máy trạng thái trên máy tính
 
 ```sh
-c++ -std=c++11 -Wall -Wextra -Werror firmware/tests/tray_gate_test.cpp -o /tmp/ecotray-tray-gate-test
-/tmp/ecotray-tray-gate-test
+for t in tray_gate_test hcsr04_presence_test; do
+  c++ -std=c++11 -Wall -Wextra -Werror firmware/tests/$t.cpp -o /tmp/ecotray-$t && /tmp/ecotray-$t && echo "$t OK"
+done
 ```
 
-Kiểm tra này dùng đúng lớp C++ của firmware, bao gồm nhiễu ngắn, giữ khay, ngắt khoảng vắng, mốc 1.000ms và tràn `millis()`. Không thay thế nghiệm thu điện, camera, TLS/NTP hoặc độ trễ thực tế. Đặt camera thẳng xuống khay và giới hạn vùng chụp trước khi dùng tại trường.
+Kiểm tra này dùng đúng lớp C++ của firmware, bao gồm nhiễu ngắn, giữ khay, ngắt khoảng vắng, mốc 1.000ms và tràn `millis()`. `hcsr04_presence_test` chạy chuỗi bộ lọc HC-SR04 → `TrayGate` với chu kỳ 60 ms: không echo ≠ 0 cm, gai lẻ không đổi trạng thái, trễ biên 25–27 cm, đúng một lần chụp mỗi lượt giữ khay, vẫy tay 200 ms không chụp. Không thay thế nghiệm thu điện, camera, TLS/NTP hoặc độ trễ thực tế. Đặt camera thẳng xuống khay và giới hạn vùng chụp trước khi dùng tại trường.
 
 ## Đối chiếu khi CameraWebServer chạy nhưng EcoTray lỗi 0x106
 
@@ -83,6 +104,12 @@ Bản đối chiếu khởi tạo camera trước các chân nút/flash/cảm bi
 - Bản đầu (trước bổ sung log và lệnh `t`) biên dịch thành công với `esp32:esp32@3.3.2`, FQBN `esp32:esp32:esp32cam`: 1.143.383 byte chương trình, 58.972 byte biến toàn cục. Cấu hình kiểm tra dùng thông tin giữ chỗ, không có mật khẩu/chứng thư thật và không nạp thiết bị.
 - Kiểm thử C++ máy trạng thái, 69 test Node, model smoke, typecheck và build `dist/` đều qua. Model smoke chỉ kiểm tra chạy được, không đo độ chính xác.
 - Lần kiểm tra production ban đầu (chưa chạy lại khi bổ sung log camera): API Vision trả 200 nhưng chưa có ảnh/kết quả; IoT status trả 200, `online:false`, chưa có capture. Chưa POST ảnh vào production trong lần kiểm tra này; chưa xác nhận commit đang deploy, nạp ESP32, chụp ảnh thật hay NFC vật lý.
+
+### Bổ sung HC-SR04 (03/11/2026)
+
+- Đã chạy: hai bài kiểm thử C++ trên máy tính ở trên (đều qua), và kiểm tra cú pháp `esp32_cam_gate.ino` với `config.h` thật cùng `config.example.h` bằng thư viện giả lập Arduino/ESP32 (không có lỗi; các `static_assert` chặn đúng TRIG=GPIO16, nút trùng TRIG và bật hai cảm biến cùng lúc).
+- **Chưa** biên dịch bằng `arduino-cli`/Arduino IDE với core `esp32:esp32` (máy chưa cài `arduino-cli`), chưa nạp board, chưa đo khoảng cách thật, chưa chụp/gửi ảnh từ mạch có HC-SR04. Hãy biên dịch và làm các bước hiệu chỉnh ở trên trước khi tin vào hành vi trên thiết bị.
+- Số liệu kích thước chương trình ở mục trên là của bản trước khi thêm HC-SR04.
 
 Sau khi tạo `config.h`, có thể biên dịch bằng CLI đã cài core tương ứng:
 
